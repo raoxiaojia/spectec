@@ -1,0 +1,18 @@
+(library
+  (name backend_coq)
+  (libraries util il el)
+  (modules itp coq il2itp itp2coq print)
+)
+
+(rule
+  (targets coq_output.v)
+  (deps
+    (file "../../watsup")
+    (glob_files "../../spec/wasm-1.0/*.watsup")
+  )
+  (action
+    (progn
+      (with-stdout-to %{targets} (run %{deps} --coq))
+    )
+  )
+)

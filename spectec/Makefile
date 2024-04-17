@@ -10,7 +10,7 @@ LOG = _log
 .PHONY: default all ci
 
 default: exe
-all: exe latex test
+all: exe latex test coq
 ci: all
 
 
@@ -43,6 +43,12 @@ $(CLONEDIR):
 latex: exe
 	(cd test-latex && make all)
 
+# Coq
+
+.PHONY: coq
+
+coq: 
+	dune build
 
 # Test
 

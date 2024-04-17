@@ -13,6 +13,7 @@ type target =
  | Prose
  | Splice of Backend_splice.Config.t
  | Interpreter of string list
+ | Coq
 
 type pass =
   | Sub
@@ -132,6 +133,7 @@ let argspec = Arg.align
   "--splice-sphinx", Arg.Unit (fun () -> target := Splice Backend_splice.Config.sphinx),
     " Splice Sphinx";
   "--prose", Arg.Unit (fun () -> target := Prose), " Generate prose";
+  "--coq", Arg.Unit (fun () -> target := Coq), " Generate Coq backend";
   "--interpreter", Arg.Rest_all (fun args -> target := Interpreter args),
     " Generate interpreter";
 
@@ -218,6 +220,17 @@ let () =
         prerr_endline "too many output file names";
         exit 2
       )
+
+    | Coq ->
+        log "Coq Code Generation...";
+        (match !odsts with
+        | [] -> print_endline (Backend_coq.Print.gen_string il);
+        | [odst] -> Backend_coq.Print.gen_file odst il;
+        | _ ->
+          prerr_endline "too many output file names";
+          exit 2
+      )
+
 
     | Prose ->
       log "Prose Generation...";
