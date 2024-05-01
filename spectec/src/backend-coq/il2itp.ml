@@ -334,7 +334,7 @@ let itp_of_ind (tc: typcase) : ind_constructor =
   | (op, (_bs, ts, prems), _hints) ->
     (match prems with
     | [] -> (itp_string_of_mixop op, [itp_of_typ ts])
-    | _ -> assert false
+    | _ -> (*assert false*)(itp_string_of_mixop op ^ "(* with unsupported premises: " ^ (String.concat " && " (List.map Il.Print.string_of_prem prems)) ^ " *)", [itp_of_typ ts])
     )
 
 let itp_of_inst id inst =
