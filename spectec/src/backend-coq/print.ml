@@ -112,7 +112,7 @@ let rec print_term (e: term) : string =
   | E_match (id, clauses) ->
     "(match " ^ id ^ " with\n"^
     (String.concat "" (List.map print_match_clause clauses)) ^ 
-    "end"
+    "end)"
   | E_unsupported s -> "(* Unsupported term: " ^ s ^ "*)"
 
 and print_match_clause (clause: match_clause) : string = 

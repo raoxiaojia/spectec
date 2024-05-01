@@ -5,7 +5,7 @@
 )
 
 (rule
-  (targets coq_output.v)
+  (targets _output.v)
   (deps
     (file "../../watsup")
     (glob_files "../../spec/wasm-1.0/*.watsup")
