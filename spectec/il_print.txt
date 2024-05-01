@@ -1,0 +1,2102 @@
+(* Coq code below *)
+
+
+;; ../../spec/wasm-1.0/0-aux.watsup:11.1-11.15
+syntax N = nat
+
+;; ../../spec/wasm-1.0/0-aux.watsup:12.1-12.15
+syntax M = nat
+
+;; ../../spec/wasm-1.0/0-aux.watsup:13.1-13.15
+syntax n = nat
+
+;; ../../spec/wasm-1.0/0-aux.watsup:14.1-14.15
+syntax m = nat
+
+;; ../../spec/wasm-1.0/0-aux.watsup:21.1-21.14
+def $Ki : nat
+  ;; ../../spec/wasm-1.0/0-aux.watsup:22.1-22.15
+  def $Ki = 1024
+
+;; ../../spec/wasm-1.0/0-aux.watsup:27.1-27.25
+rec {
+
+;; ../../spec/wasm-1.0/0-aux.watsup:27.1-27.25
+def $min(nat : nat, nat : nat) : nat
+  ;; ../../spec/wasm-1.0/0-aux.watsup:28.1-28.19
+  def $min{j : nat}(0, j) = 0
+  ;; ../../spec/wasm-1.0/0-aux.watsup:29.1-29.19
+  def $min{i : nat}(i, 0) = 0
+  ;; ../../spec/wasm-1.0/0-aux.watsup:30.1-30.38
+  def $min{i : nat, j : nat}((i + 1), (j + 1)) = $min(i, j)
+}
+
+;; ../../spec/wasm-1.0/0-aux.watsup:32.1-32.21
+rec {
+
+;; ../../spec/wasm-1.0/0-aux.watsup:32.1-32.21
+def $sum(nat*) : nat
+  ;; ../../spec/wasm-1.0/0-aux.watsup:33.1-33.18
+  def $sum([]) = 0
+  ;; ../../spec/wasm-1.0/0-aux.watsup:34.1-34.35
+  def $sum{n : n, n'* : n*}([n] :: n'*{n' : nat}) = (n + $sum(n'*{n' : nat}))
+}
+
+;; ../../spec/wasm-1.0/0-aux.watsup:39.1-39.59
+rec {
+
+;; ../../spec/wasm-1.0/0-aux.watsup:39.1-39.59
+def $concat_(syntax X, X**) : X*
+  ;; ../../spec/wasm-1.0/0-aux.watsup:40.1-40.34
+  def $concat_{syntax X}(syntax X, []) = []
+  ;; ../../spec/wasm-1.0/0-aux.watsup:41.1-41.61
+  def $concat_{syntax X, w* : X*, w'** : X**}(syntax X, [w*{w : X}] :: w'*{w' : X}*{w' : X}) = w*{w : X} :: $concat_(syntax X, w'*{w' : X}*{w' : X})
+}
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:6.1-6.49
+syntax list{syntax X}(syntax X) = 
+  | `%`{X* : X*}(X*{X : X} : X*)
+    -- if (|X*{X : X}| < (2 ^ 32))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:15.1-15.50
+syntax byte = 
+  | `%`{i : nat}(i : nat)
+    -- if ((i >= 0) /\ (i <= 255))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:17.1-18.18
+syntax uN{N : N}(N) = 
+  | `%`{i : nat}(i : nat)
+    -- if ((i >= 0) /\ (i <= ((2 ^ N) - 1)))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:19.1-20.49
+syntax sN{N : N}(N) = 
+  | `%`{i : int}(i : int)
+    -- if ((((i >= - ((2 ^ (N - 1)) : nat <: int)) /\ (i <= - (1 : nat <: int))) \/ (i = (0 : nat <: int))) \/ ((i >= + (1 : nat <: int)) /\ (i <= (((2 ^ (N - 1)) - 1) : nat <: int))))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:21.1-22.8
+syntax iN{N : N}(N) = uN(N)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:24.1-24.20
+syntax u31 = uN(31)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:25.1-25.20
+syntax u32 = uN(32)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:26.1-26.20
+syntax u64 = uN(64)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:33.1-33.21
+def $signif(N : N) : nat
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:34.1-34.21
+  def $signif(32) = 23
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:35.1-35.21
+  def $signif(64) = 52
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:37.1-37.20
+def $expon(N : N) : nat
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:38.1-38.19
+  def $expon(32) = 8
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:39.1-39.20
+  def $expon(64) = 11
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:41.1-41.30
+def $M(N : N) : nat
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:42.1-42.23
+  def $M{N : N}(N) = $signif(N)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:44.1-44.30
+def $E(N : N) : nat
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:45.1-45.22
+  def $E{N : N}(N) = $expon(N)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:51.1-55.83
+syntax fNmag{N : N}(N) = 
+  | NORM{m : m, n : n}(m : m, n : n)
+    -- if ((m < (2 ^ $M(N))) /\ (((2 - (2 ^ ($E(N) - 1))) <= n) /\ (n <= ((2 ^ ($E(N) - 1)) - 1))))
+  | SUBNORM{m : m, N : N, n : n}(m : m)
+    -- if ((m < (2 ^ $M(N))) /\ ((2 - (2 ^ ($E(N) - 1))) = n))
+  | INF
+  | `NAN(%)`{m : m}(m : m)
+    -- if ((1 <= m) /\ (m < (2 ^ $M(N))))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:47.1-49.35
+syntax fN{N : N}(N) = 
+  | POS{fNmag : fNmag(N)}(fNmag : fNmag(N))
+  | NEG{fNmag : fNmag(N)}(fNmag : fNmag(N))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:57.1-57.20
+syntax f32 = fN(32)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:58.1-58.20
+syntax f64 = fN(64)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:60.1-60.39
+def $fzero(N : N) : fN(N)
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:61.1-61.32
+  def $fzero{N : N}(N) = POS_fN(SUBNORM_fNmag(0))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:63.1-63.39
+def $fone(N : N) : fN(N)
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:64.1-64.30
+  def $fone{N : N}(N) = POS_fN(NORM_fNmag(1, 0))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:66.1-66.21
+def $canon_(N : N) : nat
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:67.1-67.37
+  def $canon_{N : N}(N) = (2 ^ ($signif(N) - 1))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:74.1-74.85
+syntax char = 
+  | `%`{i : nat}(i : nat)
+    -- if (((i >= 0) /\ (i <= 55295)) \/ ((i >= 57344) /\ (i <= 1114111)))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:76.1-76.25
+rec {
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:76.1-76.25
+def $utf8(char*) : byte*
+  ;; ../../spec/wasm-1.0/A-binary.watsup:49.1-49.47
+  def $utf8{ch : char, b : byte}([ch]) = [b]
+    -- if ((ch!`%`_char.0 < 128) /\ (ch = `%`_char(b!`%`_byte.0)))
+  ;; ../../spec/wasm-1.0/A-binary.watsup:50.1-50.96
+  def $utf8{ch : char, b_1 : byte, b_2 : byte}([ch]) = [b_1 b_2]
+    -- if (((128 <= ch!`%`_char.0) /\ (ch!`%`_char.0 < 2048)) /\ (ch = `%`_char((((2 ^ 6) * (b_1!`%`_byte.0 - 192)) + (b_2!`%`_byte.0 - 128)))))
+  ;; ../../spec/wasm-1.0/A-binary.watsup:51.1-51.148
+  def $utf8{ch : char, b_1 : byte, b_2 : byte, b_3 : byte}([ch]) = [b_1 b_2 b_3]
+    -- if ((((2048 <= ch!`%`_char.0) /\ (ch!`%`_char.0 < 55296)) \/ ((57344 <= ch!`%`_char.0) /\ (ch!`%`_char.0 < 65536))) /\ (ch = `%`_char(((((2 ^ 12) * (b_1!`%`_byte.0 - 224)) + ((2 ^ 6) * (b_2!`%`_byte.0 - 128))) + (b_3!`%`_byte.0 - 128)))))
+  ;; ../../spec/wasm-1.0/A-binary.watsup:52.1-52.148
+  def $utf8{ch : char, b_1 : byte, b_2 : byte, b_3 : byte, b_4 : byte}([ch]) = [b_1 b_2 b_3 b_4]
+    -- if (((65536 <= ch!`%`_char.0) /\ (ch!`%`_char.0 < 69632)) /\ (ch = `%`_char((((((2 ^ 18) * (b_1!`%`_byte.0 - 240)) + ((2 ^ 12) * (b_2!`%`_byte.0 - 128))) + ((2 ^ 6) * (b_3!`%`_byte.0 - 128))) + (b_4!`%`_byte.0 - 128)))))
+  ;; ../../spec/wasm-1.0/A-binary.watsup:53.1-53.44
+  def $utf8{ch* : char*}(ch*{ch : char}) = $concat_(syntax byte, $utf8([ch])*{ch : char})
+}
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:78.1-78.70
+syntax name = 
+  | `%`{char* : char*}(char*{char : char} : char*)
+    -- if (|$utf8(char*{char : char})| < (2 ^ 32))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:87.1-87.36
+syntax idx = u32
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:89.1-89.45
+syntax typeidx = idx
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:90.1-90.49
+syntax funcidx = idx
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:91.1-91.49
+syntax globalidx = idx
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:92.1-92.47
+syntax tableidx = idx
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:93.1-93.46
+syntax memidx = idx
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:94.1-94.47
+syntax labelidx = idx
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:95.1-95.47
+syntax localidx = idx
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:104.1-105.26
+syntax valtype = 
+  | I32
+  | I64
+  | F32
+  | F64
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:107.1-107.38
+syntax inn = 
+  | I32
+  | I64
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:108.1-108.38
+syntax fnn = 
+  | F32
+  | F64
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:112.1-113.11
+syntax resulttype = valtype?
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:115.1-115.18
+syntax mut = 
+  | `MUT%?`(()?)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:117.1-118.16
+syntax limits = 
+  | `[%..%]`{u32 : u32}(u32 : u32, u32)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:119.1-120.14
+syntax globaltype = 
+  | `%%`{mut : mut, valtype : valtype}(mut : mut, valtype : valtype)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:121.1-122.23
+syntax functype = 
+  | `%->%`{valtype* : valtype*}(valtype*{valtype : valtype} : valtype*, valtype*)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:123.1-124.9
+syntax tabletype = limits
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:125.1-126.9
+syntax memtype = limits
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:127.1-128.70
+syntax externtype = 
+  | FUNC{functype : functype}(functype : functype)
+  | GLOBAL{globaltype : globaltype}(globaltype : globaltype)
+  | TABLE{tabletype : tabletype}(tabletype : tabletype)
+  | MEM{memtype : memtype}(memtype : memtype)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:140.1-140.55
+def $size(valtype : valtype) : nat
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:11.1-11.20
+  def $size(I32_valtype) = 32
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:12.1-12.20
+  def $size(I64_valtype) = 64
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:13.1-13.20
+  def $size(F32_valtype) = 32
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:14.1-14.20
+  def $size(F64_valtype) = 64
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:142.1-142.21
+syntax val_(valtype : valtype)
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:143.1-143.34
+  syntax val_{inn : inn}((inn : inn <: valtype)) = iN($size((inn : inn <: valtype)))
+
+
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:144.1-144.34
+  syntax val_{fnn : fnn}((fnn : fnn <: valtype)) = fN($size((fnn : fnn <: valtype)))
+
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:149.1-149.42
+syntax sx = 
+  | U
+  | S
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:151.1-151.22
+syntax unop_(valtype : valtype)
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:152.1-152.39
+  syntax unop_{inn : inn}((inn : inn <: valtype)) = 
+  | CLZ
+  | CTZ
+  | POPCNT
+
+
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:153.1-153.70
+  syntax unop_{fnn : fnn}((fnn : fnn <: valtype)) = 
+  | ABS
+  | NEG
+  | SQRT
+  | CEIL
+  | FLOOR
+  | TRUNC
+  | NEAREST
+
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:155.1-155.23
+syntax binop_(valtype : valtype)
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:156.1-158.66
+  syntax binop_{inn : inn}((inn : inn <: valtype)) = 
+  | ADD
+  | SUB
+  | MUL
+  | DIV{sx : sx}(sx : sx)
+  | REM{sx : sx}(sx : sx)
+  | AND
+  | OR
+  | XOR
+  | SHL
+  | SHR{sx : sx}(sx : sx)
+  | ROTL
+  | ROTR
+
+
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:159.1-160.49
+  syntax binop_{fnn : fnn}((fnn : fnn <: valtype)) = 
+  | ADD
+  | SUB
+  | MUL
+  | DIV
+  | MIN
+  | MAX
+  | COPYSIGN
+
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:162.1-162.24
+syntax testop_{inn : inn}((inn : inn <: valtype)) = 
+  | EQZ
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:166.1-166.23
+syntax relop_(valtype : valtype)
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:167.1-170.52
+  syntax relop_{inn : inn}((inn : inn <: valtype)) = 
+  | EQ
+  | NE
+  | LT{sx : sx}(sx : sx)
+  | GT{sx : sx}(sx : sx)
+  | LE{sx : sx}(sx : sx)
+  | GE{sx : sx}(sx : sx)
+
+
+  ;; ../../spec/wasm-1.0/1-syntax.watsup:171.1-172.32
+  syntax relop_{fnn : fnn}((fnn : fnn <: valtype)) = 
+  | EQ
+  | NE
+  | LT
+  | GT
+  | LE
+  | GE
+
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:174.1-174.37
+syntax cvtop = 
+  | CONVERT
+  | REINTERPRET
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:177.1-177.68
+syntax memop = 
+{
+  ALIGN{u32 : u32} u32,
+  OFFSET{u32 : u32} u32
+}
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:184.1-184.52
+syntax blocktype = valtype?
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:234.1-234.53
+syntax packsize = 
+  | `%`{i : nat}(i : nat)
+    -- if (((i = 8) \/ (i = 16)) \/ (i = 32))
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:235.1-235.34
+syntax ww = packsize
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:237.1-243.16
+rec {
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:237.1-243.16
+syntax instr = 
+  | NOP
+  | UNREACHABLE
+  | DROP
+  | SELECT
+  | BLOCK{blocktype : blocktype, instr* : instr*}(blocktype : blocktype, instr*{instr : instr} : instr*)
+  | LOOP{blocktype : blocktype, instr* : instr*}(blocktype : blocktype, instr*{instr : instr} : instr*)
+  | `IF%%ELSE%`{blocktype : blocktype, instr* : instr*}(blocktype : blocktype, instr*{instr : instr} : instr*, instr*)
+  | BR{labelidx : labelidx}(labelidx : labelidx)
+  | BR_IF{labelidx : labelidx}(labelidx : labelidx)
+  | BR_TABLE{labelidx : labelidx}(labelidx*{} : labelidx*, labelidx)
+  | CALL{funcidx : funcidx}(funcidx : funcidx)
+  | CALL_INDIRECT{typeidx : typeidx}(typeidx : typeidx)
+  | RETURN
+  | CONST{valtype : valtype, val_ : val_(valtype)}(valtype : valtype, val_ : val_(valtype))
+  | UNOP{valtype : valtype, unop_ : unop_(valtype)}(valtype : valtype, unop_ : unop_(valtype))
+  | BINOP{valtype : valtype, binop_ : binop_(valtype)}(valtype : valtype, binop_ : binop_(valtype))
+  | TESTOP{valtype : valtype, testop_ : testop_(valtype)}(valtype : valtype, testop_ : testop_(valtype))
+  | RELOP{valtype : valtype, relop_ : relop_(valtype)}(valtype : valtype, relop_ : relop_(valtype))
+  | CVTOP{valtype_1 : valtype, valtype_2 : valtype, cvtop : cvtop, sx? : sx?}(valtype_1 : valtype, valtype_2 : valtype, cvtop : cvtop, sx?{sx : sx} : sx?)
+    -- if (valtype_1 =/= valtype_2)
+  | LOCAL.GET{localidx : localidx}(localidx : localidx)
+  | LOCAL.SET{localidx : localidx}(localidx : localidx)
+  | LOCAL.TEE{localidx : localidx}(localidx : localidx)
+  | GLOBAL.GET{globalidx : globalidx}(globalidx : globalidx)
+  | GLOBAL.SET{globalidx : globalidx}(globalidx : globalidx)
+  | `LOAD%(_)%?%`{valtype : valtype, ww? : ww?, sx? : sx?, memop : memop, inn? : inn?}(valtype : valtype, (ww, sx)?{sx : sx, ww : ww} : (ww, sx)?, memop : memop)
+    -- (if ((valtype = (inn : inn <: valtype)) /\ (ww!`%`_ww.0 < $size((inn : inn <: valtype)))))?{inn : inn, ww : ww}
+  | STORE{valtype : valtype, ww? : ww?, memop : memop, inn? : inn?}(valtype : valtype, ww?{ww : ww} : ww?, memop : memop)
+    -- (if ((valtype = (inn : inn <: valtype)) /\ (ww!`%`_ww.0 < $size((inn : inn <: valtype)))))?{inn : inn, ww : ww}
+  | MEMORY.SIZE
+  | MEMORY.GROW
+}
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:245.1-246.9
+syntax expr = instr*
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:256.1-257.16
+syntax type = 
+  | TYPE{functype : functype}(functype : functype)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:258.1-259.16
+syntax local = 
+  | LOCAL{valtype : valtype}(valtype : valtype)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:260.1-261.27
+syntax func = 
+  | FUNC{typeidx : typeidx, local* : local*, expr : expr}(typeidx : typeidx, local*{local : local} : local*, expr : expr)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:262.1-263.25
+syntax global = 
+  | GLOBAL{globaltype : globaltype, expr : expr}(globaltype : globaltype, expr : expr)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:264.1-265.18
+syntax table = 
+  | TABLE{tabletype : tabletype}(tabletype : tabletype)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:266.1-267.17
+syntax mem = 
+  | MEMORY{memtype : memtype}(memtype : memtype)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:268.1-269.21
+syntax elem = 
+  | ELEM{expr : expr, funcidx* : funcidx*}(expr : expr, funcidx*{funcidx : funcidx} : funcidx*)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:270.1-271.18
+syntax data = 
+  | DATA{expr : expr, byte* : byte*}(expr : expr, byte*{byte : byte} : byte*)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:272.1-273.16
+syntax start = 
+  | START{funcidx : funcidx}(funcidx : funcidx)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:275.1-276.66
+syntax externidx = 
+  | FUNC{funcidx : funcidx}(funcidx : funcidx)
+  | GLOBAL{globalidx : globalidx}(globalidx : globalidx)
+  | TABLE{tableidx : tableidx}(tableidx : tableidx)
+  | MEM{memidx : memidx}(memidx : memidx)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:277.1-278.24
+syntax export = 
+  | EXPORT{name : name, externidx : externidx}(name : name, externidx : externidx)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:279.1-280.30
+syntax import = 
+  | IMPORT{name : name, externtype : externtype}(name : name, name, externtype : externtype)
+
+;; ../../spec/wasm-1.0/1-syntax.watsup:282.1-283.76
+syntax module = 
+  | MODULE{type* : type*, import* : import*, func* : func*, global* : global*, table* : table*, mem* : mem*, elem* : elem*, data* : data*, start* : start*, export* : export*}(type*{type : type} : type*, import*{import : import} : import*, func*{func : func} : func*, global*{global : global} : global*, table*{table : table} : table*, mem*{mem : mem} : mem*, elem*{elem : elem} : elem*, data*{data : data} : data*, start*{start : start} : start*, export*{export : export} : export*)
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:20.1-20.64
+rec {
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:20.1-20.64
+def $funcsxt(externtype*) : functype*
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:25.1-25.24
+  def $funcsxt([]) = []
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:26.1-26.47
+  def $funcsxt{ft : functype, xt* : externtype*}([FUNC_externtype(ft)] :: xt*{xt : externtype}) = [ft] :: $funcsxt(xt*{xt : externtype})
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:27.1-27.59
+  def $funcsxt{externtype : externtype, xt* : externtype*}([externtype] :: xt*{xt : externtype}) = $funcsxt(xt*{xt : externtype})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:21.1-21.66
+rec {
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:21.1-21.66
+def $globalsxt(externtype*) : globaltype*
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:29.1-29.26
+  def $globalsxt([]) = []
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:30.1-30.53
+  def $globalsxt{gt : globaltype, xt* : externtype*}([GLOBAL_externtype(gt)] :: xt*{xt : externtype}) = [gt] :: $globalsxt(xt*{xt : externtype})
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:31.1-31.63
+  def $globalsxt{externtype : externtype, xt* : externtype*}([externtype] :: xt*{xt : externtype}) = $globalsxt(xt*{xt : externtype})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:22.1-22.65
+rec {
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:22.1-22.65
+def $tablesxt(externtype*) : tabletype*
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:33.1-33.25
+  def $tablesxt([]) = []
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:34.1-34.50
+  def $tablesxt{tt : tabletype, xt* : externtype*}([TABLE_externtype(tt)] :: xt*{xt : externtype}) = [tt] :: $tablesxt(xt*{xt : externtype})
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:35.1-35.61
+  def $tablesxt{externtype : externtype, xt* : externtype*}([externtype] :: xt*{xt : externtype}) = $tablesxt(xt*{xt : externtype})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:23.1-23.63
+rec {
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:23.1-23.63
+def $memsxt(externtype*) : memtype*
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:37.1-37.23
+  def $memsxt([]) = []
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:38.1-38.44
+  def $memsxt{mt : memtype, xt* : externtype*}([MEM_externtype(mt)] :: xt*{xt : externtype}) = [mt] :: $memsxt(xt*{xt : externtype})
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:39.1-39.57
+  def $memsxt{externtype : externtype, xt* : externtype*}([externtype] :: xt*{xt : externtype}) = $memsxt(xt*{xt : externtype})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/2-syntax-aux.watsup:49.1-49.33
+def $memop0 : memop
+  ;; ../../spec/wasm-1.0/2-syntax-aux.watsup:50.1-50.34
+  def $memop0 = {ALIGN `%`_u32(0), OFFSET `%`_u32(0)}
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:7.1-7.57
+def $signed(N : N, nat : nat) : int
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:8.1-8.54
+  def $signed{N : N, i : nat}(N, i) = (i : nat <: int)
+    -- if (0 <= (2 ^ (N - 1)))
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:9.1-9.60
+  def $signed{N : N, i : nat}(N, i) = ((i - (2 ^ N)) : nat <: int)
+    -- if (((2 ^ (N - 1)) <= i) /\ (i < (2 ^ N)))
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:11.1-11.66
+def $invsigned(N : N, int : int) : nat
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:12.1-12.57
+  def $invsigned{N : N, ii : int, j : nat}(N, ii) = j
+    -- if ($signed(N, j) = ii)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:78.1-78.63
+def $fabs(N : N, fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:81.1-81.64
+def $fceil(N : N, fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:82.1-82.65
+def $ffloor(N : N, fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:84.1-84.67
+def $fnearest(N : N, fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:79.1-79.63
+def $fneg(N : N, fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:80.1-80.64
+def $fsqrt(N : N, fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:83.1-83.65
+def $ftrunc(N : N, fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:60.1-60.63
+def $iclz(N : N, iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:61.1-61.63
+def $ictz(N : N, iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:62.1-62.66
+def $ipopcnt(N : N, iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:17.1-18.32
+def $unop(valtype : valtype, unop_ : unop_(valtype), val_ : val_(valtype)) : val_(valtype)*
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:105.1-105.48
+  def $unop{inn : inn, iN : val_((inn : inn <: valtype))}((inn : inn <: valtype), CLZ_unop_, iN) = [$iclz($size((inn : inn <: valtype)), iN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:106.1-106.48
+  def $unop{inn : inn, iN : val_((inn : inn <: valtype))}((inn : inn <: valtype), CTZ_unop_, iN) = [$ictz($size((inn : inn <: valtype)), iN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:107.1-107.54
+  def $unop{inn : inn, iN : val_((inn : inn <: valtype))}((inn : inn <: valtype), POPCNT_unop_, iN) = [$ipopcnt($size((inn : inn <: valtype)), iN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:124.1-124.48
+  def $unop{fnn : fnn, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), ABS_unop_, fN) = [$fabs($size((fnn : fnn <: valtype)), fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:125.1-125.48
+  def $unop{fnn : fnn, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), NEG_unop_, fN) = [$fneg($size((fnn : fnn <: valtype)), fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:126.1-126.50
+  def $unop{fnn : fnn, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), SQRT_unop_, fN) = [$fsqrt($size((fnn : fnn <: valtype)), fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:127.1-127.50
+  def $unop{fnn : fnn, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), CEIL_unop_, fN) = [$fceil($size((fnn : fnn <: valtype)), fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:128.1-128.52
+  def $unop{fnn : fnn, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), FLOOR_unop_, fN) = [$ffloor($size((fnn : fnn <: valtype)), fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:129.1-129.52
+  def $unop{fnn : fnn, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), TRUNC_unop_, fN) = [$ftrunc($size((fnn : fnn <: valtype)), fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:130.1-130.56
+  def $unop{fnn : fnn, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), NEAREST_unop_, fN) = [$fnearest($size((fnn : fnn <: valtype)), fN)]
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:71.1-71.65
+def $fadd(N : N, fN : fN(N), fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:77.1-77.70
+def $fcopysign(N : N, fN : fN(N), fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:74.1-74.65
+def $fdiv(N : N, fN : fN(N), fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:76.1-76.65
+def $fmax(N : N, fN : fN(N), fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:75.1-75.65
+def $fmin(N : N, fN : fN(N), fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:73.1-73.65
+def $fmul(N : N, fN : fN(N), fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:72.1-72.65
+def $fsub(N : N, fN : fN(N), fN : fN(N)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:47.1-47.65
+def $iadd(N : N, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:53.1-53.65
+def $iand(N : N, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:50.1-50.73
+def $idiv(N : N, sx : sx, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:49.1-49.65
+def $imul(N : N, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:54.1-54.64
+def $ior(N : N, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:51.1-51.73
+def $irem(N : N, sx : sx, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:58.1-58.66
+def $irotl(N : N, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:59.1-59.66
+def $irotr(N : N, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:56.1-56.65
+def $ishl(N : N, iN : iN(N), u32 : u32) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:57.1-57.73
+def $ishr(N : N, sx : sx, iN : iN(N), u32 : u32) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:48.1-48.65
+def $isub(N : N, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:55.1-55.65
+def $ixor(N : N, iN : iN(N), iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:19.1-20.34
+def $binop(valtype : valtype, binop_ : binop_(valtype), val_ : val_(valtype), val_ : val_(valtype)) : val_(valtype)*
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:93.1-93.65
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), ADD_binop_, iN_1, iN_2) = [$iadd($size((inn : inn <: valtype)), iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:94.1-94.65
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), SUB_binop_, iN_1, iN_2) = [$isub($size((inn : inn <: valtype)), iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:95.1-95.65
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), MUL_binop_, iN_1, iN_2) = [$imul($size((inn : inn <: valtype)), iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:96.1-96.72
+  def $binop{inn : inn, sx : sx, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), DIV_binop_(sx), iN_1, iN_2) = [$idiv($size((inn : inn <: valtype)), sx, iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:97.1-97.72
+  def $binop{inn : inn, sx : sx, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), REM_binop_(sx), iN_1, iN_2) = [$irem($size((inn : inn <: valtype)), sx, iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:98.1-98.65
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), AND_binop_, iN_1, iN_2) = [$iand($size((inn : inn <: valtype)), iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:99.1-99.63
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), OR_binop_, iN_1, iN_2) = [$ior($size((inn : inn <: valtype)), iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:100.1-100.65
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), XOR_binop_, iN_1, iN_2) = [$ixor($size((inn : inn <: valtype)), iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:101.1-101.65
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), SHL_binop_, iN_1, iN_2) = [$ishl($size((inn : inn <: valtype)), iN_1, `%`_u32(iN_2!`%`_val_.0))]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:102.1-102.72
+  def $binop{inn : inn, sx : sx, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), SHR_binop_(sx), iN_1, iN_2) = [$ishr($size((inn : inn <: valtype)), sx, iN_1, `%`_u32(iN_2!`%`_val_.0))]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:103.1-103.67
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), ROTL_binop_, iN_1, iN_2) = [$irotl($size((inn : inn <: valtype)), iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:104.1-104.67
+  def $binop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), ROTR_binop_, iN_1, iN_2) = [$irotr($size((inn : inn <: valtype)), iN_1, iN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:116.1-116.65
+  def $binop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), ADD_binop_, fN_1, fN_2) = [$fadd($size((fnn : fnn <: valtype)), fN_1, fN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:117.1-117.65
+  def $binop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), SUB_binop_, fN_1, fN_2) = [$fsub($size((fnn : fnn <: valtype)), fN_1, fN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:118.1-118.65
+  def $binop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), MUL_binop_, fN_1, fN_2) = [$fmul($size((fnn : fnn <: valtype)), fN_1, fN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:119.1-119.65
+  def $binop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), DIV_binop_, fN_1, fN_2) = [$fdiv($size((fnn : fnn <: valtype)), fN_1, fN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:120.1-120.65
+  def $binop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), MIN_binop_, fN_1, fN_2) = [$fmin($size((fnn : fnn <: valtype)), fN_1, fN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:121.1-121.65
+  def $binop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), MAX_binop_, fN_1, fN_2) = [$fmax($size((fnn : fnn <: valtype)), fN_1, fN_2)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:122.1-122.75
+  def $binop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), COPYSIGN_binop_, fN_1, fN_2) = [$fcopysign($size((fnn : fnn <: valtype)), fN_1, fN_2)]
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:63.1-63.63
+def $ieqz(N : N, iN : iN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:21.1-22.32
+def $testop(valtype : valtype, testop_ : testop_(valtype), val_ : val_(valtype)) : val_(I32_valtype)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:108.1-108.50
+  def $testop{inn : inn, iN : val_((inn : inn <: valtype))}((inn : inn <: valtype), EQZ_testop_, iN) = $ieqz($size((inn : inn <: valtype)), iN)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:85.1-85.64
+def $feq(N : N, fN : fN(N), fN : fN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:90.1-90.64
+def $fge(N : N, fN : fN(N), fN : fN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:88.1-88.64
+def $fgt(N : N, fN : fN(N), fN : fN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:89.1-89.64
+def $fle(N : N, fN : fN(N), fN : fN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:87.1-87.64
+def $flt(N : N, fN : fN(N), fN : fN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:86.1-86.64
+def $fne(N : N, fN : fN(N), fN : fN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:64.1-64.64
+def $ieq(N : N, iN : iN(N), iN : iN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:69.1-69.72
+def $ige(N : N, sx : sx, iN : iN(N), iN : iN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:67.1-67.72
+def $igt(N : N, sx : sx, iN : iN(N), iN : iN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:68.1-68.72
+def $ile(N : N, sx : sx, iN : iN(N), iN : iN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:66.1-66.72
+def $ilt(N : N, sx : sx, iN : iN(N), iN : iN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:65.1-65.64
+def $ine(N : N, iN : iN(N), iN : iN(N)) : u32
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:23.1-24.34
+def $relop(valtype : valtype, relop_ : relop_(valtype), val_ : val_(valtype), val_ : val_(valtype)) : val_(I32_valtype)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:109.1-109.63
+  def $relop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), EQ_relop_, iN_1, iN_2) = $ieq($size((inn : inn <: valtype)), iN_1, iN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:110.1-110.63
+  def $relop{inn : inn, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), NE_relop_, iN_1, iN_2) = $ine($size((inn : inn <: valtype)), iN_1, iN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:111.1-111.70
+  def $relop{inn : inn, sx : sx, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), LT_relop_(sx), iN_1, iN_2) = $ilt($size((inn : inn <: valtype)), sx, iN_1, iN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:112.1-112.70
+  def $relop{inn : inn, sx : sx, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), GT_relop_(sx), iN_1, iN_2) = $igt($size((inn : inn <: valtype)), sx, iN_1, iN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:113.1-113.70
+  def $relop{inn : inn, sx : sx, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), LE_relop_(sx), iN_1, iN_2) = $ile($size((inn : inn <: valtype)), sx, iN_1, iN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:114.1-114.70
+  def $relop{inn : inn, sx : sx, iN_1 : val_((inn : inn <: valtype)), iN_2 : val_((inn : inn <: valtype))}((inn : inn <: valtype), GE_relop_(sx), iN_1, iN_2) = $ige($size((inn : inn <: valtype)), sx, iN_1, iN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:132.1-132.63
+  def $relop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), EQ_relop_, fN_1, fN_2) = $feq($size((fnn : fnn <: valtype)), fN_1, fN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:133.1-133.63
+  def $relop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), NE_relop_, fN_1, fN_2) = $fne($size((fnn : fnn <: valtype)), fN_1, fN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:134.1-134.63
+  def $relop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), LT_relop_, fN_1, fN_2) = $flt($size((fnn : fnn <: valtype)), fN_1, fN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:135.1-135.63
+  def $relop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), GT_relop_, fN_1, fN_2) = $fgt($size((fnn : fnn <: valtype)), fN_1, fN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:136.1-136.63
+  def $relop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), LE_relop_, fN_1, fN_2) = $fle($size((fnn : fnn <: valtype)), fN_1, fN_2)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:137.1-137.63
+  def $relop{fnn : fnn, fN_1 : val_((fnn : fnn <: valtype)), fN_2 : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), GE_relop_, fN_1, fN_2) = $fge($size((fnn : fnn <: valtype)), fN_1, fN_2)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:33.1-33.90
+def $convert(M : M, N : N, sx : sx, iN : iN(M)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:31.1-31.85
+def $demote(M : M, N : N, fN : fN(M)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:29.1-29.86
+def $ext(M : M, N : N, sx : sx, iN : iN(M)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:32.1-32.86
+def $promote(M : M, N : N, fN : fN(M)) : fN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:34.1-35.35
+def $reinterpret(valtype_1 : valtype, valtype_2 : valtype, val_ : val_(valtype_1)) : val_(valtype_2)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:30.1-30.88
+def $trunc(M : M, N : N, sx : sx, fN : fN(M)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:28.1-28.83
+def $wrap(M : M, N : N, iN : iN(M)) : iN(N)
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:25.1-26.42
+def $cvtop(valtype_1 : valtype, valtype_2 : valtype, cvtop : cvtop, sx?, val_ : val_(valtype_1)) : val_(valtype_2)*
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:139.1-139.61
+  def $cvtop{sx : sx, iN : val_(I32_valtype)}(I32_valtype, I64_valtype, CONVERT_cvtop, ?(sx), iN) = [$ext(32, 64, sx, iN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:140.1-140.59
+  def $cvtop{sx? : sx?, iN : val_(I64_valtype)}(I64_valtype, I32_valtype, CONVERT_cvtop, sx?{sx : sx}, iN) = [$wrap(64, 32, iN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:141.1-141.79
+  def $cvtop{fnn : fnn, inn : inn, sx : sx, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), (inn : inn <: valtype), CONVERT_cvtop, ?(sx), fN) = [$trunc($size((fnn : fnn <: valtype)), $size((inn : inn <: valtype)), sx, fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:142.1-142.62
+  def $cvtop{sx? : sx?, fN : val_(F32_valtype)}(F32_valtype, F64_valtype, CONVERT_cvtop, sx?{sx : sx}, fN) = [$promote(32, 64, fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:143.1-143.61
+  def $cvtop{sx? : sx?, fN : val_(F64_valtype)}(F64_valtype, F32_valtype, CONVERT_cvtop, sx?{sx : sx}, fN) = [$demote(64, 32, fN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:144.1-144.81
+  def $cvtop{inn : inn, fnn : fnn, sx : sx, iN : val_((inn : inn <: valtype))}((inn : inn <: valtype), (fnn : fnn <: valtype), CONVERT_cvtop, ?(sx), iN) = [$convert($size((inn : inn <: valtype)), $size((fnn : fnn <: valtype)), sx, iN)]
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:145.1-145.102
+  def $cvtop{inn : inn, fnn : fnn, sx? : sx?, iN : val_((inn : inn <: valtype))}((inn : inn <: valtype), (fnn : fnn <: valtype), REINTERPRET_cvtop, sx?{sx : sx}, iN) = [$reinterpret((inn : inn <: valtype), (fnn : fnn <: valtype), iN)]
+    -- if ($size((inn : inn <: valtype)) = $size((fnn : fnn <: valtype)))
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:146.1-146.102
+  def $cvtop{fnn : fnn, inn : inn, sx? : sx?, fN : val_((fnn : fnn <: valtype))}((fnn : fnn <: valtype), (inn : inn <: valtype), REINTERPRET_cvtop, sx?{sx : sx}, fN) = [$reinterpret((fnn : fnn <: valtype), (inn : inn <: valtype), fN)]
+    -- if ($size((inn : inn <: valtype)) = $size((fnn : fnn <: valtype)))
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:37.1-37.78
+def $ibytes(N : N, iN : iN(N)) : byte*
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:38.1-38.78
+def $fbytes(N : N, fN : fN(N)) : byte*
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:39.1-39.76
+def $bytes(valtype : valtype, val_ : val_(valtype)) : byte*
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:41.1-41.33
+def $invibytes(N : N, byte*) : iN(N)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:44.1-44.52
+  def $invibytes{N : N, b* : byte*, n : n}(N, b*{b : byte}) = `%`_iN(n)
+    -- if ($ibytes(N, `%`_iN(n)) = b*{b : byte})
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:42.1-42.33
+def $invfbytes(N : N, byte*) : fN(N)
+  ;; ../../spec/wasm-1.0/3-numerics.watsup:45.1-45.52
+  def $invfbytes{N : N, b* : byte*, p : fN(N)}(N, b*{b : byte}) = p
+    -- if ($fbytes(N, p) = b*{b : byte})
+
+;; ../../spec/wasm-1.0/3-numerics.watsup:52.1-52.63
+def $inot(N : N, iN : iN(N)) : iN(N)
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:5.1-5.39
+syntax addr = nat
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:6.1-6.53
+syntax funcaddr = addr
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:7.1-7.53
+syntax globaladdr = addr
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:8.1-8.51
+syntax tableaddr = addr
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:9.1-9.50
+syntax memaddr = addr
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:24.1-25.55
+syntax val = 
+  | CONST{valtype : valtype, val_ : val_(valtype)}(valtype : valtype, val_ : val_(valtype))
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:27.1-28.22
+syntax result = 
+  | _VALS{val* : val*}(val*{val : val} : val*)
+  | TRAP
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:36.1-37.70
+syntax externval = 
+  | FUNC{funcaddr : funcaddr}(funcaddr : funcaddr)
+  | GLOBAL{globaladdr : globaladdr}(globaladdr : globaladdr)
+  | TABLE{tableaddr : tableaddr}(tableaddr : tableaddr)
+  | MEM{memaddr : memaddr}(memaddr : memaddr)
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:61.1-63.22
+syntax exportinst = 
+{
+  NAME{name : name} name,
+  VALUE{externval : externval} externval
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:65.1-71.26
+syntax moduleinst = 
+{
+  TYPES{functype* : functype*} functype*,
+  FUNCS{funcaddr* : funcaddr*} funcaddr*,
+  GLOBALS{globaladdr* : globaladdr*} globaladdr*,
+  TABLES{tableaddr* : tableaddr*} tableaddr*,
+  MEMS{memaddr* : memaddr*} memaddr*,
+  EXPORTS{exportinst* : exportinst*} exportinst*
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:48.1-51.16
+syntax funcinst = 
+{
+  TYPE{functype : functype} functype,
+  MODULE{moduleinst : moduleinst} moduleinst,
+  CODE{func : func} func
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:52.1-54.16
+syntax globalinst = 
+{
+  TYPE{globaltype : globaltype} globaltype,
+  VALUE{val : val} val
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:55.1-57.24
+syntax tableinst = 
+{
+  TYPE{tabletype : tabletype} tabletype,
+  REFS{funcaddr?* : funcaddr?*} funcaddr?*
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:58.1-60.18
+syntax meminst = 
+{
+  TYPE{memtype : memtype} memtype,
+  BYTES{byte* : byte*} byte*
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:83.1-87.20
+syntax store = 
+{
+  FUNCS{funcinst* : funcinst*} funcinst*,
+  GLOBALS{globalinst* : globalinst*} globalinst*,
+  TABLES{tableinst* : tableinst*} tableinst*,
+  MEMS{meminst* : meminst*} meminst*
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:89.1-91.24
+syntax frame = 
+{
+  LOCALS{val* : val*} val*,
+  MODULE{moduleinst : moduleinst} moduleinst
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:93.1-93.47
+syntax state = 
+  | `%;%`{store : store, frame : frame}(store : store, frame : frame)
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:105.1-110.9
+rec {
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:105.1-110.9
+syntax admininstr = 
+  | NOP
+  | UNREACHABLE
+  | DROP
+  | SELECT
+  | BLOCK{blocktype : blocktype, instr* : instr*}(blocktype : blocktype, instr*{instr : instr} : instr*)
+  | LOOP{blocktype : blocktype, instr* : instr*}(blocktype : blocktype, instr*{instr : instr} : instr*)
+  | `IF%%ELSE%`{blocktype : blocktype, instr* : instr*}(blocktype : blocktype, instr*{instr : instr} : instr*, instr*)
+  | BR{labelidx : labelidx}(labelidx : labelidx)
+  | BR_IF{labelidx : labelidx}(labelidx : labelidx)
+  | BR_TABLE{labelidx : labelidx}(labelidx*{} : labelidx*, labelidx)
+  | CALL{funcidx : funcidx}(funcidx : funcidx)
+  | CALL_INDIRECT{typeidx : typeidx}(typeidx : typeidx)
+  | RETURN
+  | CONST{valtype : valtype, val_ : val_(valtype)}(valtype : valtype, val_ : val_(valtype))
+  | UNOP{valtype : valtype, unop_ : unop_(valtype)}(valtype : valtype, unop_ : unop_(valtype))
+  | BINOP{valtype : valtype, binop_ : binop_(valtype)}(valtype : valtype, binop_ : binop_(valtype))
+  | TESTOP{valtype : valtype, testop_ : testop_(valtype)}(valtype : valtype, testop_ : testop_(valtype))
+  | RELOP{valtype : valtype, relop_ : relop_(valtype)}(valtype : valtype, relop_ : relop_(valtype))
+  | CVTOP{valtype_1 : valtype, valtype_2 : valtype, cvtop : cvtop, sx? : sx?}(valtype_1 : valtype, valtype_2 : valtype, cvtop : cvtop, sx?{sx : sx} : sx?)
+    -- if (valtype_1 =/= valtype_2)
+  | LOCAL.GET{localidx : localidx}(localidx : localidx)
+  | LOCAL.SET{localidx : localidx}(localidx : localidx)
+  | LOCAL.TEE{localidx : localidx}(localidx : localidx)
+  | GLOBAL.GET{globalidx : globalidx}(globalidx : globalidx)
+  | GLOBAL.SET{globalidx : globalidx}(globalidx : globalidx)
+  | `LOAD%(_)%?%`{valtype : valtype, ww? : ww?, sx? : sx?, memop : memop, inn? : inn?}(valtype : valtype, (ww, sx)?{sx : sx, ww : ww} : (ww, sx)?, memop : memop)
+    -- (if ((valtype = (inn : inn <: valtype)) /\ (ww!`%`_ww.0 < $size((inn : inn <: valtype)))))?{inn : inn, ww : ww}
+  | STORE{valtype : valtype, ww? : ww?, memop : memop, inn? : inn?}(valtype : valtype, ww?{ww : ww} : ww?, memop : memop)
+    -- (if ((valtype = (inn : inn <: valtype)) /\ (ww!`%`_ww.0 < $size((inn : inn <: valtype)))))?{inn : inn, ww : ww}
+  | MEMORY.SIZE
+  | MEMORY.GROW
+  | CALL_ADDR{funcaddr : funcaddr}(funcaddr : funcaddr)
+  | `LABEL_%{%}%`{n : n, instr* : instr*, admininstr* : admininstr*}(n : n, instr*{instr : instr} : instr*, admininstr*{admininstr : admininstr} : admininstr*)
+  | `FRAME_%{%}%`{n : n, frame : frame, admininstr* : admininstr*}(n : n, frame : frame, admininstr*{admininstr : admininstr} : admininstr*)
+  | TRAP
+}
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:94.1-94.62
+syntax config = 
+  | `%;%`{state : state, admininstr* : admininstr*}(state : state, admininstr*{admininstr : admininstr} : admininstr*)
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:112.1-115.25
+rec {
+
+;; ../../spec/wasm-1.0/4-runtime.watsup:112.1-115.25
+syntax E = 
+  | `_HOLE[_]`
+  | _SEQ{val* : val*, E : E, instr* : instr*}(val*{val : val} : val*, E : E, instr*{instr : instr} : instr*)
+  | `LABEL_%{%}%`{n : n, instr* : instr*, E : E}(n : n, instr*{instr : instr} : instr*, E : E)
+}
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:7.1-7.29
+def $default_(valtype : valtype) : val
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:9.1-9.35
+  def $default_(I32_valtype) = CONST_val(I32_valtype, `%`_val_(0))
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:10.1-10.35
+  def $default_(I64_valtype) = CONST_val(I64_valtype, `%`_val_(0))
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:11.1-11.44
+  def $default_(F32_valtype) = CONST_val(F32_valtype, $fzero(32))
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:12.1-12.44
+  def $default_(F64_valtype) = CONST_val(F64_valtype, $fzero(64))
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:17.1-17.62
+rec {
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:17.1-17.62
+def $funcsxv(externval*) : funcaddr*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:22.1-22.24
+  def $funcsxv([]) = []
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:23.1-23.47
+  def $funcsxv{fa : funcaddr, xv* : externval*}([FUNC_externval(fa)] :: xv*{xv : externval}) = [fa] :: $funcsxv(xv*{xv : externval})
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:24.1-24.58
+  def $funcsxv{externval : externval, xv* : externval*}([externval] :: xv*{xv : externval}) = $funcsxv(xv*{xv : externval})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:18.1-18.64
+rec {
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:18.1-18.64
+def $globalsxv(externval*) : globaladdr*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:26.1-26.26
+  def $globalsxv([]) = []
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:27.1-27.53
+  def $globalsxv{ga : globaladdr, xv* : externval*}([GLOBAL_externval(ga)] :: xv*{xv : externval}) = [ga] :: $globalsxv(xv*{xv : externval})
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:28.1-28.62
+  def $globalsxv{externval : externval, xv* : externval*}([externval] :: xv*{xv : externval}) = $globalsxv(xv*{xv : externval})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:19.1-19.63
+rec {
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:19.1-19.63
+def $tablesxv(externval*) : tableaddr*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:30.1-30.25
+  def $tablesxv([]) = []
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:31.1-31.50
+  def $tablesxv{ta : tableaddr, xv* : externval*}([TABLE_externval(ta)] :: xv*{xv : externval}) = [ta] :: $tablesxv(xv*{xv : externval})
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:32.1-32.60
+  def $tablesxv{externval : externval, xv* : externval*}([externval] :: xv*{xv : externval}) = $tablesxv(xv*{xv : externval})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:20.1-20.61
+rec {
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:20.1-20.61
+def $memsxv(externval*) : memaddr*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:34.1-34.23
+  def $memsxv([]) = []
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:35.1-35.44
+  def $memsxv{ma : memaddr, xv* : externval*}([MEM_externval(ma)] :: xv*{xv : externval}) = [ma] :: $memsxv(xv*{xv : externval})
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:36.1-36.56
+  def $memsxv{externval : externval, xv* : externval*}([externval] :: xv*{xv : externval}) = $memsxv(xv*{xv : externval})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:46.1-46.57
+def $store(state : state) : store
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:49.1-49.23
+  def $store{s : store, f : frame}(`%;%`_state(s, f)) = s
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:47.1-47.57
+def $frame(state : state) : frame
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:50.1-50.23
+  def $frame{s : store, f : frame}(`%;%`_state(s, f)) = f
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:53.1-53.64
+def $funcaddr(state : state) : funcaddr*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:54.1-54.39
+  def $funcaddr{s : store, f : frame}(`%;%`_state(s, f)) = f.MODULE_frame.FUNCS_moduleinst
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:56.1-56.57
+def $funcinst(state : state) : funcinst*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:62.1-62.32
+  def $funcinst{s : store, f : frame}(`%;%`_state(s, f)) = s.FUNCS_store
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:57.1-57.59
+def $globalinst(state : state) : globalinst*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:63.1-63.36
+  def $globalinst{s : store, f : frame}(`%;%`_state(s, f)) = s.GLOBALS_store
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:58.1-58.58
+def $tableinst(state : state) : tableinst*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:64.1-64.34
+  def $tableinst{s : store, f : frame}(`%;%`_state(s, f)) = s.TABLES_store
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:59.1-59.56
+def $meminst(state : state) : meminst*
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:65.1-65.30
+  def $meminst{s : store, f : frame}(`%;%`_state(s, f)) = s.MEMS_store
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:60.1-60.58
+def $moduleinst(state : state) : moduleinst
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:66.1-66.35
+  def $moduleinst{s : store, f : frame}(`%;%`_state(s, f)) = f.MODULE_frame
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:68.1-68.66
+def $type(state : state, typeidx : typeidx) : functype
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:75.1-75.41
+  def $type{s : store, f : frame, x : idx}(`%;%`_state(s, f), x) = f.MODULE_frame.TYPES_moduleinst[x!`%`_idx.0]
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:69.1-69.66
+def $func(state : state, funcidx : funcidx) : funcinst
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:76.1-76.50
+  def $func{s : store, f : frame, x : idx}(`%;%`_state(s, f), x) = s.FUNCS_store[f.MODULE_frame.FUNCS_moduleinst[x!`%`_idx.0]]
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:70.1-70.68
+def $global(state : state, globalidx : globalidx) : globalinst
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:77.1-77.56
+  def $global{s : store, f : frame, x : idx}(`%;%`_state(s, f), x) = s.GLOBALS_store[f.MODULE_frame.GLOBALS_moduleinst[x!`%`_idx.0]]
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:71.1-71.67
+def $table(state : state, tableidx : tableidx) : tableinst
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:78.1-78.53
+  def $table{s : store, f : frame, x : idx}(`%;%`_state(s, f), x) = s.TABLES_store[f.MODULE_frame.TABLES_moduleinst[x!`%`_idx.0]]
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:72.1-72.65
+def $mem(state : state, memidx : memidx) : meminst
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:79.1-79.47
+  def $mem{s : store, f : frame, x : idx}(`%;%`_state(s, f), x) = s.MEMS_store[f.MODULE_frame.MEMS_moduleinst[x!`%`_idx.0]]
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:73.1-73.67
+def $local(state : state, localidx : localidx) : val
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:80.1-80.36
+  def $local{s : store, f : frame, x : idx}(`%;%`_state(s, f), x) = f.LOCALS_frame[x!`%`_idx.0]
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:85.1-85.89
+def $with_local(state : state, localidx : localidx, val : val) : state
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:92.1-92.53
+  def $with_local{s : store, f : frame, x : idx, v : val}(`%;%`_state(s, f), x, v) = `%;%`_state(s, f[LOCALS_frame[x!`%`_idx.0] = v])
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:86.1-86.96
+def $with_global(state : state, globalidx : globalidx, val : val) : state
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:93.1-93.79
+  def $with_global{s : store, f : frame, x : idx, v : val}(`%;%`_state(s, f), x, v) = `%;%`_state(s[GLOBALS_store[f.MODULE_frame.GLOBALS_moduleinst[x!`%`_idx.0]].VALUE_globalinst = v], f)
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:87.1-87.97
+def $with_table(state : state, tableidx : tableidx, nat : nat, funcaddr : funcaddr) : state
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:94.1-94.81
+  def $with_table{s : store, f : frame, x : idx, i : nat, a : addr}(`%;%`_state(s, f), x, i, a) = `%;%`_state(s[TABLES_store[f.MODULE_frame.TABLES_moduleinst[x!`%`_idx.0]].REFS_tableinst[i] = ?(a)], f)
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:88.1-88.89
+def $with_tableinst(state : state, tableidx : tableidx, tableinst : tableinst) : state
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:95.1-95.76
+  def $with_tableinst{s : store, f : frame, x : idx, ti : tableinst}(`%;%`_state(s, f), x, ti) = `%;%`_state(s[TABLES_store[f.MODULE_frame.TABLES_moduleinst[x!`%`_idx.0]] = ti], f)
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:89.1-89.100
+def $with_mem(state : state, memidx : memidx, nat : nat, nat : nat, byte*) : state
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:96.1-96.85
+  def $with_mem{s : store, f : frame, x : idx, i : nat, j : nat, b* : byte*}(`%;%`_state(s, f), x, i, j, b*{b : byte}) = `%;%`_state(s[MEMS_store[f.MODULE_frame.MEMS_moduleinst[x!`%`_idx.0]].BYTES_meminst[i : j] = b*{b : byte}], f)
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:90.1-90.87
+def $with_meminst(state : state, memidx : memidx, meminst : meminst) : state
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:97.1-97.70
+  def $with_meminst{s : store, f : frame, x : idx, mi : meminst}(`%;%`_state(s, f), x, mi) = `%;%`_state(s[MEMS_store[f.MODULE_frame.MEMS_moduleinst[x!`%`_idx.0]] = mi], f)
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:102.1-102.58
+def $growtable(tableinst : tableinst, nat : nat) : tableinst
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:105.1-109.19
+  def $growtable{ti : tableinst, n : n, ti' : tableinst, i : nat, j : nat, a* : addr*, i' : nat}(ti, n) = ti'
+    -- if (ti = {TYPE `[%..%]`_tabletype(`%`_u32(i), `%`_u32(j)), REFS ?(a)*{a : funcaddr}})
+    -- if (i' = (|a*{a : addr}| + n))
+    -- if (ti' = {TYPE `[%..%]`_tabletype(`%`_u32(i'), `%`_u32(j)), REFS ?(a)*{a : funcaddr} :: ?()^n{}})
+    -- if (i' <= j)
+
+;; ../../spec/wasm-1.0/5-runtime-aux.watsup:103.1-103.58
+def $growmemory(meminst : meminst, nat : nat) : meminst
+  ;; ../../spec/wasm-1.0/5-runtime-aux.watsup:111.1-115.19
+  def $growmemory{mi : meminst, n : n, mi' : meminst, i : nat, j : nat, b* : byte*, i' : nat}(mi, n) = mi'
+    -- if (mi = {TYPE `[%..%]`_memtype(`%`_u32(i), `%`_u32(j)), BYTES b*{b : byte}})
+    -- if (i' = ((|b*{b : byte}| / (64 * $Ki)) + n))
+    -- if (mi' = {TYPE `[%..%]`_memtype(`%`_u32(i'), `%`_u32(j)), BYTES b*{b : byte} :: `%`_byte(0)^(n * (64 * $Ki)){}})
+    -- if (i' <= j)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:5.1-8.62
+syntax context = 
+{
+  TYPES{functype* : functype*} functype*,
+  FUNCS{functype* : functype*} functype*,
+  GLOBALS{globaltype* : globaltype*} globaltype*,
+  TABLES{tabletype* : tabletype*} tabletype*,
+  MEMS{memtype* : memtype*} memtype*,
+  LOCALS{valtype* : valtype*} valtype*,
+  LABELS{resulttype* : resulttype*} resulttype*,
+  RETURN{resulttype? : resulttype?} resulttype?
+}
+
+;; ../../spec/wasm-1.0/6-typing.watsup:18.1-18.66
+relation Limits_ok: `|-%:%`(limits, nat)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:26.1-28.20
+  rule _{n : n, m : m, k : nat}:
+    `|-%:%`(`[%..%]`_limits(`%`_u32(n), `%`_u32(m)), k)
+    -- if ((n <= m) /\ (m <= k))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:19.1-19.64
+relation Functype_ok: `|-%:OK`(functype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:30.1-31.23
+  rule _{t_1* : valtype*, t_2? : valtype?}:
+    `|-%:OK`(`%->%`_functype(t_1*{t_1 : valtype}, t_2?{t_2 : valtype}))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:20.1-20.66
+relation Globaltype_ok: `|-%:OK`(globaltype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:33.1-34.17
+  rule _{t : valtype}:
+    `|-%:OK`(`%%`_globaltype(`MUT%?`_mut(()?{}), t))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:21.1-21.65
+relation Tabletype_ok: `|-%:OK`(tabletype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:36.1-38.38
+  rule _{limits : limits}:
+    `|-%:OK`(limits)
+    -- Limits_ok: `|-%:%`(limits, ((2 ^ 32) - 1))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:22.1-22.63
+relation Memtype_ok: `|-%:OK`(memtype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:40.1-42.36
+  rule _{limits : limits}:
+    `|-%:OK`(limits)
+    -- Limits_ok: `|-%:%`(limits, (2 ^ 16))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:23.1-23.66
+relation Externtype_ok: `|-%:OK`(externtype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:45.1-47.35
+  rule func{functype : functype}:
+    `|-%:OK`(FUNC_externtype(functype))
+    -- Functype_ok: `|-%:OK`(functype)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:49.1-51.39
+  rule global{globaltype : globaltype}:
+    `|-%:OK`(GLOBAL_externtype(globaltype))
+    -- Globaltype_ok: `|-%:OK`(globaltype)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:53.1-55.37
+  rule table{tabletype : tabletype}:
+    `|-%:OK`(TABLE_externtype(tabletype))
+    -- Tabletype_ok: `|-%:OK`(tabletype)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:57.1-59.33
+  rule mem{memtype : memtype}:
+    `|-%:OK`(MEM_externtype(memtype))
+    -- Memtype_ok: `|-%:OK`(memtype)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:69.1-69.75
+relation Limits_sub: `|-%<:%`(limits, limits)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:77.1-80.21
+  rule _{n_11 : n, n_12 : n, n_21 : n, n_22 : n}:
+    `|-%<:%`(`[%..%]`_limits(`%`_u32(n_11), `%`_u32(n_12)), `[%..%]`_limits(`%`_u32(n_21), `%`_u32(n_22)))
+    -- if (n_11 >= n_21)
+    -- if (n_12 <= n_22)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:70.1-70.73
+relation Functype_sub: `|-%<:%`(functype, functype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:82.1-83.14
+  rule _{ft : functype}:
+    `|-%<:%`(ft, ft)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:71.1-71.75
+relation Globaltype_sub: `|-%<:%`(globaltype, globaltype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:85.1-86.14
+  rule _{gt : globaltype}:
+    `|-%<:%`(gt, gt)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:72.1-72.74
+relation Tabletype_sub: `|-%<:%`(tabletype, tabletype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:88.1-90.35
+  rule _{lim_1 : limits, lim_2 : limits}:
+    `|-%<:%`(lim_1, lim_2)
+    -- Limits_sub: `|-%<:%`(lim_1, lim_2)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:73.1-73.72
+relation Memtype_sub: `|-%<:%`(memtype, memtype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:92.1-94.35
+  rule _{lim_1 : limits, lim_2 : limits}:
+    `|-%<:%`(lim_1, lim_2)
+    -- Limits_sub: `|-%<:%`(lim_1, lim_2)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:74.1-74.75
+relation Externtype_sub: `|-%<:%`(externtype, externtype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:97.1-99.35
+  rule func{ft_1 : functype, ft_2 : functype}:
+    `|-%<:%`(FUNC_externtype(ft_1), FUNC_externtype(ft_2))
+    -- Functype_sub: `|-%<:%`(ft_1, ft_2)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:101.1-103.37
+  rule global{gt_1 : globaltype, gt_2 : globaltype}:
+    `|-%<:%`(GLOBAL_externtype(gt_1), GLOBAL_externtype(gt_2))
+    -- Globaltype_sub: `|-%<:%`(gt_1, gt_2)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:105.1-107.36
+  rule table{tt_1 : tabletype, tt_2 : tabletype}:
+    `|-%<:%`(TABLE_externtype(tt_1), TABLE_externtype(tt_2))
+    -- Tabletype_sub: `|-%<:%`(tt_1, tt_2)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:109.1-111.34
+  rule mem{mt_1 : memtype, mt_2 : memtype}:
+    `|-%<:%`(MEM_externtype(mt_1), MEM_externtype(mt_2))
+    -- Memtype_sub: `|-%<:%`(mt_1, mt_2)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:119.1-120.65
+rec {
+
+;; ../../spec/wasm-1.0/6-typing.watsup:119.1-119.64
+relation Instr_ok: `%|-%:%`(context, instr, functype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:148.1-149.24
+  rule nop{C : context}:
+    `%|-%:%`(C, NOP_instr, `%->%`_functype([], []))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:151.1-152.34
+  rule unreachable{C : context, t_1* : valtype*, t_2* : valtype*}:
+    `%|-%:%`(C, UNREACHABLE_instr, `%->%`_functype(t_1*{t_1 : valtype}, t_2*{t_2 : valtype}))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:154.1-155.23
+  rule drop{C : context, t : valtype}:
+    `%|-%:%`(C, DROP_instr, `%->%`_functype([t], []))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:157.1-158.29
+  rule select{C : context, t : valtype}:
+    `%|-%:%`(C, SELECT_instr, `%->%`_functype([t t I32_valtype], [t]))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:163.1-165.53
+  rule block{C : context, t? : valtype?, instr* : instr*}:
+    `%|-%:%`(C, BLOCK_instr(t?{t : valtype}, instr*{instr : instr}), `%->%`_functype([], t?{t : valtype}))
+    -- Instrs_ok: `%|-%:%`(C ++ {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], LOCALS [], LABELS [t?{t : valtype}], RETURN ?()}, instr*{instr : instr}, `%->%`_functype([], t?{t : valtype}))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:167.1-169.55
+  rule loop{C : context, t? : valtype?, instr* : instr*}:
+    `%|-%:%`(C, LOOP_instr(t?{t : valtype}, instr*{instr : instr}), `%->%`_functype([], t?{t : valtype}))
+    -- Instrs_ok: `%|-%:%`(C ++ {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], LOCALS [], LABELS [?()], RETURN ?()}, instr*{instr : instr}, `%->%`_functype([], []))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:171.1-174.55
+  rule if{C : context, t? : valtype?, instr_1* : instr*, instr_2* : instr*}:
+    `%|-%:%`(C, `IF%%ELSE%`_instr(t?{t : valtype}, instr_1*{instr_1 : instr}, instr_2*{instr_2 : instr}), `%->%`_functype([I32_valtype], t?{t : valtype}))
+    -- Instrs_ok: `%|-%:%`(C ++ {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], LOCALS [], LABELS [t?{t : valtype}], RETURN ?()}, instr_1*{instr_1 : instr}, `%->%`_functype([], t?{t : valtype}))
+    -- Instrs_ok: `%|-%:%`(C ++ {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], LOCALS [], LABELS [t?{t : valtype}], RETURN ?()}, instr_2*{instr_2 : instr}, `%->%`_functype([], t?{t : valtype}))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:179.1-181.25
+  rule br{C : context, l : labelidx, t_1* : valtype*, t? : valtype?, t_2* : valtype*}:
+    `%|-%:%`(C, BR_instr(l), `%->%`_functype(t_1*{t_1 : valtype} :: t?{t : valtype}, t_2*{t_2 : valtype}))
+    -- if (C.LABELS_context[l!`%`_labelidx.0] = t?{t : valtype})
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:183.1-185.25
+  rule br_if{C : context, l : labelidx, t? : valtype?}:
+    `%|-%:%`(C, BR_IF_instr(l), `%->%`_functype(t?{t : valtype} :: [I32_valtype], t?{t : valtype}))
+    -- if (C.LABELS_context[l!`%`_labelidx.0] = t?{t : valtype})
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:187.1-190.28
+  rule br_table{C : context, l* : labelidx*, l' : labelidx, t_1* : valtype*, t? : valtype?, t_2* : valtype*}:
+    `%|-%:%`(C, BR_TABLE_instr(l*{l : labelidx}, l'), `%->%`_functype(t_1*{t_1 : valtype} :: t?{t : valtype}, t_2*{t_2 : valtype}))
+    -- if (t?{t : valtype} = C.LABELS_context[l'!`%`_labelidx.0])
+    -- (if (t?{t : valtype} = C.LABELS_context[l!`%`_labelidx.0]))*{l : labelidx}
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:195.1-197.34
+  rule call{C : context, x : idx, t_1* : valtype*, t_2? : valtype?}:
+    `%|-%:%`(C, CALL_instr(x), `%->%`_functype(t_1*{t_1 : valtype}, t_2?{t_2 : valtype}))
+    -- if (C.FUNCS_context[x!`%`_idx.0] = `%->%`_functype(t_1*{t_1 : valtype}, t_2?{t_2 : valtype}))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:199.1-201.34
+  rule call_indirect{C : context, x : idx, t_1* : valtype*, t_2? : valtype?}:
+    `%|-%:%`(C, CALL_INDIRECT_instr(x), `%->%`_functype(t_1*{t_1 : valtype} :: [I32_valtype], t_2?{t_2 : valtype}))
+    -- if (C.TYPES_context[x!`%`_idx.0] = `%->%`_functype(t_1*{t_1 : valtype}, t_2?{t_2 : valtype}))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:203.1-205.24
+  rule return{C : context, t_1* : valtype*, t? : valtype?, t_2* : valtype*}:
+    `%|-%:%`(C, RETURN_instr, `%->%`_functype(t_1*{t_1 : valtype} :: t?{t : valtype}, t_2*{t_2 : valtype}))
+    -- if (C.RETURN_context = ?(t?{t : valtype}))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:210.1-211.30
+  rule const{C : context, t : valtype, c_t : val_(t)}:
+    `%|-%:%`(C, CONST_instr(t, c_t), `%->%`_functype([], [t]))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:213.1-214.30
+  rule unop{C : context, t : valtype, unop_t : unop_(t)}:
+    `%|-%:%`(C, UNOP_instr(t, unop_t), `%->%`_functype([t], [t]))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:216.1-217.34
+  rule binop{C : context, t : valtype, binop_t : binop_(t)}:
+    `%|-%:%`(C, BINOP_instr(t, binop_t), `%->%`_functype([t t], [t]))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:219.1-220.36
+  rule testop{C : context, t : valtype, testop_t : testop_(t)}:
+    `%|-%:%`(C, TESTOP_instr(t, testop_t), `%->%`_functype([t], [I32_valtype]))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:222.1-223.36
+  rule relop{C : context, t : valtype, relop_t : relop_(t)}:
+    `%|-%:%`(C, RELOP_instr(t, relop_t), `%->%`_functype([t t], [I32_valtype]))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:227.1-229.34
+  rule cvtop-reinterpret{C : context, nt_1 : valtype, nt_2 : valtype}:
+    `%|-%:%`(C, CVTOP_instr(nt_1, nt_2, REINTERPRET_cvtop, ?()), `%->%`_functype([nt_2], [nt_1]))
+    -- if ($size(nt_1) = $size(nt_2))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:231.1-233.112
+  rule cvtop-convert{C : context, nt_1 : valtype, nt_2 : valtype, sx? : sx?, inn_1 : inn, inn_2 : inn, fnn_1 : fnn, fnn_2 : fnn}:
+    `%|-%:%`(C, CVTOP_instr(nt_1, nt_2, CONVERT_cvtop, sx?{sx : sx}), `%->%`_functype([nt_2], [nt_1]))
+    -- if ((sx?{sx : sx} = ?()) <=> ((((nt_1 = (inn_1 : inn <: valtype)) /\ (nt_2 = (inn_2 : inn <: valtype))) /\ ($size(nt_1) > $size(nt_2))) \/ ((nt_1 = (fnn_1 : fnn <: valtype)) /\ (nt_2 = (fnn_2 : fnn <: valtype)))))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:238.1-240.24
+  rule local.get{C : context, x : idx, t : valtype}:
+    `%|-%:%`(C, LOCAL.GET_instr(x), `%->%`_functype([], [t]))
+    -- if (C.LOCALS_context[x!`%`_idx.0] = t)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:242.1-244.24
+  rule local.set{C : context, x : idx, t : valtype}:
+    `%|-%:%`(C, LOCAL.SET_instr(x), `%->%`_functype([t], []))
+    -- if (C.LOCALS_context[x!`%`_idx.0] = t)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:246.1-248.24
+  rule local.tee{C : context, x : idx, t : valtype}:
+    `%|-%:%`(C, LOCAL.TEE_instr(x), `%->%`_functype([t], [t]))
+    -- if (C.LOCALS_context[x!`%`_idx.0] = t)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:253.1-255.29
+  rule global.get{C : context, x : idx, t : valtype, mut : mut}:
+    `%|-%:%`(C, GLOBAL.GET_instr(x), `%->%`_functype([], [t]))
+    -- if (C.GLOBALS_context[x!`%`_idx.0] = `%%`_globaltype(mut, t))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:257.1-259.29
+  rule global.set{C : context, x : idx, t : valtype}:
+    `%|-%:%`(C, GLOBAL.SET_instr(x), `%->%`_functype([t], []))
+    -- if (C.GLOBALS_context[x!`%`_idx.0] = `%%`_globaltype(`MUT%?`_mut(?(())), t))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:264.1-266.23
+  rule memory.size{C : context, mt : memtype}:
+    `%|-%:%`(C, MEMORY.SIZE_instr, `%->%`_functype([], [I32_valtype]))
+    -- if (C.MEMS_context[0] = mt)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:268.1-270.23
+  rule memory.grow{C : context, mt : memtype}:
+    `%|-%:%`(C, MEMORY.GROW_instr, `%->%`_functype([I32_valtype], [I32_valtype]))
+    -- if (C.MEMS_context[0] = mt)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:272.1-277.29
+  rule load{C : context, nt : valtype, n? : n?, sx? : sx?, memop : memop, mt : memtype, inn : inn}:
+    `%|-%:%`(C, `LOAD%(_)%?%`_instr(nt, (`%`_ww(n), sx)?{n : nat, sx : sx}, memop), `%->%`_functype([I32_valtype], [nt]))
+    -- if (C.MEMS_context[0] = mt)
+    -- if ((2 ^ memop.ALIGN_memop!`%`_u32.0) <= ($size(nt) / 8))
+    -- (if (((2 ^ memop.ALIGN_memop!`%`_u32.0) <= (n / 8)) /\ ((n / 8) < ($size(nt) / 8))))?{n : nat}
+    -- if ((n?{n : n} = ?()) \/ (nt = (inn : inn <: valtype)))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:279.1-284.29
+  rule store{C : context, nt : valtype, n? : n?, memop : memop, mt : memtype, inn : inn}:
+    `%|-%:%`(C, STORE_instr(nt, `%`_ww(n)?{n : nat}, memop), `%->%`_functype([I32_valtype nt], []))
+    -- if (C.MEMS_context[0] = mt)
+    -- if ((2 ^ memop.ALIGN_memop!`%`_u32.0) <= ($size(nt) / 8))
+    -- (if (((2 ^ memop.ALIGN_memop!`%`_u32.0) <= (n / 8)) /\ ((n / 8) < ($size(nt) / 8))))?{n : nat}
+    -- if ((n?{n : n} = ?()) \/ (nt = (inn : inn <: valtype)))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:120.1-120.65
+relation Instrs_ok: `%|-%:%`(context, instr*, functype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:133.1-134.24
+  rule empty{C : context}:
+    `%|-%:%`(C, [], `%->%`_functype([], []))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:136.1-139.44
+  rule seq{C : context, instr_1 : instr, instr_2 : instr, t_1* : valtype*, t_3* : valtype*, t_2* : valtype*}:
+    `%|-%:%`(C, [instr_1] :: instr_2*{}, `%->%`_functype(t_1*{t_1 : valtype}, t_3*{t_3 : valtype}))
+    -- Instr_ok: `%|-%:%`(C, instr_1, `%->%`_functype(t_1*{t_1 : valtype}, t_2*{t_2 : valtype}))
+    -- Instrs_ok: `%|-%:%`(C, [instr_2], `%->%`_functype(t_2*{t_2 : valtype}, t_3*{t_3 : valtype}))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:141.1-143.43
+  rule frame{C : context, instr* : instr*, t* : valtype*, t_1* : valtype*, t_2* : valtype*}:
+    `%|-%:%`(C, instr*{instr : instr}, `%->%`_functype(t*{t : valtype} :: t_1*{t_1 : valtype}, t*{t : valtype} :: t_2*{t_2 : valtype}))
+    -- Instrs_ok: `%|-%:%`(C, instr*{instr : instr}, `%->%`_functype(t_1*{t_1 : valtype}, t_2*{t_2 : valtype}))
+}
+
+;; ../../spec/wasm-1.0/6-typing.watsup:121.1-121.69
+relation Expr_ok: `%|-%:%`(context, expr, resulttype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:126.1-128.40
+  rule _{C : context, instr* : instr*, t? : valtype?}:
+    `%|-%:%`(C, instr*{instr : instr}, t?{t : valtype})
+    -- Instrs_ok: `%|-%:%`(C, instr*{instr : instr}, `%->%`_functype([], t?{t : valtype}))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:291.1-291.79
+relation Instr_const: `%|-%CONST`(context, instr)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:295.1-296.25
+  rule const{C : context, t : valtype, c : val_(t)}:
+    `%|-%CONST`(C, CONST_instr(t, c))
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:298.1-300.25
+  rule global.get{C : context, x : idx, t : valtype}:
+    `%|-%CONST`(C, GLOBAL.GET_instr(x))
+    -- if (C.GLOBALS_context[x!`%`_idx.0] = `%%`_globaltype(`MUT%?`_mut(?()), t))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:292.1-292.78
+relation Expr_const: `%|-%CONST`(context, expr)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:303.1-304.38
+  rule _{C : context, instr* : instr*}:
+    `%|-%CONST`(C, instr*{instr : instr})
+    -- (Instr_const: `%|-%CONST`(C, instr))*{instr : instr}
+
+;; ../../spec/wasm-1.0/6-typing.watsup:293.1-293.79
+relation Expr_ok_const: `%|-%:%CONST`(context, expr, valtype?)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:307.1-310.33
+  rule _{C : context, expr : expr, t? : valtype?}:
+    `%|-%:%CONST`(C, expr, t?{t : valtype})
+    -- Expr_ok: `%|-%:%`(C, expr, t?{t : valtype})
+    -- Expr_const: `%|-%CONST`(C, expr)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:317.1-317.73
+relation Type_ok: `|-%:%`(type, functype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:329.1-331.29
+  rule _{ft : functype}:
+    `|-%:%`(TYPE_type(ft), ft)
+    -- Functype_ok: `|-%:OK`(ft)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:318.1-318.73
+relation Func_ok: `%|-%:%`(context, func, functype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:333.1-336.77
+  rule _{C : context, x : idx, t* : valtype*, expr : expr, t_1* : valtype*, t_2? : valtype?}:
+    `%|-%:%`(C, FUNC_func(x, LOCAL_local(t)*{t : valtype}, expr), `%->%`_functype(t_1*{t_1 : valtype}, t_2?{t_2 : valtype}))
+    -- if (C.TYPES_context[x!`%`_idx.0] = `%->%`_functype(t_1*{t_1 : valtype}, t_2?{t_2 : valtype}))
+    -- Expr_ok: `%|-%:%`(C ++ {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], LOCALS t_1*{t_1 : valtype} :: t*{t : valtype}, LABELS [], RETURN ?()} ++ {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], LOCALS [], LABELS [t_2?{t_2 : valtype}], RETURN ?()} ++ {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], LOCALS [], LABELS [], RETURN ?(t_2?{t_2 : valtype})}, expr, t_2?{t_2 : valtype})
+
+;; ../../spec/wasm-1.0/6-typing.watsup:319.1-319.75
+relation Global_ok: `%|-%:%`(context, global, globaltype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:338.1-342.40
+  rule _{C : context, gt : globaltype, expr : expr, mut : mut, t : valtype}:
+    `%|-%:%`(C, GLOBAL_global(gt, expr), gt)
+    -- Globaltype_ok: `|-%:OK`(gt)
+    -- if (gt = `%%`_globaltype(mut, t))
+    -- Expr_ok_const: `%|-%:%CONST`(C, expr, ?(t))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:320.1-320.74
+relation Table_ok: `%|-%:%`(context, table, tabletype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:344.1-346.30
+  rule _{C : context, tt : tabletype}:
+    `%|-%:%`(C, TABLE_table(tt), tt)
+    -- Tabletype_ok: `|-%:OK`(tt)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:321.1-321.72
+relation Mem_ok: `%|-%:%`(context, mem, memtype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:348.1-350.28
+  rule _{C : context, mt : memtype}:
+    `%|-%:%`(C, MEMORY_mem(mt), mt)
+    -- Memtype_ok: `|-%:OK`(mt)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:322.1-322.73
+relation Elem_ok: `%|-%:OK`(context, elem)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:353.1-357.27
+  rule _{C : context, expr : expr, x* : idx*, lim : limits, ft* : functype*}:
+    `%|-%:OK`(C, ELEM_elem(expr, x*{x : funcidx}))
+    -- if (C.TABLES_context[0] = lim)
+    -- Expr_ok_const: `%|-%:%CONST`(C, expr, ?(I32_valtype))
+    -- (if (C.FUNCS_context[x!`%`_idx.0] = ft))*{ft : functype, x : idx}
+
+;; ../../spec/wasm-1.0/6-typing.watsup:323.1-323.73
+relation Data_ok: `%|-%:OK`(context, data)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:360.1-363.42
+  rule _{C : context, expr : expr, b* : byte*, lim : limits}:
+    `%|-%:OK`(C, DATA_data(expr, b*{b : byte}))
+    -- if (C.MEMS_context[0] = lim)
+    -- Expr_ok_const: `%|-%:%CONST`(C, expr, ?(I32_valtype))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:324.1-324.74
+relation Start_ok: `%|-%:OK`(context, start)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:365.1-367.32
+  rule _{C : context, x : idx}:
+    `%|-%:OK`(C, START_start(x))
+    -- if (C.FUNCS_context[x!`%`_idx.0] = `%->%`_functype([], []))
+
+;; ../../spec/wasm-1.0/6-typing.watsup:372.1-372.80
+relation Import_ok: `%|-%:%`(context, import, externtype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:376.1-378.31
+  rule _{C : context, name_1 : name, name_2 : name, xt : externtype}:
+    `%|-%:%`(C, IMPORT_import(name_1, name_2, xt), xt)
+    -- Externtype_ok: `|-%:OK`(xt)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:374.1-374.83
+relation Externidx_ok: `%|-%:%`(context, externidx, externtype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:385.1-387.24
+  rule func{C : context, x : idx, ft : functype}:
+    `%|-%:%`(C, FUNC_externidx(x), FUNC_externtype(ft))
+    -- if (C.FUNCS_context[x!`%`_idx.0] = ft)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:389.1-391.26
+  rule global{C : context, x : idx, gt : globaltype}:
+    `%|-%:%`(C, GLOBAL_externidx(x), GLOBAL_externtype(gt))
+    -- if (C.GLOBALS_context[x!`%`_idx.0] = gt)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:393.1-395.25
+  rule table{C : context, x : idx, tt : tabletype}:
+    `%|-%:%`(C, TABLE_externidx(x), TABLE_externtype(tt))
+    -- if (C.TABLES_context[x!`%`_idx.0] = tt)
+
+  ;; ../../spec/wasm-1.0/6-typing.watsup:397.1-399.23
+  rule mem{C : context, x : idx, mt : memtype}:
+    `%|-%:%`(C, MEM_externidx(x), MEM_externtype(mt))
+    -- if (C.MEMS_context[x!`%`_idx.0] = mt)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:373.1-373.80
+relation Export_ok: `%|-%:%`(context, export, externtype)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:380.1-382.39
+  rule _{C : context, name : name, externidx : externidx, xt : externtype}:
+    `%|-%:%`(C, EXPORT_export(name, externidx), xt)
+    -- Externidx_ok: `%|-%:%`(C, externidx, xt)
+
+;; ../../spec/wasm-1.0/6-typing.watsup:404.1-404.62
+relation Module_ok: `|-%:OK`(module)
+  ;; ../../spec/wasm-1.0/6-typing.watsup:406.1-432.29
+  rule _{type* : type*, import* : import*, func* : func*, global* : global*, table* : table*, mem* : mem*, elem* : elem*, data* : data*, start? : start?, export* : export*, ft'* : functype*, ixt* : externtype*, C' : context, gt* : globaltype*, C : context, ft* : functype*, tt* : tabletype*, mt* : memtype*, xt* : externtype*, ift* : functype*, igt* : globaltype*, itt* : tabletype*, imt* : memtype*}:
+    `|-%:OK`(MODULE_module(type*{type : type}, import*{import : import}, func*{func : func}, global*{global : global}, table*{table : table}, mem*{mem : mem}, elem*{elem : elem}, data*{data : data}, start?{start : start}, export*{export : export}))
+    -- (Type_ok: `|-%:%`(type, ft'))*{ft' : functype, type : type}
+    -- (Import_ok: `%|-%:%`({TYPES ft'*{ft' : functype}, FUNCS [], GLOBALS [], TABLES [], MEMS [], LOCALS [], LABELS [], RETURN ?()}, import, ixt))*{import : import, ixt : externtype}
+    -- (Global_ok: `%|-%:%`(C', global, gt))*{global : global, gt : globaltype}
+    -- (Func_ok: `%|-%:%`(C, func, ft))*{ft : functype, func : func}
+    -- (Table_ok: `%|-%:%`(C, table, tt))*{table : table, tt : tabletype}
+    -- (Mem_ok: `%|-%:%`(C, mem, mt))*{mem : mem, mt : memtype}
+    -- (Elem_ok: `%|-%:OK`(C, elem))*{elem : elem}
+    -- (Data_ok: `%|-%:OK`(C, data))*{data : data}
+    -- (Start_ok: `%|-%:OK`(C, start))?{start : start}
+    -- (Export_ok: `%|-%:%`(C, export, xt))*{export : export, xt : externtype}
+    -- if (|tt*{tt : tabletype}| <= 1)
+    -- if (|mt*{mt : memtype}| <= 1)
+    -- if (C = {TYPES ft'*{ft' : functype}, FUNCS ift*{ift : functype} :: ft*{ft : functype}, GLOBALS igt*{igt : globaltype} :: gt*{gt : globaltype}, TABLES itt*{itt : tabletype} :: tt*{tt : tabletype}, MEMS imt*{imt : memtype} :: mt*{mt : memtype}, LOCALS [], LABELS [], RETURN ?()})
+    -- if (C' = {TYPES ft'*{ft' : functype}, FUNCS ift*{ift : functype} :: ft*{ft : functype}, GLOBALS igt*{igt : globaltype}, TABLES [], MEMS [], LOCALS [], LABELS [], RETURN ?()})
+    -- if (ift*{ift : functype} = $funcsxt(ixt*{ixt : externtype}))
+    -- if (igt*{igt : globaltype} = $globalsxt(ixt*{ixt : externtype}))
+    -- if (itt*{itt : tabletype} = $tablesxt(ixt*{ixt : externtype}))
+    -- if (imt*{imt : memtype} = $memsxt(ixt*{ixt : externtype}))
+
+;; ../../spec/wasm-1.0/8-reduction.watsup:6.1-6.63
+relation Step_pure: `%~>%`(admininstr*, admininstr*)
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:42.1-43.24
+  rule unreachable:
+    `%~>%`([UNREACHABLE_admininstr], [TRAP_admininstr])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:45.1-46.15
+  rule nop:
+    `%~>%`([NOP_admininstr], [])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:48.1-49.20
+  rule drop{val : val}:
+    `%~>%`([(val : val <: admininstr) DROP_admininstr], [])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:52.1-54.16
+  rule select-true{val_1 : val, val_2 : val, c : val_(I32_valtype)}:
+    `%~>%`([(val_1 : val <: admininstr) (val_2 : val <: admininstr) CONST_admininstr(I32_valtype, c) SELECT_admininstr], [(val_1 : val <: admininstr)])
+    -- if (c =/= `%`_val_(0))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:56.1-58.14
+  rule select-false{val_1 : val, val_2 : val, c : val_(I32_valtype)}:
+    `%~>%`([(val_1 : val <: admininstr) (val_2 : val <: admininstr) CONST_admininstr(I32_valtype, c) SELECT_admininstr], [(val_2 : val <: admininstr)])
+    -- if (c = `%`_val_(0))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:70.1-72.16
+  rule if-true{c : val_(I32_valtype), t? : valtype?, instr_1* : instr*, instr_2* : instr*}:
+    `%~>%`([CONST_admininstr(I32_valtype, c) `IF%%ELSE%`_admininstr(t?{t : valtype}, instr_1*{instr_1 : instr}, instr_2*{instr_2 : instr})], [BLOCK_admininstr(t?{t : valtype}, instr_1*{instr_1 : instr})])
+    -- if (c =/= `%`_val_(0))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:74.1-76.14
+  rule if-false{c : val_(I32_valtype), t? : valtype?, instr_1* : instr*, instr_2* : instr*}:
+    `%~>%`([CONST_admininstr(I32_valtype, c) `IF%%ELSE%`_admininstr(t?{t : valtype}, instr_1*{instr_1 : instr}, instr_2*{instr_2 : instr})], [BLOCK_admininstr(t?{t : valtype}, instr_2*{instr_2 : instr})])
+    -- if (c = `%`_val_(0))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:79.1-80.38
+  rule label-vals{n : n, instr* : instr*, val* : val*}:
+    `%~>%`([`LABEL_%{%}%`_admininstr(n, instr*{instr : instr}, (val : val <: admininstr)*{val : val})], (val : val <: admininstr)*{val : val})
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:86.1-87.69
+  rule br-zero{n : n, instr'* : instr*, val'* : val*, val^n : val^n, instr* : instr*}:
+    `%~>%`([`LABEL_%{%}%`_admininstr(n, instr'*{instr' : instr}, (val' : val <: admininstr)*{val' : val} :: (val : val <: admininstr)^n{val : val} :: [BR_admininstr(`%`_labelidx(0))] :: (instr : instr <: admininstr)*{instr : instr})], (val : val <: admininstr)^n{val : val} :: (instr' : instr <: admininstr)*{instr' : instr})
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:89.1-90.65
+  rule br-succ{n : n, instr'* : instr*, val* : val*, l : labelidx, instr* : instr*}:
+    `%~>%`([`LABEL_%{%}%`_admininstr(n, instr'*{instr' : instr}, (val : val <: admininstr)*{val : val} :: [BR_admininstr(`%`_labelidx((l!`%`_labelidx.0 + 1)))] :: (instr : instr <: admininstr)*{instr : instr})], (val : val <: admininstr)*{val : val} :: [BR_admininstr(l)])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:93.1-95.16
+  rule br_if-true{c : val_(I32_valtype), l : labelidx}:
+    `%~>%`([CONST_admininstr(I32_valtype, c) BR_IF_admininstr(l)], [BR_admininstr(l)])
+    -- if (c =/= `%`_val_(0))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:97.1-99.14
+  rule br_if-false{c : val_(I32_valtype), l : labelidx}:
+    `%~>%`([CONST_admininstr(I32_valtype, c) BR_IF_admininstr(l)], [])
+    -- if (c = `%`_val_(0))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:102.1-104.17
+  rule br_table-lt{i : nat, l* : labelidx*, l' : labelidx}:
+    `%~>%`([CONST_admininstr(I32_valtype, `%`_val_(i)) BR_TABLE_admininstr(l*{l : labelidx}, l')], [BR_admininstr(l*{l : labelidx}[i])])
+    -- if (i < |l*{l : labelidx}|)
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:106.1-108.18
+  rule br_table-ge{i : nat, l* : labelidx*, l' : labelidx}:
+    `%~>%`([CONST_admininstr(I32_valtype, `%`_val_(i)) BR_TABLE_admininstr(l*{l : labelidx}, l')], [BR_admininstr(l')])
+    -- if (i >= |l*{l : labelidx}|)
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:132.1-133.35
+  rule frame-vals{n : n, f : frame, val^n : val^n}:
+    `%~>%`([`FRAME_%{%}%`_admininstr(n, f, (val : val <: admininstr)^n{val : val})], (val : val <: admininstr)^n{val : val})
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:135.1-136.55
+  rule return-frame{n : n, f : frame, val'* : val*, val^n : val^n, instr* : instr*}:
+    `%~>%`([`FRAME_%{%}%`_admininstr(n, f, (val' : val <: admininstr)*{val' : val} :: (val : val <: admininstr)^n{val : val} :: [RETURN_admininstr] :: (instr : instr <: admininstr)*{instr : instr})], (val : val <: admininstr)^n{val : val})
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:138.1-139.60
+  rule return-label{n : n, instr'* : instr*, val* : val*, instr* : instr*}:
+    `%~>%`([`LABEL_%{%}%`_admininstr(n, instr'*{instr' : instr}, (val : val <: admininstr)*{val : val} :: [RETURN_admininstr] :: (instr : instr <: admininstr)*{instr : instr})], (val : val <: admininstr)*{val : val} :: [RETURN_admininstr])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:144.1-146.32
+  rule unop-val{t : valtype, c_1 : val_(t), unop : unop_(t), c : val_(t)}:
+    `%~>%`([CONST_admininstr(t, c_1) UNOP_admininstr(t, unop)], [CONST_admininstr(t, c)])
+    -- if ($unop(t, unop, c_1) = [c])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:148.1-150.34
+  rule unop-trap{t : valtype, c_1 : val_(t), unop : unop_(t)}:
+    `%~>%`([CONST_admininstr(t, c_1) UNOP_admininstr(t, unop)], [TRAP_admininstr])
+    -- if ($unop(t, unop, c_1) = [])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:153.1-155.39
+  rule binop-val{t : valtype, c_1 : val_(t), c_2 : val_(t), binop : binop_(t), c : val_(t)}:
+    `%~>%`([CONST_admininstr(t, c_1) CONST_admininstr(t, c_2) BINOP_admininstr(t, binop)], [CONST_admininstr(t, c)])
+    -- if ($binop(t, binop, c_1, c_2) = [c])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:157.1-159.41
+  rule binop-trap{t : valtype, c_1 : val_(t), c_2 : val_(t), binop : binop_(t)}:
+    `%~>%`([CONST_admininstr(t, c_1) CONST_admininstr(t, c_2) BINOP_admininstr(t, binop)], [TRAP_admininstr])
+    -- if ($binop(t, binop, c_1, c_2) = [])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:162.1-164.36
+  rule testop{t : valtype, c_1 : val_(t), testop : testop_(t), c : val_(I32_valtype)}:
+    `%~>%`([CONST_admininstr(t, c_1) TESTOP_admininstr(t, testop)], [CONST_admininstr(I32_valtype, c)])
+    -- if (c = $testop(t, testop, c_1))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:166.1-168.39
+  rule relop{t : valtype, c_1 : val_(t), c_2 : val_(t), relop : relop_(t), c : val_(I32_valtype)}:
+    `%~>%`([CONST_admininstr(t, c_1) CONST_admininstr(t, c_2) RELOP_admininstr(t, relop)], [CONST_admininstr(I32_valtype, c)])
+    -- if (c = $relop(t, relop, c_1, c_2))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:171.1-173.46
+  rule cvtop-val{t_1 : valtype, c_1 : val_(t_1), t_2 : valtype, cvtop : cvtop, sx? : sx?, c : val_(t_2)}:
+    `%~>%`([CONST_admininstr(t_1, c_1) CVTOP_admininstr(t_2, t_1, cvtop, sx?{sx : sx})], [CONST_admininstr(t_2, c)])
+    -- if ($cvtop(t_1, t_2, cvtop, sx?{sx : sx}, c_1) = [c])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:175.1-177.48
+  rule cvtop-trap{t_1 : valtype, c_1 : val_(t_1), t_2 : valtype, cvtop : cvtop, sx? : sx?}:
+    `%~>%`([CONST_admininstr(t_1, c_1) CVTOP_admininstr(t_2, t_1, cvtop, sx?{sx : sx})], [TRAP_admininstr])
+    -- if ($cvtop(t_1, t_2, cvtop, sx?{sx : sx}, c_1) = [])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:188.1-189.47
+  rule local.tee{val : val, x : idx}:
+    `%~>%`([(val : val <: admininstr) LOCAL.TEE_admininstr(x)], [(val : val <: admininstr) (val : val <: admininstr) LOCAL.SET_admininstr(x)])
+
+;; ../../spec/wasm-1.0/8-reduction.watsup:7.1-7.63
+relation Step_read: `%~>%`(config, admininstr*)
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:63.1-65.49
+  rule block{z : state, t? : valtype?, instr* : instr*, n : n}:
+    `%~>%`(`%;%`_config(z, [BLOCK_admininstr(t?{t : valtype}, instr*{instr : instr})]), [`LABEL_%{%}%`_admininstr(n, [], (instr : instr <: admininstr)*{instr : instr})])
+    -- if (((t?{t : valtype} = ?()) /\ (n = 0)) \/ ((t?{t : valtype} =/= ?()) /\ (n = 1)))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:67.1-68.63
+  rule loop{z : state, t? : valtype?, instr* : instr*}:
+    `%~>%`(`%;%`_config(z, [LOOP_admininstr(t?{t : valtype}, instr*{instr : instr})]), [`LABEL_%{%}%`_admininstr(0, [LOOP_instr(t?{t : valtype}, instr*{instr : instr})], (instr : instr <: admininstr)*{instr : instr})])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:113.1-114.47
+  rule call{z : state, x : idx}:
+    `%~>%`(`%;%`_config(z, [CALL_admininstr(x)]), [CALL_ADDR_admininstr($funcaddr(z)[x!`%`_idx.0])])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:116.1-119.43
+  rule call_indirect-call{z : state, i : nat, x : idx, a : addr}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) CALL_INDIRECT_admininstr(x)]), [CALL_ADDR_admininstr(a)])
+    -- if ($table(z, `%`_tableidx(0)).REFS_tableinst[i] = ?(a))
+    -- if ($type(z, x) = $funcinst(z)[a].TYPE_funcinst)
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:121.1-123.15
+  rule call_indirect-trap{z : state, i : nat, x : idx}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) CALL_INDIRECT_admininstr(x)]), [TRAP_admininstr])
+    -- otherwise
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:125.1-129.54
+  rule call_addr{z : state, val^k : val^k, k : nat, a : addr, n : n, f : frame, instr* : instr*, t_1^k : valtype^k, t_2^n : valtype^n, mm : moduleinst, func : func, x : idx, t* : valtype*}:
+    `%~>%`(`%;%`_config(z, (val : val <: admininstr)^k{val : val} :: [CALL_ADDR_admininstr(a)]), [`FRAME_%{%}%`_admininstr(n, f, [`LABEL_%{%}%`_admininstr(n, [], (instr : instr <: admininstr)*{instr : instr})])])
+    -- if ($funcinst(z)[a] = {TYPE `%->%`_functype(t_1^k{t_1 : valtype}, t_2^n{t_2 : valtype}), MODULE mm, CODE func})
+    -- if (func = FUNC_func(x, LOCAL_local(t)*{t : valtype}, instr*{instr : instr}))
+    -- if (f = {LOCALS val^k{val : val} :: $default_(t)*{t : valtype}, MODULE mm})
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:182.1-183.37
+  rule local.get{z : state, x : idx}:
+    `%~>%`(`%;%`_config(z, [LOCAL.GET_admininstr(x)]), [($local(z, x) : val <: admininstr)])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:194.1-195.45
+  rule global.get{z : state, x : idx}:
+    `%~>%`(`%;%`_config(z, [GLOBAL.GET_admininstr(x)]), [($global(z, x).VALUE_globalinst : val <: admininstr)])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:203.1-205.59
+  rule load-num-trap{z : state, i : nat, t : valtype, mo : memop}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) `LOAD%(_)%?%`_admininstr(t, ?(), mo)]), [TRAP_admininstr])
+    -- if (((i + mo.OFFSET_memop!`%`_u32.0) + ($size(t) / 8)) > |$mem(z, `%`_memidx(0)).BYTES_meminst|)
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:207.1-209.68
+  rule load-num-val{z : state, i : nat, t : valtype, mo : memop, c : val_(t)}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) `LOAD%(_)%?%`_admininstr(t, ?(), mo)]), [CONST_admininstr(t, c)])
+    -- if ($bytes(t, c) = $mem(z, `%`_memidx(0)).BYTES_meminst[(i + mo.OFFSET_memop!`%`_u32.0) : ($size(t) / 8)])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:211.1-213.52
+  rule load-pack-trap{z : state, i : nat, inn : inn, n : n, sx : sx, mo : memop}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) `LOAD%(_)%?%`_admininstr((inn : inn <: valtype), ?((`%`_ww(n), sx)), mo)]), [TRAP_admininstr])
+    -- if (((i + mo.OFFSET_memop!`%`_u32.0) + (n / 8)) > |$mem(z, `%`_memidx(0)).BYTES_meminst|)
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:215.1-217.62
+  rule load-pack-val{z : state, i : nat, inn : inn, n : n, sx : sx, mo : memop, c : iN(n)}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) `LOAD%(_)%?%`_admininstr((inn : inn <: valtype), ?((`%`_ww(n), sx)), mo)]), [CONST_admininstr((inn : inn <: valtype), $ext(n, $size((inn : inn <: valtype)), sx, c))])
+    -- if ($ibytes(n, c) = $mem(z, `%`_memidx(0)).BYTES_meminst[(i + mo.OFFSET_memop!`%`_u32.0) : (n / 8)])
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:237.1-239.45
+  rule memory.size{z : state, n : n}:
+    `%~>%`(`%;%`_config(z, [MEMORY.SIZE_admininstr]), [CONST_admininstr(I32_valtype, `%`_val_(n))])
+    -- if (((n * 64) * $Ki) = |$mem(z, `%`_memidx(0)).BYTES_meminst|)
+
+;; ../../spec/wasm-1.0/8-reduction.watsup:5.1-5.63
+relation Step: `%~>%`(config, config)
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:10.1-12.34
+  rule pure{z : state, instr* : instr*, instr'* : instr*}:
+    `%~>%`(`%;%`_config(z, (instr : instr <: admininstr)*{instr : instr}), `%;%`_config(z, (instr' : instr <: admininstr)*{instr' : instr}))
+    -- Step_pure: `%~>%`((instr : instr <: admininstr)*{instr : instr}, (instr' : instr <: admininstr)*{instr' : instr})
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:14.1-16.37
+  rule read{z : state, instr* : instr*, instr'* : instr*}:
+    `%~>%`(`%;%`_config(z, (instr : instr <: admininstr)*{instr : instr}), `%;%`_config(z, (instr' : instr <: admininstr)*{instr' : instr}))
+    -- Step_read: `%~>%`(`%;%`_config(z, (instr : instr <: admininstr)*{instr : instr}), (instr' : instr <: admininstr)*{instr' : instr})
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:185.1-186.56
+  rule local.set{z : state, val : val, x : idx}:
+    `%~>%`(`%;%`_config(z, [(val : val <: admininstr) LOCAL.SET_admininstr(x)]), `%;%`_config($with_local(z, x, val), []))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:197.1-198.58
+  rule global.set{z : state, val : val, x : idx}:
+    `%~>%`(`%;%`_config(z, [(val : val <: admininstr) GLOBAL.SET_admininstr(x)]), `%;%`_config($with_global(z, x, val), []))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:220.1-222.59
+  rule store-num-trap{z : state, i : nat, t : valtype, c : val_(t), mo : memop}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) CONST_admininstr(t, c) STORE_admininstr(t, ?(), mo)]), `%;%`_config(z, [TRAP_admininstr]))
+    -- if (((i + mo.OFFSET_memop!`%`_u32.0) + ($size(t) / 8)) > |$mem(z, `%`_memidx(0)).BYTES_meminst|)
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:224.1-226.26
+  rule store-num-val{z : state, i : nat, t : valtype, c : val_(t), mo : memop, b* : byte*}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) CONST_admininstr(t, c) STORE_admininstr(t, ?(), mo)]), `%;%`_config($with_mem(z, `%`_memidx(0), (i + mo.OFFSET_memop!`%`_u32.0), ($size(t) / 8), b*{b : byte}), []))
+    -- if (b*{b : byte} = $bytes(t, c))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:228.1-230.52
+  rule store-pack-trap{z : state, i : nat, inn : inn, c : val_((inn : inn <: valtype)), n : n, mo : memop}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) CONST_admininstr((inn : inn <: valtype), c) STORE_admininstr((inn : inn <: valtype), ?(`%`_ww(n)), mo)]), `%;%`_config(z, [TRAP_admininstr]))
+    -- if (((i + mo.OFFSET_memop!`%`_u32.0) + (n / 8)) > |$mem(z, `%`_memidx(0)).BYTES_meminst|)
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:232.1-234.49
+  rule store-pack-val{z : state, i : nat, inn : inn, c : val_((inn : inn <: valtype)), n : n, mo : memop, b* : byte*}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(i)) CONST_admininstr((inn : inn <: valtype), c) STORE_admininstr((inn : inn <: valtype), ?(`%`_ww(n)), mo)]), `%;%`_config($with_mem(z, `%`_memidx(0), (i + mo.OFFSET_memop!`%`_u32.0), (n / 8), b*{b : byte}), []))
+    -- if (b*{b : byte} = $ibytes(n, $wrap($size((inn : inn <: valtype)), n, c)))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:242.1-244.40
+  rule memory.grow-succeed{z : state, n : n, mi : meminst}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(n)) MEMORY.GROW_admininstr]), `%;%`_config($with_meminst(z, `%`_memidx(0), mi), [CONST_admininstr(I32_valtype, `%`_val_((|$mem(z, `%`_memidx(0)).BYTES_meminst| / (64 * $Ki))))]))
+    -- if ($growmemory($mem(z, `%`_memidx(0)), n) = mi)
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:246.1-247.75
+  rule memory.grow-fail{z : state, n : n}:
+    `%~>%`(`%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_(n)) MEMORY.GROW_admininstr]), `%;%`_config(z, [CONST_admininstr(I32_valtype, `%`_val_($invsigned(32, - (1 : nat <: int))))]))
+
+;; ../../spec/wasm-1.0/8-reduction.watsup:8.1-8.63
+rec {
+
+;; ../../spec/wasm-1.0/8-reduction.watsup:8.1-8.63
+relation Steps: `%~>*%`(config, config)
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:18.1-19.36
+  rule refl{z : state, admininstr* : admininstr*}:
+    `%~>*%`(`%;%`_config(z, admininstr*{admininstr : admininstr}), `%;%`_config(z, admininstr*{admininstr : admininstr}))
+
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:21.1-24.53
+  rule trans{z : state, admininstr* : admininstr*, z'' : state, admininstr''* : admininstr*, z' : state, admininstr' : admininstr}:
+    `%~>*%`(`%;%`_config(z, admininstr*{admininstr : admininstr}), `%;%`_config(z'', admininstr''*{admininstr'' : admininstr}))
+    -- Step: `%~>%`(`%;%`_config(z, admininstr*{admininstr : admininstr}), `%;%`_config(z', admininstr'*{}))
+    -- Steps: `%~>*%`(`%;%`_config(z', [admininstr']), `%;%`_config(z'', admininstr''*{admininstr'' : admininstr}))
+}
+
+;; ../../spec/wasm-1.0/8-reduction.watsup:29.1-29.69
+relation Eval_expr: `%;%~>*%;%`(state, expr, state, val*)
+  ;; ../../spec/wasm-1.0/8-reduction.watsup:31.1-33.37
+  rule _{z : state, instr* : instr*, z' : state, val* : val*}:
+    `%;%~>*%;%`(z, instr*{instr : instr}, z', val*{val : val})
+    -- Steps: `%~>*%`(`%;%`_config(z, (instr : instr <: admininstr)*{instr : instr}), `%;%`_config(z', (val : val <: admininstr)*{val : val}))
+
+;; ../../spec/wasm-1.0/9-module.watsup:5.1-5.35
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:5.1-5.35
+def $funcs(externval*) : funcaddr*
+  ;; ../../spec/wasm-1.0/9-module.watsup:6.1-6.22
+  def $funcs([]) = []
+  ;; ../../spec/wasm-1.0/9-module.watsup:7.1-7.59
+  def $funcs{fa : funcaddr, externval'* : externval*}([FUNC_externval(fa)] :: externval'*{externval' : externval}) = [fa] :: $funcs(externval'*{externval' : externval})
+  ;; ../../spec/wasm-1.0/9-module.watsup:8.1-9.15
+  def $funcs{externval : externval, externval'* : externval*}([externval] :: externval'*{externval' : externval}) = $funcs(externval'*{externval' : externval})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:11.1-11.39
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:11.1-11.39
+def $globals(externval*) : globaladdr*
+  ;; ../../spec/wasm-1.0/9-module.watsup:12.1-12.24
+  def $globals([]) = []
+  ;; ../../spec/wasm-1.0/9-module.watsup:13.1-13.65
+  def $globals{ga : globaladdr, externval'* : externval*}([GLOBAL_externval(ga)] :: externval'*{externval' : externval}) = [ga] :: $globals(externval'*{externval' : externval})
+  ;; ../../spec/wasm-1.0/9-module.watsup:14.1-15.15
+  def $globals{externval : externval, externval'* : externval*}([externval] :: externval'*{externval' : externval}) = $globals(externval'*{externval' : externval})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:17.1-17.37
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:17.1-17.37
+def $tables(externval*) : tableaddr*
+  ;; ../../spec/wasm-1.0/9-module.watsup:18.1-18.23
+  def $tables([]) = []
+  ;; ../../spec/wasm-1.0/9-module.watsup:19.1-19.62
+  def $tables{ta : tableaddr, externval'* : externval*}([TABLE_externval(ta)] :: externval'*{externval' : externval}) = [ta] :: $tables(externval'*{externval' : externval})
+  ;; ../../spec/wasm-1.0/9-module.watsup:20.1-21.15
+  def $tables{externval : externval, externval'* : externval*}([externval] :: externval'*{externval' : externval}) = $tables(externval'*{externval' : externval})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:23.1-23.33
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:23.1-23.33
+def $mems(externval*) : memaddr*
+  ;; ../../spec/wasm-1.0/9-module.watsup:24.1-24.21
+  def $mems([]) = []
+  ;; ../../spec/wasm-1.0/9-module.watsup:25.1-25.56
+  def $mems{ma : memaddr, externval'* : externval*}([MEM_externval(ma)] :: externval'*{externval' : externval}) = [ma] :: $mems(externval'*{externval' : externval})
+  ;; ../../spec/wasm-1.0/9-module.watsup:26.1-27.15
+  def $mems{externval : externval, externval'* : externval*}([externval] :: externval'*{externval' : externval}) = $mems(externval'*{externval' : externval})
+    -- otherwise
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:36.1-36.60
+def $allocfunc(store : store, moduleinst : moduleinst, func : func) : (store, funcaddr)
+  ;; ../../spec/wasm-1.0/9-module.watsup:37.1-39.34
+  def $allocfunc{s : store, mm : moduleinst, func : func, fi : funcinst, x : idx, local* : local*, expr : expr}(s, mm, func) = (s[FUNCS_store =.. [fi]], |s.FUNCS_store|)
+    -- if (fi = {TYPE mm.TYPES_moduleinst[x!`%`_idx.0], MODULE mm, CODE func})
+    -- if (func = FUNC_func(x, local*{local : local}, expr))
+
+;; ../../spec/wasm-1.0/9-module.watsup:41.1-41.63
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:41.1-41.63
+def $allocfuncs(store : store, moduleinst : moduleinst, func*) : (store, funcaddr*)
+  ;; ../../spec/wasm-1.0/9-module.watsup:42.1-42.39
+  def $allocfuncs{s : store, mm : moduleinst}(s, mm, []) = (s, [])
+  ;; ../../spec/wasm-1.0/9-module.watsup:43.1-45.51
+  def $allocfuncs{s : store, mm : moduleinst, func : func, func'* : func*, s_2 : store, fa : funcaddr, fa'* : funcaddr*, s_1 : store}(s, mm, [func] :: func'*{func' : func}) = (s_2, [fa] :: fa'*{fa' : funcaddr})
+    -- if ((s_1, fa) = $allocfunc(s, mm, func))
+    -- if ((s_2, fa'*{fa' : funcaddr}) = $allocfuncs(s_1, mm, func'*{func' : func}))
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:47.1-47.63
+def $allocglobal(store : store, globaltype : globaltype, val : val) : (store, globaladdr)
+  ;; ../../spec/wasm-1.0/9-module.watsup:48.1-49.44
+  def $allocglobal{s : store, globaltype : globaltype, val : val, gi : globalinst}(s, globaltype, val) = (s[GLOBALS_store =.. [gi]], |s.GLOBALS_store|)
+    -- if (gi = {TYPE globaltype, VALUE val})
+
+;; ../../spec/wasm-1.0/9-module.watsup:51.1-51.67
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:51.1-51.67
+def $allocglobals(store : store, globaltype*, val*) : (store, globaladdr*)
+  ;; ../../spec/wasm-1.0/9-module.watsup:52.1-52.42
+  def $allocglobals{s : store}(s, [], []) = (s, [])
+  ;; ../../spec/wasm-1.0/9-module.watsup:53.1-55.62
+  def $allocglobals{s : store, globaltype : globaltype, globaltype'* : globaltype*, val : val, val'* : val*, s_2 : store, ga : globaladdr, ga'* : globaladdr*, s_1 : store}(s, [globaltype] :: globaltype'*{globaltype' : globaltype}, [val] :: val'*{val' : val}) = (s_2, [ga] :: ga'*{ga' : globaladdr})
+    -- if ((s_1, ga) = $allocglobal(s, globaltype, val))
+    -- if ((s_2, ga'*{ga' : globaladdr}) = $allocglobals(s_1, globaltype'*{globaltype' : globaltype}, val'*{val' : val}))
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:57.1-57.55
+def $alloctable(store : store, tabletype : tabletype) : (store, tableaddr)
+  ;; ../../spec/wasm-1.0/9-module.watsup:58.1-59.44
+  def $alloctable{s : store, i : nat, j : nat, ti : tableinst}(s, `[%..%]`_tabletype(`%`_u32(i), `%`_u32(j))) = (s[TABLES_store =.. [ti]], |s.TABLES_store|)
+    -- if (ti = {TYPE `[%..%]`_tabletype(`%`_u32(i), `%`_u32(j)), REFS ?()^i{}})
+
+;; ../../spec/wasm-1.0/9-module.watsup:61.1-61.58
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:61.1-61.58
+def $alloctables(store : store, tabletype*) : (store, tableaddr*)
+  ;; ../../spec/wasm-1.0/9-module.watsup:62.1-62.36
+  def $alloctables{s : store}(s, []) = (s, [])
+  ;; ../../spec/wasm-1.0/9-module.watsup:63.1-65.53
+  def $alloctables{s : store, tabletype : tabletype, tabletype'* : tabletype*, s_2 : store, ta : tableaddr, ta'* : tableaddr*, s_1 : store}(s, [tabletype] :: tabletype'*{tabletype' : tabletype}) = (s_2, [ta] :: ta'*{ta' : tableaddr})
+    -- if ((s_1, ta) = $alloctable(s, tabletype))
+    -- if ((s_2, ta'*{ta' : tableaddr}) = $alloctables(s_1, tabletype'*{tabletype' : tabletype}))
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:67.1-67.49
+def $allocmem(store : store, memtype : memtype) : (store, memaddr)
+  ;; ../../spec/wasm-1.0/9-module.watsup:68.1-69.62
+  def $allocmem{s : store, i : nat, j : nat, mi : meminst}(s, `[%..%]`_memtype(`%`_u32(i), `%`_u32(j))) = (s[MEMS_store =.. [mi]], |s.MEMS_store|)
+    -- if (mi = {TYPE `[%..%]`_memtype(`%`_u32(i), `%`_u32(j)), BYTES `%`_byte(0)^(i * (64 * $Ki)){}})
+
+;; ../../spec/wasm-1.0/9-module.watsup:71.1-71.52
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:71.1-71.52
+def $allocmems(store : store, memtype*) : (store, memaddr*)
+  ;; ../../spec/wasm-1.0/9-module.watsup:72.1-72.34
+  def $allocmems{s : store}(s, []) = (s, [])
+  ;; ../../spec/wasm-1.0/9-module.watsup:73.1-75.49
+  def $allocmems{s : store, memtype : memtype, memtype'* : memtype*, s_2 : store, ma : memaddr, ma'* : memaddr*, s_1 : store}(s, [memtype] :: memtype'*{memtype' : memtype}) = (s_2, [ma] :: ma'*{ma' : memaddr})
+    -- if ((s_1, ma) = $allocmem(s, memtype))
+    -- if ((s_2, ma'*{ma' : memaddr}) = $allocmems(s_1, memtype'*{memtype' : memtype}))
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:80.1-80.83
+def $instexport(funcaddr*, globaladdr*, tableaddr*, memaddr*, export : export) : exportinst
+  ;; ../../spec/wasm-1.0/9-module.watsup:81.1-81.95
+  def $instexport{fa* : funcaddr*, ga* : globaladdr*, ta* : tableaddr*, ma* : memaddr*, name : name, x : idx}(fa*{fa : funcaddr}, ga*{ga : globaladdr}, ta*{ta : tableaddr}, ma*{ma : memaddr}, EXPORT_export(name, FUNC_externidx(x))) = {NAME name, VALUE FUNC_externval(fa*{fa : funcaddr}[x!`%`_idx.0])}
+  ;; ../../spec/wasm-1.0/9-module.watsup:82.1-82.99
+  def $instexport{fa* : funcaddr*, ga* : globaladdr*, ta* : tableaddr*, ma* : memaddr*, name : name, x : idx}(fa*{fa : funcaddr}, ga*{ga : globaladdr}, ta*{ta : tableaddr}, ma*{ma : memaddr}, EXPORT_export(name, GLOBAL_externidx(x))) = {NAME name, VALUE GLOBAL_externval(ga*{ga : globaladdr}[x!`%`_idx.0])}
+  ;; ../../spec/wasm-1.0/9-module.watsup:83.1-83.97
+  def $instexport{fa* : funcaddr*, ga* : globaladdr*, ta* : tableaddr*, ma* : memaddr*, name : name, x : idx}(fa*{fa : funcaddr}, ga*{ga : globaladdr}, ta*{ta : tableaddr}, ma*{ma : memaddr}, EXPORT_export(name, TABLE_externidx(x))) = {NAME name, VALUE TABLE_externval(ta*{ta : tableaddr}[x!`%`_idx.0])}
+  ;; ../../spec/wasm-1.0/9-module.watsup:84.1-84.93
+  def $instexport{fa* : funcaddr*, ga* : globaladdr*, ta* : tableaddr*, ma* : memaddr*, name : name, x : idx}(fa*{fa : funcaddr}, ga*{ga : globaladdr}, ta*{ta : tableaddr}, ma*{ma : memaddr}, EXPORT_export(name, MEM_externidx(x))) = {NAME name, VALUE MEM_externval(ma*{ma : memaddr}[x!`%`_idx.0])}
+
+;; ../../spec/wasm-1.0/9-module.watsup:87.1-87.72
+def $allocmodule(store : store, module : module, externval*, val*) : (store, moduleinst)
+  ;; ../../spec/wasm-1.0/9-module.watsup:88.1-121.52
+  def $allocmodule{s : store, module : module, externval* : externval*, val* : val*, s_4 : store, mm : moduleinst, ft* : functype*, import* : import*, func^n_func : func^n_func, n_func : n, globaltype^n_global : globaltype^n_global, expr_1^n_global : expr^n_global, n_global : n, tabletype^n_table : tabletype^n_table, n_table : n, memtype^n_mem : memtype^n_mem, n_mem : n, elem* : elem*, data* : data*, start? : start?, export* : export*, fa_ex* : funcaddr*, ga_ex* : globaladdr*, ta_ex* : tableaddr*, ma_ex* : memaddr*, fa* : funcaddr*, i_func^n_func : nat^n_func, ga* : globaladdr*, i_global^n_global : nat^n_global, ta* : tableaddr*, i_table^n_table : nat^n_table, ma* : memaddr*, i_mem^n_mem : nat^n_mem, xi* : exportinst*, s_1 : store, s_2 : store, s_3 : store}(s, module, externval*{externval : externval}, val*{val : val}) = (s_4, mm)
+    -- if (module = MODULE_module(TYPE_type(ft)*{ft : functype}, import*{import : import}, func^n_func{func : func}, GLOBAL_global(globaltype, expr_1)^n_global{expr_1 : expr, globaltype : globaltype}, TABLE_table(tabletype)^n_table{tabletype : tabletype}, MEMORY_mem(memtype)^n_mem{memtype : memtype}, elem*{elem : elem}, data*{data : data}, start?{start : start}, export*{export : export}))
+    -- if (fa_ex*{fa_ex : funcaddr} = $funcs(externval*{externval : externval}))
+    -- if (ga_ex*{ga_ex : globaladdr} = $globals(externval*{externval : externval}))
+    -- if (ta_ex*{ta_ex : tableaddr} = $tables(externval*{externval : externval}))
+    -- if (ma_ex*{ma_ex : memaddr} = $mems(externval*{externval : externval}))
+    -- if (fa*{fa : funcaddr} = (|s.FUNCS_store| + i_func)^(i_func<n_func){i_func : nat})
+    -- if (ga*{ga : globaladdr} = (|s.GLOBALS_store| + i_global)^(i_global<n_global){i_global : nat})
+    -- if (ta*{ta : tableaddr} = (|s.TABLES_store| + i_table)^(i_table<n_table){i_table : nat})
+    -- if (ma*{ma : memaddr} = (|s.MEMS_store| + i_mem)^(i_mem<n_mem){i_mem : nat})
+    -- if (xi*{xi : exportinst} = $instexport(fa_ex*{fa_ex : funcaddr} :: fa*{fa : funcaddr}, ga_ex*{ga_ex : globaladdr} :: ga*{ga : globaladdr}, ta_ex*{ta_ex : tableaddr} :: ta*{ta : tableaddr}, ma_ex*{ma_ex : memaddr} :: ma*{ma : memaddr}, export)*{export : export})
+    -- if (mm = {TYPES ft*{ft : functype}, FUNCS fa_ex*{fa_ex : funcaddr} :: fa*{fa : funcaddr}, GLOBALS ga_ex*{ga_ex : globaladdr} :: ga*{ga : globaladdr}, TABLES ta_ex*{ta_ex : tableaddr} :: ta*{ta : tableaddr}, MEMS ma_ex*{ma_ex : memaddr} :: ma*{ma : memaddr}, EXPORTS xi*{xi : exportinst}})
+    -- if ((s_1, fa*{fa : funcaddr}) = $allocfuncs(s, mm, func^n_func{func : func}))
+    -- if ((s_2, ga*{ga : globaladdr}) = $allocglobals(s_1, globaltype^n_global{globaltype : globaltype}, val*{val : val}))
+    -- if ((s_3, ta*{ta : tableaddr}) = $alloctables(s_2, tabletype^n_table{tabletype : tabletype}))
+    -- if ((s_4, ma*{ma : memaddr}) = $allocmems(s_3, memtype^n_mem{memtype : memtype}))
+
+;; ../../spec/wasm-1.0/9-module.watsup:128.1-128.61
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:128.1-128.61
+def $initelem(store : store, moduleinst : moduleinst, u32*, funcaddr**) : store
+  ;; ../../spec/wasm-1.0/9-module.watsup:129.1-129.35
+  def $initelem{s : store, mm : moduleinst}(s, mm, [], []) = s
+  ;; ../../spec/wasm-1.0/9-module.watsup:130.1-132.46
+  def $initelem{s : store, mm : moduleinst, i : nat, i'* : nat*, a* : addr*, a'** : addr**, s_2 : store, s_1 : store}(s, mm, [`%`_uN(i)] :: `%`_u32(i')*{i' : nat}, [a*{a : funcaddr}] :: a'*{a' : funcaddr}*{a' : funcaddr}) = s_2
+    -- if (s_1 = s[TABLES_store[mm.TABLES_moduleinst[0]].REFS_tableinst[i : |a*{a : addr}|] = ?(a)*{a : addr}])
+    -- if (s_2 = $initelem(s_1, mm, `%`_u32(i')*{i' : nat}, a'*{a' : funcaddr}*{a' : funcaddr}))
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:134.1-134.57
+rec {
+
+;; ../../spec/wasm-1.0/9-module.watsup:134.1-134.57
+def $initdata(store : store, moduleinst : moduleinst, u32*, byte**) : store
+  ;; ../../spec/wasm-1.0/9-module.watsup:135.1-135.35
+  def $initdata{s : store, mm : moduleinst}(s, mm, [], []) = s
+  ;; ../../spec/wasm-1.0/9-module.watsup:136.1-138.46
+  def $initdata{s : store, mm : moduleinst, i : nat, i'* : nat*, b* : byte*, b'** : byte**, s_2 : store, s_1 : store}(s, mm, [`%`_uN(i)] :: `%`_u32(i')*{i' : nat}, [b*{b : byte}] :: b'*{b' : byte}*{b' : byte}) = s_2
+    -- if (s_1 = s[MEMS_store[mm.MEMS_moduleinst[0]].BYTES_meminst[i : |b*{b : byte}|] = b*{b : byte}])
+    -- if (s_2 = $initdata(s_1, mm, `%`_u32(i')*{i' : nat}, b'*{b' : byte}*{b' : byte}))
+}
+
+;; ../../spec/wasm-1.0/9-module.watsup:140.1-140.53
+def $instantiate(store : store, module : module, externval*) : config
+  ;; ../../spec/wasm-1.0/9-module.watsup:141.1-162.26
+  def $instantiate{s : store, module : module, externval* : externval*, s_3 : store, f : frame, x'? : idx?, type* : type*, import* : import*, func* : func*, global* : global*, table* : table*, mem* : mem*, elem* : elem*, data* : data*, start? : start?, export* : export*, functype* : functype*, globaltype* : globaltype*, expr_G* : expr*, expr_E* : expr*, x** : idx**, expr_D* : expr*, b** : byte**, n_F : n, mm_init : moduleinst, i_F^n_F : nat^n_F, f_init : frame, z : state, val* : val*, i_E* : nat*, i_D* : nat*, s_1 : store, mm : moduleinst, s_2 : store}(s, module, externval*{externval : externval}) = `%;%`_config(`%;%`_state(s_3, f), CALL_admininstr(x')?{x' : funcidx})
+    -- if (module = MODULE_module(type*{type : type}, import*{import : import}, func*{func : func}, global*{global : global}, table*{table : table}, mem*{mem : mem}, elem*{elem : elem}, data*{data : data}, start?{start : start}, export*{export : export}))
+    -- if (type*{type : type} = TYPE_type(functype)*{functype : functype})
+    -- if (global*{global : global} = GLOBAL_global(globaltype, expr_G)*{expr_G : expr, globaltype : globaltype})
+    -- if (elem*{elem : elem} = ELEM_elem(expr_E, x*{x : funcidx})*{expr_E : expr, x : funcidx})
+    -- if (data*{data : data} = DATA_data(expr_D, b*{b : byte})*{b : byte, expr_D : expr})
+    -- if (start?{start : start} = START_start(x')?{x' : funcidx})
+    -- if (n_F = |func*{func : func}|)
+    -- if (mm_init = {TYPES functype*{functype : functype}, FUNCS $funcs(externval*{externval : externval}) :: (|s.FUNCS_store| + i_F)^(i_F<n_F){i_F : nat}, GLOBALS $globals(externval*{externval : externval}), TABLES [], MEMS [], EXPORTS []})
+    -- if (f_init = {LOCALS [], MODULE mm_init})
+    -- if (z = `%;%`_state(s, f_init))
+    -- (Eval_expr: `%;%~>*%;%`(z, expr_G, z, [val]))*{expr_G : expr, val : val}
+    -- (Eval_expr: `%;%~>*%;%`(z, expr_E, z, [CONST_val(I32_valtype, `%`_val_(i_E))]))*{expr_E : expr, i_E : nat}
+    -- (Eval_expr: `%;%~>*%;%`(z, expr_D, z, [CONST_val(I32_valtype, `%`_val_(i_D))]))*{expr_D : expr, i_D : nat}
+    -- if ((s_1, mm) = $allocmodule(s, module, externval*{externval : externval}, val*{val : val}))
+    -- if (s_2 = $initelem(s_1, mm, `%`_u32(i_E)*{i_E : nat}, mm.FUNCS_moduleinst[x!`%`_idx.0]*{x : idx}*{x : idx}))
+    -- if (s_3 = $initdata(s_2, mm, `%`_u32(i_D)*{i_D : nat}, b*{b : byte}*{b : byte}))
+    -- if (f = {LOCALS [], MODULE mm})
+
+;; ../../spec/wasm-1.0/9-module.watsup:169.1-169.44
+def $invoke(store : store, funcaddr : funcaddr, val*) : config
+  ;; ../../spec/wasm-1.0/9-module.watsup:170.1-172.51
+  def $invoke{s : store, fa : funcaddr, val^n : val^n, n : n, f : frame, t_1^n : valtype^n, t_2* : valtype*}(s, fa, val^n{val : val}) = `%;%`_config(`%;%`_state(s, f), (val : val <: admininstr)^n{val : val} :: [CALL_ADDR_admininstr(fa)])
+    -- if (f = {LOCALS [], MODULE {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], EXPORTS []}})
+    -- if ($funcinst(`%;%`_state(s, f))[fa].TYPE_funcinst = `%->%`_functype(t_1^n{t_1 : valtype}, t_2*{t_2 : valtype}))
+
+;; ../../spec/wasm-1.0/A-binary.watsup:496.1-496.29
+syntax code = (local*, expr)
+

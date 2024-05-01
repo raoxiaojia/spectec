@@ -11,6 +11,8 @@ val string_of_exp : exp -> string
 val string_of_path : path -> string
 val string_of_prem : prem -> string
 val string_of_arg : arg -> string
+val string_of_args : arg list -> string
+val string_of_binds : bind list -> string
 val string_of_param : param -> string
 val string_of_deftyp : [`H | `V] -> deftyp -> string
 val string_of_def : ?suppress_pos:bool -> def -> string
