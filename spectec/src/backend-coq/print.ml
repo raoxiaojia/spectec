@@ -118,11 +118,11 @@ let rec print_term (e: term) : string =
 and print_match_clause (clause: match_clause) : string = 
   match clause with
   | (pat, e) -> 
-    print_patterns pat ^ " => " ^ print_term e
+    "  | " ^ print_patterns pat ^ " => " ^ print_term e ^ "\n"
 
 let print_inductive_constructor (id: ident) (ind: ind_constructor) : string =
   match ind with
-  | (ind_id, ts) -> "| " ^ ind_id ^ " : " ^ (String.concat "" (List.map (fun t -> (print_type t) ^ " -> ") ts)) ^ id ^ "\n"
+  | (ind_id, ts) -> "  | " ^ ind_id ^ " : " ^ (String.concat "" (List.map (fun t -> (print_type t) ^ " -> ") ts)) ^ id ^ "\n"
 
 let print_premise (prem: premise) : string =
   prem
@@ -136,7 +136,7 @@ let print_relation_constructor (_id: ident) (rel: rel_constructor) : string =
 let rec print_def (def: itp_def) : string = 
   match def with
   | TypeD (id, t) -> "Definition " ^ id ^ " : Type := " ^ (print_type t) ^ ".\n"
-  | FuncD (id, bs, t, e) -> "Definition " ^ id ^ (String.concat " " (List.map print_binder bs) ^ " : " ^ (print_type t) ^ " := " ^ (print_term e)) ^ ".\n"
+  | FuncD (id, bs, t, e) -> "Definition " ^ id ^ " " ^ (String.concat " " (List.map print_binder bs) ^ " : " ^ (print_type t) ^ " :=\n" ^ (print_term e)) ^ ".\n"
   | IndTypeD (id, inds) -> "Inductive " ^ id ^ " : Set := \n" ^ (String.concat "" (List.map (print_inductive_constructor id) inds)) ^ ".\n"
   (* Technically there's no difference between types and relations, but this might not be the case in some itps *)
   | IndRelD (id, ts, rels) -> 
