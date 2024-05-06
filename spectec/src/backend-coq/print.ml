@@ -149,6 +149,14 @@ let rec print_def (def: itp_def) : string =
     "Rec {\n" ^
     (String.concat "\n" (List.map print_def defs)) ^
     "}\n" 
+  | FamilyD (id, constrs, defs) ->
+    "(* Family of definitions: " ^ id ^ " *)\n" ^
+    (String.concat "\n" (List.map print_def defs)) ^
+    "\n" ^
+    "(* Overall constructor *)\n" ^
+    "Inductive " ^ id ^ " : Set :=\n" ^
+    (String.concat "\n" (List.map (fun str -> "| " ^ str ^ "_constructor : " ^ str ^ " -> " ^ id) constrs)) ^
+    ".\n"
   | UnsupportedD s -> "(* Unsupported definition : " ^ s ^ " *)\n"
 
 let gen_string il: string = 

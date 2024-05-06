@@ -325,7 +325,7 @@ let itp_of_recfield (tf: typfield) : record_constructor =
     | _ -> assert false
 
 let itp_string_of_mixop (op: mixop) : string = 
-  String.concat "_" (List.map (
+  String.concat "" (List.map (
         fun atoms -> String.concat "" (List.map Il.Atom.string_of_atom atoms)) op
       )
 
@@ -333,7 +333,11 @@ let itp_of_ind (tc: typcase) : ind_constructor =
   match tc with
   | (op, (_bs, ts, prems), _hints) ->
     (match prems with
-    | [] -> (itp_string_of_mixop op, [itp_of_typ ts])
+    | [] -> 
+      (match ts.it with
+      | TupT [] -> (itp_string_of_mixop op, [])
+      | _ -> (itp_string_of_mixop op, [itp_of_typ ts])
+      )
     | _ -> (*assert false*)(itp_string_of_mixop op ^ "(* with unsupported premises: " ^ (String.concat " && " (List.map Il.Print.string_of_prem prems)) ^ " *)", [itp_of_typ ts])
     )
 
@@ -348,6 +352,15 @@ let itp_of_inst id inst =
     (*"\n" ^ region_comment ~suppress_pos "  " inst.at ^
     "  syntax " ^ id.it ^ itp_of_binds bs ^ itp_of_args as_ ^ " = " ^
       itp_of_deftyp `V dt ^ "\n"*)
+
+let itp_of_inst_family (constr, inst) =
+  match inst.it with
+  | InstD (_bs, _as_, dt) ->
+    (match dt.it with
+    | AliasT t -> TypeD (constr, itp_of_typ t)
+    | StructT tfs -> RecordD (constr, List.map itp_of_recfield tfs)
+    | VariantT tcs -> IndTypeD (constr, List.map itp_of_ind tcs)
+    )
 
 let itp_of_rule rule : rel_constructor =
   match rule.it with
@@ -370,8 +383,8 @@ let rec itp_of_def d =
   (*  TypeD (id.it,)
     pre ^ "syntax " ^ id.it ^ itp_of_binds bs ^ itp_of_args as_ ^ " = " ^
       itp_of_deftyp `V dt ^ "\n"*)
-  | TypD (id, _ps, _insts) ->
-    UnsupportedD (id.it ^ " Family of definitions is currently unsupported")
+  | TypD (id, _ps, insts) ->
+    itp_of_family_def id insts
   (*  pre ^ "syntax " ^ id.it ^ itp_of_params ps ^
      concat "\n" (List.map (itp_of_inst ~suppress_pos id) insts) ^ "\n"*)
   | RelD (id, _mixop, t, rules) ->
@@ -383,8 +396,23 @@ let rec itp_of_def d =
   | HintD _hints ->
     UnsupportedD "hint_def"
 
+and itp_of_family_def id insts =
+  (* Generate a constructor name for each instance based on binds *)
+  let constructor_name_insts = List.map (get_family_constructor_name_inst id) insts in
+    FamilyD (id.it, List.map fst constructor_name_insts, List.map itp_of_inst_family constructor_name_insts)
+
+and get_family_constructor_name_inst id inst = 
+  match inst.it with
+  | InstD (bs, _as_, _dt) ->
+    (id.it ^ "_" ^ (String.concat "_" (List.map get_binder_name bs)), inst)
+
+and get_binder_name b =
+  match b.it with
+  | ExpB (id, _t, _its) -> id.it
+  | TypB id -> id.it
 
 (* Scripts *)
 
 let itp_of_script ds =
+  (*List.map itp_of_def (Family.transform ds)*)
   List.map itp_of_def ds

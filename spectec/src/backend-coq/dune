@@ -1,7 +1,7 @@
 (library
   (name backend_coq)
   (libraries util il el)
-  (modules itp il2itp print)
+  (modules itp il2itp print family)
 )
 
 (rule

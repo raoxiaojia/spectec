@@ -99,6 +99,7 @@ type itp_def =
   | IndRelD of ident * (types list) * (rel_constructor list) (* Technically there's no difference between types and relations, but this might not be the case in some itps*)
   | RecordD of ident * (record_constructor list)
   | MutualD of itp_def list (* Mutually recursive definitions *)
+  | FamilyD of (ident * ident list * itp_def list) (* Family of instances -- this should treated as separate definition instances *)
   | UnsupportedD of string
 
 type itp_script = (itp_def * string) list
