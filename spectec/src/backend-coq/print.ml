@@ -22,7 +22,7 @@ let rec print_type (t: types) : string =
     | t' :: tail -> "(prod " ^ (print_type t') ^ " " ^ print_type (T_tuple tail) ^ ")"
     )
   | T_app (t', ts) ->
-    (match ts with
+    (match ts with  
     | [] -> print_type t'
     | _ -> "(" ^ print_type t' ^ " " ^ (String.concat " " (List.map print_type ts)) ^ ")"
     )
@@ -66,6 +66,7 @@ let print_basic_term (e: basic_term) : string =
   | E_nat n -> print_nat n
   | E_int n -> string_of_int n
   | E_string s -> s
+  | E_unit -> "()"
   | E_not -> "not"
   | E_plus -> "plus"
   | E_minus -> "minus"
@@ -96,24 +97,27 @@ let print_basic_term (e: basic_term) : string =
   | E_listupdate -> "list_upd"
   | E_listlength -> "length"
 
-let print_patterns (pat: pattern) : string =
-  String.concat " " pat
 
 let rec print_term (e: term) : string =
   match e with
   | E_basic be -> print_basic_term be
   | E_ident id -> id
   | E_tuple es ->
-    "(" ^ (String.concat "," (List.map print_term es)) ^ ")"
+    "(" ^ (String.concat " , " (List.map print_term es)) ^ ")"
   | E_list es -> 
-    "[" ^ (String.concat ";" (List.map print_term es)) ^ "]"
+    "[" ^ (String.concat " ; " (List.map print_term es)) ^ "]"
   | E_app (e0, es) ->
     "(" ^ print_term e0 ^ " " ^ (String.concat " " (List.map print_term es)) ^ ")"
+  | E_recordlookup (e0, field) ->
+    print_term e0 ^ ".(" ^ field ^ ")"
   | E_match (id, clauses) ->
     "(match " ^ id ^ " with\n"^
     (String.concat "" (List.map print_match_clause clauses)) ^ 
     "end)"
   | E_unsupported s -> "(* Unsupported term: " ^ s ^ "*)"
+
+and print_patterns (pat: pattern) : string =
+  print_term pat
 
 and print_match_clause (clause: match_clause) : string = 
   match clause with

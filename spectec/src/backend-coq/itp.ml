@@ -22,6 +22,7 @@ type basic_term =
   | E_nat of nat
   | E_int of int
   | E_string of string
+  | E_unit
   | E_not
   | E_plus
   | E_minus
@@ -65,6 +66,7 @@ type term =
   | E_tuple of (term list) (* See comments on T_tuple *)
   | E_list of (term list)
   | E_app of (term * (term list))
+  | E_recordlookup of (term * ident)
   | E_match of term_match
   | E_unsupported of string
   
@@ -72,7 +74,7 @@ and term_match = ident * (match_clause list)
   
 and match_clause = pattern * term
 
-and pattern = ident list
+and pattern = term
   
 type premise = string
 
