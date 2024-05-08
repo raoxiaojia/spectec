@@ -53,13 +53,6 @@ type basic_term =
   | E_listupdate
   | E_listlength
 
-type types =
-  | T_basic of basic_types
-  | T_ident of ident
-  | T_tuple of (types list) (* Technically this is the same as below (with the prod constructor), but this occurs too often and is worth a separate constructor *)
-  | T_app of (types * (types list)) (* Parameterised types. This does not perform any arity check but merely defines an AST. *)
-  | T_unsupported of string
-
 type term =
   | E_basic of basic_term
   | E_ident of ident
@@ -76,6 +69,14 @@ and match_clause = pattern * term
 
 and pattern = term
   
+type types =
+  | T_basic of basic_types
+  | T_ident of ident
+  | T_tuple of (types list) (* Technically this is the same as below (with the prod constructor), but this occurs too often and is worth a separate constructor *)
+  | T_app of (types * (types list)) (* Parameterised types. This does not perform any arity check but merely defines an AST. *)
+  | T_term of term (* Dependent types *)
+  | T_unsupported of string
+
 type premise = string
 
 type binder = (ident * types)
@@ -100,8 +101,8 @@ type itp_def =
   | IndTypeD of ident * (ind_constructor list)
   | IndRelD of ident * (types list) * (rel_constructor list) (* Technically there's no difference between types and relations, but this might not be the case in some itps*)
   | RecordD of ident * (record_constructor list)
+  | DepFamilyD of (ident * types * (term * itp_def) list) (* Dependent family definition, currently requiring the dependent type to go into one argument *)
   | MutualD of itp_def list (* Mutually recursive definitions *)
-  | FamilyD of (ident * ident list * itp_def list) (* Family of instances -- this should treated as separate definition instances *)
   | UnsupportedD of string
 
 type itp_script = (itp_def * string) list

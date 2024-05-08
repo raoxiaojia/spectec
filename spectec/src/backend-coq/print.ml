@@ -1,57 +1,5 @@
 open Itp
 
-let print_unit_type t : string =
-  match t with
-  | T_unit -> "unit"
-  | T_bool -> "bool"
-  | T_nat -> "nat"
-  | T_int -> "int"
-  | T_string -> "string"
-  | T_list -> "list"
-  | T_opt -> "option"
-  | T_prod -> "prod"
-
-let rec print_type (t: types) : string = 
-  match t with
-  | T_basic t' -> print_unit_type t'
-  | T_ident id -> id
-  | T_tuple ts -> 
-    (match ts with
-    | [] -> "unit"
-    | [t'] -> print_type t'
-    | t' :: tail -> "(prod " ^ (print_type t') ^ " " ^ print_type (T_tuple tail) ^ ")"
-    )
-  | T_app (t', ts) ->
-    (match ts with  
-    | [] -> print_type t'
-    | _ -> "(" ^ print_type t' ^ " " ^ (String.concat " " (List.map print_type ts)) ^ ")"
-    )
-  | T_unsupported str -> "(* Unsupported type: " ^ str ^ "*)"
-
-and print_tuple_type (ts: types list) : string = 
-  "( " ^ (String.concat "*" (List.map print_type ts)) ^ " )"
-
-let print_record_constructor (name: ident) (b: binder) : string =
-  match b with
-  | (ident, term) ->
-    name ^ "_" ^ ident ^ " : " ^ print_type term
-
-let print_record_decl record_def : string =
-  match record_def with
-  | (name, binders) ->
-    "Record " ^ name ^ " : Type := \n" ^
-    "{|\n  " ^ (String.concat "\n  " (List.map (print_record_constructor name) binders)) ^ "\n|}"
-
-let print_record_constructor (_id: ident) (r: record_constructor) : string =
-  match r with
-  | (f, t) ->
-   "  " ^ f ^ " : " ^ print_type t ^ ";\n"
-
-let print_binder (b: binder) : string = 
-  match b with
-  | (name, t) ->
-    "(" ^ name ^ " : " ^ print_type t ^ ")"
-
 let print_bool b : string = 
   match b with
   | true -> "true"
@@ -124,6 +72,59 @@ and print_match_clause (clause: match_clause) : string =
   | (pat, e) -> 
     "  | " ^ print_patterns pat ^ " => " ^ print_term e ^ "\n"
 
+let print_basic_type t : string =
+  match t with
+  | T_unit -> "unit"
+  | T_bool -> "bool"
+  | T_nat -> "nat"
+  | T_int -> "int"
+  | T_string -> "string"
+  | T_list -> "list"
+  | T_opt -> "option"
+  | T_prod -> "prod"
+
+let rec print_type (t: types) : string = 
+  match t with
+  | T_basic t' -> print_basic_type t'
+  | T_ident id -> id
+  | T_tuple ts -> 
+    (match ts with
+    | [] -> "unit"
+    | [t'] -> print_type t'
+    | t' :: tail -> "(prod " ^ (print_type t') ^ " " ^ print_type (T_tuple tail) ^ ")"
+    )
+  | T_app (t', ts) ->
+    (match ts with  
+    | [] -> print_type t'
+    | _ -> "(" ^ print_type t' ^ " " ^ (String.concat " " (List.map print_type ts)) ^ ")"
+    )
+  | T_term e -> print_term e
+  | T_unsupported str -> "(* Unsupported type: " ^ str ^ "*)"
+
+and print_tuple_type (ts: types list) : string = 
+  "( " ^ (String.concat "*" (List.map print_type ts)) ^ " )"
+
+let print_record_constructor (name: ident) (b: binder) : string =
+  match b with
+  | (ident, term) ->
+    name ^ "_" ^ ident ^ " : " ^ print_type term
+
+let print_record_decl record_def : string =
+  match record_def with
+  | (name, binders) ->
+    "Record " ^ name ^ " : Type := \n" ^
+    "{|\n  " ^ (String.concat "\n  " (List.map (print_record_constructor name) binders)) ^ "\n|}"
+
+let print_record_constructor (_id: ident) (r: record_constructor) : string =
+  match r with
+  | (f, t) ->
+    "  " ^ f ^ " : " ^ print_type t ^ ";\n"
+
+let print_binder (b: binder) : string = 
+  match b with
+  | (name, t) ->
+    "(" ^ name ^ " : " ^ print_type t ^ ")"
+
 let print_inductive_constructor (id: ident) (ind: ind_constructor) : string =
   match ind with
   | (ind_id, ts) -> "  | " ^ ind_id ^ " : " ^ (String.concat "" (List.map (fun t -> (print_type t) ^ " -> ") ts)) ^ id ^ "\n"
@@ -153,14 +154,6 @@ let rec print_def (def: itp_def) : string =
     "Rec {\n" ^
     (String.concat "\n" (List.map print_def defs)) ^
     "}\n" 
-  | FamilyD (id, constrs, defs) ->
-    "(* Family of definitions: " ^ id ^ " *)\n" ^
-    (String.concat "\n" (List.map print_def defs)) ^
-    "\n" ^
-    "(* Overall constructor *)\n" ^
-    "Inductive " ^ id ^ " : Set :=\n" ^
-    (String.concat "\n" (List.map (fun str -> "| " ^ str ^ "_constructor : " ^ str ^ " -> " ^ id) constrs)) ^
-    ".\n"
   | UnsupportedD s -> "(* Unsupported definition : " ^ s ^ " *)\n"
 
 let gen_string il: string = 

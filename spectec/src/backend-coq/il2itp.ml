@@ -10,7 +10,6 @@ let concat = String.concat
 let prefix s f x = s ^ f x
 let space f x = " " ^ f x ^ " "
 
-
 (* Operators *)
 
 let itp_of_unop (e: unop) : term =
@@ -140,14 +139,13 @@ and itp_of_iters_typ iters t =
 
 and itp_of_arg_type id as1 = 
   let args = List.map itp_of_arg_as_type as1 in
-  let args_cleaned = List.filter (fun x -> match x with | T_unsupported _ -> false | _ -> true) args in
   match args with
   | [] -> T_ident id
-  | _ -> T_app (T_ident id, args_cleaned)
+  | _ -> T_app (T_ident id, args)
 
 and itp_of_arg_as_type a =
   match a.it with
-  | ExpA e -> T_unsupported ("Dependent type is currently unsupported ( arg: " ^ Il.Print.string_of_exp e ^ " )")
+  | ExpA e -> T_term (itp_of_exp e)
   | TypA t -> itp_of_typ t
 
 and itp_of_typ_name t =
@@ -162,7 +160,6 @@ and itp_of_typ_args t =
   | TupT _ -> itp_of_typ t
   | _ -> "(" ^ itp_of_typ t ^ ")"
   *)
-
 
 and itp_of_typbind (e, t) =
   match e.it with
@@ -381,13 +378,14 @@ let itp_of_clause _id clause =
     | _ -> (E_list (List.map itp_of_arg_as_exp as_), itp_of_exp e)
     (*(["binds: " ^ Il.Print.string_of_binds bs ^ ", args: " ^ Il.Print.string_of_args as_ ^ ", prems: " ^ (String.concat "" (List.map Il.Print.string_of_prem prems))], itp_of_exp e)*)
 
+(* Each instance is transformed to an individual definition with modified name formed by concatenating the binder names *)
 let itp_of_inst_family (constr, inst) =
   match inst.it with
   | InstD (_bs, _as_, dt) ->
     (match dt.it with
     | AliasT t -> TypeD (constr, itp_of_typ t)
-    | StructT tfs -> RecordD (constr, List.map itp_of_recfield tfs)
     | VariantT tcs -> IndTypeD (constr, List.map itp_of_ind tcs)
+    | StructT _ -> assert false
     )
 
 let itp_get_param_name p = 
@@ -405,20 +403,23 @@ let itp_get_param_tuple ps =
     )
   | _ -> "(" ^ (String.concat " , " (List.map itp_get_param_name ps)) ^ ")"
 
-let get_binder_name b =
+let get_binder_name_type b =
   match b.it with
-  | ExpB (id, _t, _its) -> id.it
-  | TypB id -> id.it
+  | ExpB (id, t, _its) -> (id.it, itp_of_typ t)
+  | TypB id -> (id.it, T_ident id.it)
 
 let get_family_constructor_name_inst id inst = 
   match inst.it with
   | InstD (bs, _as_, _dt) ->
     (id.it ^ "_" ^ (String.concat "_" (List.map get_binder_name bs)), inst)
 
-let transform_family_def id insts : itp_def list =
-  let constructor_name_insts = List.map (get_family_constructor_name_inst id) insts in
-  (List.map itp_of_inst_family constructor_name_insts) @ 
-  [IndTypeD (id.it, List.map (fun (constr, _inst) -> (constr ^ "_constructor", [T_ident constr])) constructor_name_insts)]
+let transform_family_def id ps insts : itp_def list =
+  match ps with
+  | [p] -> 
+    let constructor_name_insts = List.map (get_family_constructor_name_inst id) insts in
+    (List.map itp_of_inst_family constructor_name_insts) @ 
+    [IndTypeD (id.it, List.map (fun (constr, _inst) -> (constr ^ "_constructor", [T_ident constr])) constructor_name_insts)]
+  | _ -> assert false
 
 let rec itp_of_def d =
   match d.it with
@@ -427,8 +428,8 @@ let rec itp_of_def d =
   (*  TypeD (id.it,)
     pre ^ "syntax " ^ id.it ^ itp_of_binds bs ^ itp_of_args as_ ^ " = " ^
       itp_of_deftyp `V dt ^ "\n"*)
-  | TypD (id, _ps, insts) ->
-    transform_family_def id insts
+  | TypD (id, ps, insts) ->
+    transform_family_def id ps insts
   (*  pre ^ "syntax " ^ id.it ^ itp_of_params ps ^
      concat "\n" (List.map (itp_of_inst ~suppress_pos id) insts) ^ "\n"*)
   | RelD (id, _mixop, t, rules) ->
@@ -439,7 +440,6 @@ let rec itp_of_def d =
     [MutualD (List.concat_map itp_of_def ds)]
   | HintD _hints ->
     [UnsupportedD "hint_def"]
-
 
 let itp_of_script ds =
   List.concat_map itp_of_def ds
