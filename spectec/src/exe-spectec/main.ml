@@ -27,7 +27,7 @@ type pass =
   | AliasDemut
   | ImproveIds
   | Ite
-  | LetIntro
+  | LetIntroMech
 
 (* This list declares the intended order of passes.
 
@@ -38,7 +38,7 @@ flags on the command line.
 let _skip_passes = [ Unthe ]  (* Not clear how to extend them to indexed types *)
 let all_passes = [
   Ite;
-  LetIntro;
+  LetIntroMech;
   TypeFamilyRemoval;
   Undep;
   Totalize;
@@ -114,7 +114,7 @@ let pass_flag = function
   | Uncaseremoval -> "uncase-removal"
   | ImproveIds -> "improve-ids"
   | Ite -> "ite"
-  | LetIntro -> "let-intro"
+  | LetIntroMech -> "let-intro-mech"
 
 let pass_desc = function
   | Sub -> "Synthesize explicit subtype coercions"
@@ -129,7 +129,7 @@ let pass_desc = function
   | AliasDemut -> "Lifts type aliases out of mutual groups"
   | ImproveIds -> "Disambiguates ids used from each other"
   | Ite -> "If-then-else introduction"
-  | LetIntro -> "Let Premise introduction"
+  | LetIntroMech -> "Let Premise introduction for mechanization backends"
 
 
 let run_pass : pass -> Il.Ast.script -> Il.Ast.script = function
@@ -145,7 +145,7 @@ let run_pass : pass -> Il.Ast.script -> Il.Ast.script = function
   | AliasDemut -> Middlend.AliasDemut.transform
   | ImproveIds -> Middlend.Improveids.transform
   | Ite -> Middlend.Ite.transform
-  | LetIntro -> Middlend.Letintro.transform
+  | LetIntroMech -> Middlend.Letintromech.transform
 
 
 (* Argument parsing *)
