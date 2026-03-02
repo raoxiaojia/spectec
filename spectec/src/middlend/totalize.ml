@@ -50,11 +50,17 @@ let t_exp env exp =
     {exp with it = TheE {exp with note = IterT (exp.note, Opt) $ exp.at}}
   | _ -> exp
 
-let f_exp env subst exp =
+(* This makes the traversal stop traversing when reaching a partial function *)
+let f_exp env exp = 
+  match exp.it with
+  | TheE ({ it = CallE (f, _); _}) when is_partial env f -> None
+  | _ -> Some exp
+
+let fix_exp env eps exp =
   match exp.it with
   | TheE ({ it = CallE (f, _); _} as exp') when is_partial env f ->
     let id = (Fresh.fresh_varid "iter_val") $ exp'.at  in 
-    subst := (id, exp') :: !subst;
+    eps := (id, exp') :: !eps;
     { exp' with it = VarE id }
   | _ -> exp
 
@@ -66,12 +72,14 @@ let fix_partial_funcs env exp =
   | _ ->
     (* Apply transformation to wrap an option iteration on the rhs *)
     let eps_ref = ref [] in 
-    let t = { base_transformer with transform_exp = f_exp env eps_ref } in
+    let t = { base_transformer with transform_exp = fix_exp env eps_ref; filter_exp = f_exp env} in
     let t_e = transform_exp t exp in 
-    if !eps_ref = [] then 
+    let free_vars = Free.free_exp t_e in 
+    let eps' = List.filter (fun (id, _) -> Free.Set.mem id.it free_vars.varid) !eps_ref in
+    if eps' = [] then 
       { exp with it = OptE (Some exp); note = IterT (exp.note, Opt) $ exp.at } 
     else 
-      { exp with it = IterE (t_e, (Opt, !eps_ref)); note = IterT (exp.note, Opt) $ exp.at }  
+      { exp with it = IterE (t_e, (Opt, eps')); note = IterT (exp.note, Opt) $ exp.at }  
 
 let has_catch_all clauses = 
   List.exists (fun clause ->
