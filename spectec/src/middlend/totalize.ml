@@ -83,13 +83,13 @@ let fix_partial_funcs env exp =
 
 let has_catch_all clauses = 
   List.exists (fun clause ->
-    let DefD (_, args, _, _) = clause.it in
+    let DefD (_, args, _, prems) = clause.it in
     List.for_all (fun a -> 
       match a.it with
       | ExpA {it = VarE _; _} -> true
       | TypA _ | DefA _ -> true
       | _ -> false 
-    ) args
+    ) args && List.for_all (fun p -> p.it = ElsePr) prems
   ) clauses
 
 let rec t_def env d = 
