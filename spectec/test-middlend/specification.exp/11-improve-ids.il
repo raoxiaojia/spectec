@@ -48,6 +48,7 @@ def $opt_(syntax X, var_0 : X*) : X??
   ;; ../../../../specification/wasm-3.0/0.3-aux.seq.spectec
   def $opt_{syntax X, w : X}(syntax X, [w]) = ?(?(w))
   def $opt_{syntax X, x1 : X*}(syntax X, x1) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/0.3-aux.seq.spectec
 rec {
@@ -249,6 +250,7 @@ def $signif(v_N : N) : nat?
   ;; ../../../../specification/wasm-3.0/1.1-syntax.values.spectec
   def $signif(64) = ?(52)
   def $signif{x0 : N}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.1-syntax.values.spectec
 def $expon(v_N : N) : nat?
@@ -257,6 +259,7 @@ def $expon(v_N : N) : nat?
   ;; ../../../../specification/wasm-3.0/1.1-syntax.values.spectec
   def $expon(64) = ?(11)
   def $expon{x0 : N}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.1-syntax.values.spectec
 def $fun_M(v_N : N) : nat
@@ -1387,6 +1390,7 @@ def $IN(v_N : N) : Inn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $IN(64) = ?(I64_Inn)
   def $IN{x0 : N}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $FN(v_N : N) : Fnn?
@@ -1395,6 +1399,7 @@ def $FN(v_N : N) : Fnn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $FN(64) = ?(F64_Fnn)
   def $FN{x0 : N}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $JN(v_N : N) : Jnn?
@@ -1407,6 +1412,7 @@ def $JN(v_N : N) : Jnn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $JN(64) = ?(I64_Jnn)
   def $JN{x0 : N}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $size(v_numtype : numtype) : nat
@@ -1463,6 +1469,7 @@ def $zsize(v_storagetype : storagetype) : nat?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $zsize(I16_storagetype) = ?($psize(I16_packtype))
   def $zsize{x0 : storagetype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $isize(v_Inn : Inn) : nat
@@ -1486,6 +1493,7 @@ def $inv_isize(nat : nat) : Inn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $inv_isize(64) = ?(I64_Inn)
   def $inv_isize{x0 : nat}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $inv_jsize(nat : nat) : Jnn?
@@ -1494,8 +1502,7 @@ def $inv_jsize(nat : nat) : Jnn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $inv_jsize(16) = ?(I16_Jnn)
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
-  def $inv_jsize{v_n : nat}(v_n) = ?($Jnn_addrtype(!($inv_isize(v_n))))
-  def $inv_jsize{x0 : nat}(x0) = ?()
+  def $inv_jsize{v_n : nat}(v_n) = $Jnn_addrtype(iter_val#1)?{iter_val#1 <- $inv_isize(v_n)}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $inv_fsize(nat : nat) : Fnn?
@@ -1504,6 +1511,7 @@ def $inv_fsize(nat : nat) : Fnn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $inv_fsize(64) = ?(F64_Fnn)
   def $inv_fsize{x0 : nat}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $sizenn(v_numtype : numtype) : nat
@@ -1553,8 +1561,7 @@ def $jsizenn(v_Jnn : Jnn) : nat
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $inv_jsizenn(nat : nat) : Jnn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
-  def $inv_jsizenn{v_n : nat}(v_n) = ?(!($inv_jsize(v_n)))
-  def $inv_jsizenn{x0 : nat}(x0) = ?()
+  def $inv_jsizenn{v_n : nat}(v_n) = $inv_jsize(v_n)
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $lunpack(v_lanetype : lanetype) : numtype
@@ -1609,12 +1616,14 @@ def $nunpack(v_storagetype : storagetype) : numtype?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $nunpack(I16_storagetype) = ?(I32_numtype)
   def $nunpack{x0 : storagetype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $vunpack(v_storagetype : storagetype) : vectype?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $vunpack(V128_storagetype) = ?(V128_vectype)
   def $vunpack{x0 : storagetype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $cunpack(v_storagetype : storagetype) : consttype?
@@ -1645,6 +1654,7 @@ def $cunpack(v_storagetype : storagetype) : consttype?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $cunpack(I16_storagetype) = ?($consttype_numtype($lunpack(I16_lanetype)))
   def $cunpack{x0 : storagetype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $minat(v_addrtype : addrtype, v_addrtype_0 : addrtype) : addrtype
@@ -1665,6 +1675,7 @@ def $as_deftype(v_typeuse : typeuse) : deftype?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $as_deftype{v_rectype : rectype, v_n : n}(_DEF_typeuse(v_rectype, v_n)) = ?(_DEF_deftype(v_rectype, v_n))
   def $as_deftype{x0 : typeuse}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 rec {
@@ -1739,8 +1750,9 @@ def $subst_typevar(v_typevar : typevar, var_0 : typevar*, var_1 : typeuse*) : ty
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:365.1-365.38
   def $subst_typevar{tv : typevar}(tv, [], []) = ?($typeuse_typevar(tv))
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:366.1-366.95
-  def $subst_typevar{tv : typevar, tv_1 : typevar, tv'_lst : typevar*, tu_1 : typeuse, tu'_lst : typeuse*}(tv, [tv_1] ++ tv'_lst, [tu_1] ++ tu'_lst) = ?((if (tv = tv_1) then tu_1 else !($subst_typevar(tv, tv'_lst, tu'_lst))))
+  def $subst_typevar{tv : typevar, tv_1 : typevar, tv'_lst : typevar*, tu_1 : typeuse, tu'_lst : typeuse*}(tv, [tv_1] ++ tv'_lst, [tu_1] ++ tu'_lst) = (if (tv = tv_1) then tu_1 else iter_val#2)?{iter_val#2 <- $subst_typevar(tv, tv'_lst, tu'_lst)}
   def $subst_typevar{x0 : typevar, x1 : typevar*, x2 : typeuse*}(x0, x1, x2) = ?()
+    -- otherwise
 }
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
@@ -1751,7 +1763,7 @@ def $minus_recs(var_0 : typevar*, var_1 : typeuse*) : (typevar*, typeuse*)?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:402.1-402.39
   def $minus_recs([], []) = ?(([], []))
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:403.1-403.63
-  def $minus_recs{v_n : nat, tv_lst : typevar*, tu_1 : typeuse, tu_lst : typeuse*}([REC_typevar(v_n)] ++ tv_lst, [tu_1] ++ tu_lst) = ?(!($minus_recs(tv_lst, tu_lst)))
+  def $minus_recs{v_n : nat, tv_lst : typevar*, tu_1 : typeuse, tu_lst : typeuse*}([REC_typevar(v_n)] ++ tv_lst, [tu_1] ++ tu_lst) = $minus_recs(tv_lst, tu_lst)
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:404.1-405.45
   def $minus_recs{x : uN, tv_lst : typevar*, tu_1 : typeuse, tu_lst : typeuse*, tv'_lst : typevar*, tu'_lst : typeuse*}([_IDX_typevar(x)] ++ tv_lst, [tu_1] ++ tu_lst) = ?(([_IDX_typevar(x)] ++ tv'_lst, [tu_1] ++ tu'_lst))
     -- (wf_typevar: `%`(tv'))*{tv' <- tv'_lst}
@@ -1759,6 +1771,7 @@ def $minus_recs(var_0 : typevar*, var_1 : typeuse*) : (typevar*, typeuse*)?
     -- wf_typevar: `%`(_IDX_typevar(x))
     -- if ((tv'_lst, tu'_lst) = !($minus_recs(tv_lst, tu_lst)))
   def $minus_recs{x0 : typevar*, x1 : typeuse*}(x0, x1) = ?()
+    -- otherwise
 }
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
@@ -5210,8 +5223,9 @@ def $with_locals(v_context : context, var_0 : localidx*, var_1 : localtype*) : c
   ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:48.1-48.34
   def $with_locals{C : context}(C, [], []) = ?(C)
   ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:49.1-49.90
-  def $with_locals{C : context, x_1 : uN, x_lst : idx*, lct_1 : localtype, lct_lst : localtype*}(C, [x_1] ++ x_lst, [lct_1] ++ lct_lst) = ?(!($with_locals(C[LOCALS_context[$proj_uN_0(x_1).0] = lct_1], x_lst, lct_lst)))
+  def $with_locals{C : context, x_1 : uN, x_lst : idx*, lct_1 : localtype, lct_lst : localtype*}(C, [x_1] ++ x_lst, [lct_1] ++ lct_lst) = $with_locals(C[LOCALS_context[$proj_uN_0(x_1).0] = lct_1], x_lst, lct_lst)
   def $with_locals{x0 : context, x1 : localidx*, x2 : localtype*}(x0, x1, x2) = ?()
+    -- otherwise
 }
 
 ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec
@@ -6196,6 +6210,7 @@ def $default_(v_valtype : valtype) : val??
   ;; ../../../../specification/wasm-3.0/4.1-execution.values.spectec
   def $default_{ht : heaptype}(REF_valtype(?(), ht)) = ?(?())
   def $default_{x0 : valtype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/2.3-validation.instructions.spectec
 relation Defaultable: `|-%DEFAULTABLE`(valtype)
@@ -7981,6 +7996,7 @@ def $fun_sx(v_storagetype : storagetype) : sx??
   ;; ../../../../specification/wasm-3.0/3.1-numerics.scalar.spectec
   def $fun_sx(I16_storagetype) = ?(?(S_sx))
   def $fun_sx{x0 : storagetype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/3.1-numerics.scalar.spectec
 def $fun_zero(v_lanetype : lanetype) : lane_
@@ -12076,6 +12092,7 @@ def $packfield_(v_storagetype : storagetype, v_val : val) : fieldval?
   def $packfield_{i : uN}(I16_storagetype, CONST_val(I32_numtype, mk_num__0_num_(I32_Inn, i))) = ?(PACK_fieldval(I16_packtype, $wrap__(32, $psize(I16_packtype), i)))
     -- wf_fieldval: `%`(PACK_fieldval(I16_packtype, $wrap__(32, $psize(I16_packtype), i)))
   def $packfield_{x0 : storagetype, x1 : val}(x0, x1) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/4.0-execution.configurations.spectec
 def $unpackfield_(v_storagetype : storagetype, var_0 : sx?, v_fieldval : fieldval) : val?
@@ -12226,6 +12243,7 @@ def $unpackfield_(v_storagetype : storagetype, var_0 : sx?, v_fieldval : fieldva
   def $unpackfield_{v_sx : sx, i : uN}(I16_storagetype, ?(v_sx), PACK_fieldval(I16_packtype, i)) = ?(CONST_val(I32_numtype, mk_num__0_num_(I32_Inn, $extend__($psize(I16_packtype), 32, v_sx, i))))
     -- wf_val: `%`(CONST_val(I32_numtype, mk_num__0_num_(I32_Inn, $extend__($psize(I16_packtype), 32, v_sx, i))))
   def $unpackfield_{x0 : storagetype, x1 : sx?, x2 : fieldval}(x0, x1, x2) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/4.0-execution.configurations.spectec
 rec {
@@ -12497,6 +12515,7 @@ def $growtable(v_tableinst : tableinst, nat : nat, v_ref : ref) : tableinst?
     -- if ($proj_uN_0(i').0 = (|r'_lst| + v_n))
     -- (if ($proj_uN_0(i').0 <= $proj_uN_0(j).0))?{j <- j_opt}
   def $growtable{x0 : tableinst, x1 : nat, x2 : ref}(x0, x1, x2) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/4.0-execution.configurations.spectec
 def $growmem(v_meminst : meminst, nat : nat) : meminst?
@@ -12510,6 +12529,7 @@ def $growmem(v_meminst : meminst, nat : nat) : meminst?
     -- if (($proj_uN_0(i').0 : nat <:> rat) = (((|b_lst| : nat <:> rat) / ((64 * $Ki) : nat <:> rat)) + (v_n : nat <:> rat)))
     -- (if ($proj_uN_0(i').0 <= $proj_uN_0(j).0))?{j <- j_opt}
   def $growmem{x0 : meminst, x1 : nat}(x0, x1) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/4.1-execution.values.spectec
 relation Num_ok: `%|-%:%`(store, num, numtype)
