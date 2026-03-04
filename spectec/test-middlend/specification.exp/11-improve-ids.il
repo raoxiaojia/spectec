@@ -1486,6 +1486,7 @@ def $inv_isize(nat : nat) : Inn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $inv_isize(64) = ?(I64_Inn)
   def $inv_isize{x0 : nat}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $inv_jsize(nat : nat) : Jnn?
@@ -1494,8 +1495,7 @@ def $inv_jsize(nat : nat) : Jnn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $inv_jsize(16) = ?(I16_Jnn)
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
-  def $inv_jsize{v_n : nat}(v_n) = ?($Jnn_addrtype(!($inv_isize(v_n))))
-  def $inv_jsize{x0 : nat}(x0) = ?()
+  def $inv_jsize{v_n : nat}(v_n) = $Jnn_addrtype(iter_val#1)?{iter_val#1 <- $inv_isize(v_n)}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $inv_fsize(nat : nat) : Fnn?
@@ -1504,6 +1504,7 @@ def $inv_fsize(nat : nat) : Fnn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $inv_fsize(64) = ?(F64_Fnn)
   def $inv_fsize{x0 : nat}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $sizenn(v_numtype : numtype) : nat
@@ -1553,8 +1554,7 @@ def $jsizenn(v_Jnn : Jnn) : nat
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $inv_jsizenn(nat : nat) : Jnn?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
-  def $inv_jsizenn{v_n : nat}(v_n) = ?(!($inv_jsize(v_n)))
-  def $inv_jsizenn{x0 : nat}(x0) = ?()
+  def $inv_jsizenn{v_n : nat}(v_n) = $inv_jsize(v_n)
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $lunpack(v_lanetype : lanetype) : numtype
@@ -1609,12 +1609,14 @@ def $nunpack(v_storagetype : storagetype) : numtype?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $nunpack(I16_storagetype) = ?(I32_numtype)
   def $nunpack{x0 : storagetype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $vunpack(v_storagetype : storagetype) : vectype?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $vunpack(V128_storagetype) = ?(V128_vectype)
   def $vunpack{x0 : storagetype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $cunpack(v_storagetype : storagetype) : consttype?
@@ -1645,6 +1647,7 @@ def $cunpack(v_storagetype : storagetype) : consttype?
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $cunpack(I16_storagetype) = ?($consttype_numtype($lunpack(I16_lanetype)))
   def $cunpack{x0 : storagetype}(x0) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $minat(v_addrtype : addrtype, v_addrtype_0 : addrtype) : addrtype
@@ -12497,6 +12500,7 @@ def $growtable(v_tableinst : tableinst, nat : nat, v_ref : ref) : tableinst?
     -- if ($proj_uN_0(i').0 = (|r'_lst| + v_n))
     -- (if ($proj_uN_0(i').0 <= $proj_uN_0(j).0))?{j <- j_opt}
   def $growtable{x0 : tableinst, x1 : nat, x2 : ref}(x0, x1, x2) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/4.0-execution.configurations.spectec
 def $growmem(v_meminst : meminst, nat : nat) : meminst?
@@ -12510,6 +12514,7 @@ def $growmem(v_meminst : meminst, nat : nat) : meminst?
     -- if (($proj_uN_0(i').0 : nat <:> rat) = (((|b_lst| : nat <:> rat) / ((64 * $Ki) : nat <:> rat)) + (v_n : nat <:> rat)))
     -- (if ($proj_uN_0(i').0 <= $proj_uN_0(j).0))?{j <- j_opt}
   def $growmem{x0 : meminst, x1 : nat}(x0, x1) = ?()
+    -- otherwise
 
 ;; ../../../../specification/wasm-3.0/4.1-execution.values.spectec
 relation Num_ok: `%|-%:%`(store, num, numtype)
