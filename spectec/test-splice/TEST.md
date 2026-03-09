@@ -1567,6 +1567,7 @@ warning: definition `free_absheaptype` was never spliced
 warning: definition `free_addrtype` was never spliced
 warning: definition `free_block` was never spliced
 warning: definition `free_blocktype` was never spliced
+warning: definition `free_catch` was never spliced
 warning: definition `free_comptype` was never spliced
 warning: definition `free_consttype` was never spliced
 warning: definition `free_data` was never spliced
@@ -1615,6 +1616,7 @@ warning: definition `free_table` was never spliced
 warning: definition `free_tableidx` was never spliced
 warning: definition `free_tabletype` was never spliced
 warning: definition `free_tag` was never spliced
+warning: definition `free_tagidx` was never spliced
 warning: definition `free_tagtype` was never spliced
 warning: definition `free_type` was never spliced
 warning: definition `free_typeidx` was never spliced
@@ -2420,6 +2422,7 @@ warning: definition prose `free_absheaptype` was never spliced
 warning: definition prose `free_addrtype` was never spliced
 warning: definition prose `free_block` was never spliced
 warning: definition prose `free_blocktype` was never spliced
+warning: definition prose `free_catch` was never spliced
 warning: definition prose `free_comptype` was never spliced
 warning: definition prose `free_consttype` was never spliced
 warning: definition prose `free_data` was never spliced
@@ -2468,6 +2471,7 @@ warning: definition prose `free_table` was never spliced
 warning: definition prose `free_tableidx` was never spliced
 warning: definition prose `free_tabletype` was never spliced
 warning: definition prose `free_tag` was never spliced
+warning: definition prose `free_tagidx` was never spliced
 warning: definition prose `free_tagtype` was never spliced
 warning: definition prose `free_type` was never spliced
 warning: definition prose `free_typeidx` was never spliced

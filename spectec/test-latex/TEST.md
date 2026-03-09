@@ -2658,7 +2658,8 @@ $$
 \mathsf{elems}~{{\mathit{elemidx}}^\ast} \\
 \mathsf{datas}~{{\mathit{dataidx}}^\ast} \\
 \mathsf{locals}~{{\mathit{localidx}}^\ast} \\
-\mathsf{labels}~{{\mathit{labelidx}}^\ast} \} \\
+\mathsf{labels}~{{\mathit{labelidx}}^\ast} \\
+\mathsf{tags}~{{\mathit{tagidx}}^\ast} \} \\
 \end{array} \\
 \end{array}
 $$
@@ -2737,10 +2738,17 @@ $$
 
 $$
 \begin{array}[t]{@{}lcl@{}l@{}}
+{\mathrm{free}}_{\mathit{tagidx}}({\mathit{tagidx}}) & = & \{ \mathsf{tags}~{\mathit{tagidx}} \} \\
+\end{array}
+$$
+
+$$
+\begin{array}[t]{@{}lcl@{}l@{}}
 {\mathrm{free}}_{\mathit{externidx}}(\mathsf{func}~{\mathit{funcidx}}) & = & {\mathrm{free}}_{\mathit{funcidx}}({\mathit{funcidx}}) \\
 {\mathrm{free}}_{\mathit{externidx}}(\mathsf{global}~{\mathit{globalidx}}) & = & {\mathrm{free}}_{\mathit{globalidx}}({\mathit{globalidx}}) \\
 {\mathrm{free}}_{\mathit{externidx}}(\mathsf{table}~{\mathit{tableidx}}) & = & {\mathrm{free}}_{\mathit{tableidx}}({\mathit{tableidx}}) \\
 {\mathrm{free}}_{\mathit{externidx}}(\mathsf{mem}~{\mathit{memidx}}) & = & {\mathrm{free}}_{\mathit{memidx}}({\mathit{memidx}}) \\
+{\mathrm{free}}_{\mathit{externidx}}(\mathsf{tag}~{\mathit{tagidx}}) & = & {\mathrm{free}}_{\mathit{tagidx}}({\mathit{tagidx}}) \\
 \end{array}
 $$
 
@@ -4051,7 +4059,14 @@ $$
 \end{array}
 $$
 
-\vspace{1ex}
+$$
+\begin{array}[t]{@{}lcl@{}l@{}}
+{\mathrm{free}}_{\mathit{catch}}(\mathsf{catch}~{\mathit{tagidx}}~{\mathit{labelidx}}) & = & {\mathrm{free}}_{\mathit{tagidx}}({\mathit{tagidx}}) \oplus {\mathrm{free}}_{\mathit{labelidx}}({\mathit{labelidx}}) \\
+{\mathrm{free}}_{\mathit{catch}}(\mathsf{catch\_ref}~{\mathit{tagidx}}~{\mathit{labelidx}}) & = & {\mathrm{free}}_{\mathit{tagidx}}({\mathit{tagidx}}) \oplus {\mathrm{free}}_{\mathit{labelidx}}({\mathit{labelidx}}) \\
+{\mathrm{free}}_{\mathit{catch}}(\mathsf{catch\_all}~{\mathit{labelidx}}) & = & {\mathrm{free}}_{\mathit{labelidx}}({\mathit{labelidx}}) \\
+{\mathrm{free}}_{\mathit{catch}}(\mathsf{catch\_all\_ref}~{\mathit{labelidx}}) & = & {\mathrm{free}}_{\mathit{labelidx}}({\mathit{labelidx}}) \\
+\end{array}
+$$
 
 $$
 \begin{array}[t]{@{}lcl@{}l@{}}
@@ -4104,6 +4119,14 @@ $$
  \multicolumn{4}{@{}l@{}}{\quad
 \begin{array}[t]{@{}l@{}}
 {\mathrm{free}}_{\mathit{tableidx}}({\mathit{tableidx}}) \oplus {\mathrm{free}}_{\mathit{typeuse}}({\mathit{typeuse}}) \\
+\end{array}
+} \\
+{\mathrm{free}}_{\mathit{instr}}(\mathsf{throw}~{\mathit{tagidx}}) & = & {\mathrm{free}}_{\mathit{tagidx}}({\mathit{tagidx}}) \\
+{\mathrm{free}}_{\mathit{instr}}(\mathsf{throw\_ref}) & = & \{  \} \\
+{\mathrm{free}}_{\mathit{instr}}(\mathsf{try\_table}~{\mathit{blocktype}}~{{\mathit{catch}}^\ast}~{{\mathit{instr}}^\ast}) & = & & \\
+ \multicolumn{4}{@{}l@{}}{\quad
+\begin{array}[t]{@{}l@{}}
+{\mathrm{free}}_{\mathit{blocktype}}({\mathit{blocktype}}) \oplus {\mathrm{free}}_{\mathit{list}}({{\mathrm{free}}_{\mathit{catch}}({\mathit{catch}})^\ast}) \oplus {\mathrm{free}}_{\mathit{list}}({{\mathrm{free}}_{\mathit{instr}}({\mathit{instr}})^\ast}) \\
 \end{array}
 } \\
 {\mathrm{free}}_{\mathit{instr}}({\mathit{numtype}}{.}\mathsf{const}~{\mathit{numlit}}) & = & {\mathrm{free}}_{\mathit{numtype}}({\mathit{numtype}}) \\
