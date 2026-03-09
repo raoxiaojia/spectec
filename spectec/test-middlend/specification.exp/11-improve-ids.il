@@ -18595,7 +18595,7 @@ grammar Toffset : u64
 ;; ../../../../specification/wasm-3.0/6.3-text.instructions.spectec
 grammar Tmemarg_(v_N : N) : memarg
   ;; ../../../../specification/wasm-3.0/6.3-text.instructions.spectec
-  prod{v_n : n, v_m : m} {{`%`_u64(v_n):Toffset} {`%`_u64(v_m):Talign_(v_N)}} => {ALIGN `%`_u32(v_n), OFFSET `%`_u64(v_m)}
+  prod{v_n : n, v_m : m} {{`%`_u64(v_n):Talign_(v_N)} {`%`_u64(v_m):Toffset}} => {ALIGN `%`_u32(v_n), OFFSET `%`_u64(v_m)}
 
 ;; ../../../../specification/wasm-3.0/6.3-text.instructions.spectec
 grammar Tplaininstr_(v_I : I) : instr
