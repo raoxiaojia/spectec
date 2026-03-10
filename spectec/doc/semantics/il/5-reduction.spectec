@@ -18,7 +18,7 @@ rule Expand_typ/alias:
 rule Expand_typ/step:
   S |- VAR x a* => $subst_deftyp(s, dt)
   -- if (x, p* `-> OK `= inst*) <- S.TYP
-  -- if (INST `{q*} a* `= dt) <- inst*
+  -- if (INST `{q*} a'* `= dt) <- inst*
   -- Match_args: S |- a* `/ `{q*} a'* => s
 
 
