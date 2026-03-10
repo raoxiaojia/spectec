@@ -9221,7 +9221,7 @@ grammar Bstartsec : start?
 ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
 grammar Belemkind : reftype
   ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
-  prod 0x00 => REF_reftype(?(NULL_null), FUNC_heaptype)
+  prod 0x00 => REF_reftype(?(), FUNC_heaptype)
 
 ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
 grammar Belem : elem
@@ -20638,7 +20638,7 @@ grammar Bstartsec : start?
 ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
 grammar Belemkind : reftype
   ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
-  prod 0x00 => REF_reftype(?(NULL_null), FUNC_heaptype)
+  prod 0x00 => REF_reftype(?(), FUNC_heaptype)
 
 ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
 grammar Belem : elem
@@ -32235,7 +32235,7 @@ grammar Bstartsec : start?
 ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
 grammar Belemkind : reftype
   ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
-  prod 0x00 => REF_reftype(?(NULL_null), FUNC_heaptype)
+  prod 0x00 => REF_reftype(?(), FUNC_heaptype)
 
 ;; ../../../../specification/wasm-latest/5.4-binary.modules.spectec
 grammar Belem : elem
