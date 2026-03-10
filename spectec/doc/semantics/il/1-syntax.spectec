@@ -127,7 +127,6 @@ syntax exp =
   | LEN exp            ;; | exp |
   | MEM exp exp        ;; exp `<-` exp
   | CAT exp exp        ;; exp `++` exp
-  | COMP exp exp       ;; exp `@` exp
   | ACC exp path       ;; exp[ path ]
   | UPD exp path exp   ;; exp[ path = exp ]
   | EXT exp path exp   ;; exp[ path =.. exp ]

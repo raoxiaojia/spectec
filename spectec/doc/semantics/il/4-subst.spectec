@@ -91,7 +91,6 @@ def $subst_exp(s, SEL e n) = SEL $subst_exp(s, e) n
 def $subst_exp(s, LEN e) = LEN $subst_exp(s, e)
 def $subst_exp(s, MEM e_1 e_2) = MEM $subst_exp(s, e_1) $subst_exp(s, e_2)
 def $subst_exp(s, CAT e_1 e_2) = CAT $subst_exp(s, e_1) $subst_exp(s, e_2)
-def $subst_exp(s, COMP e_1 e_2) = COMP $subst_exp(s, e_1) $subst_exp(s, e_2)
 def $subst_exp(s, ACC e_1 p) = ACC $subst_exp(s, e_1) $subst_path(s, p)
 def $subst_exp(s, UPD e_1 p e_2) = UPD $subst_exp(s, e_1) $subst_path(s, p) $subst_exp(s, e_2)
 def $subst_exp(s, EXT e_1 p e_2) = EXT $subst_exp(s, e_1) $subst_path(s, p) $subst_exp(s, e_2)
