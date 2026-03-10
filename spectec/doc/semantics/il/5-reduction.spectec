@@ -194,19 +194,11 @@ rule Step_exp/MEM-ctx2:
   S |- MEM e_1 e_2 ~> MEM e_1 e'_2
   -- Step_exp: S |- e_2 ~> e'_2
 
-rule Step_exp/MEM-OPT-true:
-  S |- MEM e_1 (OPT (e_2)) ~> BOOL true
-  -- if e_1 = e_2
-
-rule Step_exp/MEM-OPT-false:
-  S |- MEM val_1 (OPT val_2?) ~> BOOL false
-  -- (if val_1 =/= val_2)?
-
-rule Step_exp/MEM-LIST-true:
+rule Step_exp/MEM-true:
   S |- MEM e_1 (LIST e_2*) ~> BOOL true
   -- if e_1 = e_2*[n]
 
-rule Step_exp/MEM-LIST-false:
+rule Step_exp/MEM-false:
   S |- MEM val_1 (LIST val_2*) ~> BOOL false
   -- (if val_1 =/= val_2)*
 
