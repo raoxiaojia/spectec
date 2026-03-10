@@ -12633,9 +12633,9 @@ $$
 & & | & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{param}’}~~{{{\mathtt{valtype}}}_{I}^\ast}~~\mbox{‘\texttt{{)}}’} & \quad\equiv\quad{} & {(\mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{param}’}~~{{\mathtt{valtype}}}_{I}~~\mbox{‘\texttt{{)}}’})^\ast} \\
 & {{\mathtt{result}}}_{I} & ::= & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{result}’}~~t{:}{{\mathtt{valtype}}}_{I}~~\mbox{‘\texttt{{)}}’} & \quad\Rightarrow\quad{} & t \\
 & & | & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{result}’}~~{{{\mathtt{valtype}}}_{I}^\ast}~~\mbox{‘\texttt{{)}}’} & \quad\equiv\quad{} & {(\mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{result}’}~~{{\mathtt{valtype}}}_{I}~~\mbox{‘\texttt{{)}}’})^\ast} \\
-& {{\mathtt{comptype}}}_{I} & ::= & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{struct}’}~~{({\mathit{ft}}, {{\mathit{id}}^?})^\ast}{:}{\mathtt{list}}({{\mathtt{field}}}_{I})~~\mbox{‘\texttt{{)}}’} & \quad\Rightarrow\quad{} & (\mathsf{struct}~{{\mathit{ft}}^\ast}, \{ \mathsf{fields}~{({{\mathit{id}}^?})^\ast} \}) \\
-& & | & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{array}’}~~{\mathit{ft}}{:}{{\mathtt{fieldtype}}}_{I}~~\mbox{‘\texttt{{)}}’} & \quad\Rightarrow\quad{} & (\mathsf{array}~{\mathit{ft}}, \{ \mathsf{fields}~(()) \}) \\
-& & | & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{func}’}~~{(t_1, {{\mathit{id}}^?})^\ast}{:}{\mathtt{list}}({{\mathtt{param}}}_{I})~~{t_2^\ast}{:}{\mathtt{list}}({{\mathtt{result}}}_{I})~~\mbox{‘\texttt{{)}}’} & \quad\Rightarrow\quad{} & (\mathsf{func}~{t_1^\ast} \rightarrow {t_2^\ast}, \{ \mathsf{fields}~(()) \}) \\
+& {{\mathtt{comptype}}}_{I} & ::= & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{struct}’}~~{({\mathit{ft}}, {{\mathit{id}}^?})^\ast}{:}{\mathtt{list}}({{\mathtt{field}}}_{I})~~\mbox{‘\texttt{{)}}’} & \quad\Rightarrow\quad{} & (\mathsf{struct}~{{\mathit{ft}}^\ast}, \{ \mathsf{fields}~({({{\mathit{id}}^?})^\ast}) \}) \\
+& & | & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{array}’}~~{\mathit{ft}}{:}{{\mathtt{fieldtype}}}_{I}~~\mbox{‘\texttt{{)}}’} & \quad\Rightarrow\quad{} & (\mathsf{array}~{\mathit{ft}}, \{ \mathsf{fields}~(\epsilon) \}) \\
+& & | & \mbox{‘\texttt{{(}}’}~~\mbox{‘\texttt{func}’}~~{(t_1, {{\mathit{id}}^?})^\ast}{:}{\mathtt{list}}({{\mathtt{param}}}_{I})~~{t_2^\ast}{:}{\mathtt{list}}({{\mathtt{result}}}_{I})~~\mbox{‘\texttt{{)}}’} & \quad\Rightarrow\quad{} & (\mathsf{func}~{t_1^\ast} \rightarrow {t_2^\ast}, \{ \mathsf{fields}~(\epsilon) \}) \\
 \end{array}
 $$
 
