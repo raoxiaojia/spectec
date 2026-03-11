@@ -209,6 +209,8 @@ and token = parse
   | "~>*_" { SQARROWSTARSUB }
   | "<<" { PREC }
   | ">>" { SUCC }
+  | "<<_" { PRECSUB }
+  | ">>_" { SUCCSUB }
   | "|-" { TURNSTILE }
   | "-|" { TILESTURN }
   | "|-_" { TURNSTILESUB }
