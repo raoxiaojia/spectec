@@ -64,6 +64,8 @@ and atom' =
   | Bar                          (* ``|` *)
   | BigAnd                       (* `(/\)` *)
   | BigOr                        (* `(\/)` *)
+  | BigForall                    (* `(!)` *)
+  | BigExists                    (* `(?)` *)
   | BigAdd                       (* `(+)` *)
   | BigMul                       (* `( * )` *)
   | BigCat                       (* `(++)` *)
@@ -162,6 +164,8 @@ let to_string atom =
   | Bar -> "|"
   | BigAnd -> "(/\\)"
   | BigOr -> "(\\/)"
+  | BigForall -> "(!)"
+  | BigExists -> "(?)"
   | BigAdd -> "(+)"
   | BigMul -> "(*)"
   | BigCat -> "(++)"
@@ -228,14 +232,16 @@ let name atom =
   | PlusMinus -> "plusminus"      (* Latex: \pm *)
   | MinusPlus -> "minusplus"      (* Latex: \mp *)
   | Times -> "times"
-  | Not -> "not"                  (* Latex: neg *)
-  | And -> "and"                  (* Latex: land *)
-  | Or -> "or"                    (* Latex: lor *)
+  | Not -> "not"                  (* Latex: \neg *)
+  | And -> "and"                  (* Latex: \land *)
+  | Or -> "or"                    (* Latex: \lor *)
   | Comma -> "comma"              (* Latex: , *)
   | Cat -> "cat"                  (* Latex: \oplus *)
   | Bar -> "bar"                  (* Latex: | *)
   | BigAnd -> "bigand"            (* Latex: \bigwedge *)
   | BigOr -> "bigor"              (* Latex: \bigvee *)
+  | BigForall -> "forall"
+  | BigExists -> "exists"
   | BigAdd -> "bigadd"            (* Latex: \Sigma *)
   | BigMul -> "bigmul"            (* Latex: \Pi *)
   | BigCat -> "bigcat"            (* Latex: \bigoplus *)

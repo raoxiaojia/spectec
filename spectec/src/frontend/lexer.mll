@@ -180,6 +180,8 @@ and token = parse
   | "\\/" { OR }
   | "(/\\)" { BIGAND }
   | "(\\/)" { BIGOR }
+  | "(!)" { BIGFORALL }
+  | "(?)" { BIGEXISTS }
   | "(+)" { BIGADD }
   | "(*)" { BIGMUL }
   | "(++)" { BIGCAT }
