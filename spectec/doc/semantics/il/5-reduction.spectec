@@ -8,7 +8,7 @@ relation Eq_typ: S |- typ == typ
 
 rule Expand_typ/plain:
   S |- t => ALIAS t
-  -- if t = plaintyp
+  ;; nop if t is VAR
 
 rule Expand_typ/alias:
   S |- VAR x a* => dt
