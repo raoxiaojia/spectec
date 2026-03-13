@@ -15935,7 +15935,7 @@ The instruction :math:`(\mathsf{table{.}size}~x)` is :ref:`valid <valid-val>` wi
 
 
 
-The instruction :math:`(\mathsf{table{.}grow}~x)` is :ref:`valid <valid-val>` with the instruction type :math:`{\mathit{rt}}~{\mathit{at}}~\rightarrow~\mathsf{i{\scriptstyle 32}}` if:
+The instruction :math:`(\mathsf{table{.}grow}~x)` is :ref:`valid <valid-val>` with the instruction type :math:`{\mathit{rt}}~{\mathit{at}}~\rightarrow~{\mathit{at}}` if:
 
 
    * The table :math:`C{.}\mathsf{tables}{}[x]` exists.
@@ -23191,7 +23191,9 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. If :math:`{\mathit{instr}'}` is some :math:`\mathsf{struct{.}new}~{\mathit{typeidx}}`, then:
 
-   a. Return :math:`\{  \}`.
+   a. Let :math:`(\mathsf{struct{.}new}~{\mathit{typeidx}})` be the destructuring of :math:`{\mathit{instr}'}`.
+
+   #. Return :math:`{\mathrm{free}}_{\mathit{typeidx}}({\mathit{typeidx}})`.
 
 #. If :math:`{\mathit{instr}'}` is some :math:`\mathsf{struct{.}new\_default}~{\mathit{typeidx}}`, then:
 
@@ -27958,7 +27960,7 @@ Instr_ok/table.size
   - C.TABLES[x] is (at lim rt).
 
 Instr_ok/table.grow
-- the instruction (TABLE.GROW x) is valid with the instruction type [rt, at] -> [I32] if:
+- the instruction (TABLE.GROW x) is valid with the instruction type [rt, at] -> [at] if:
   - the table C.TABLES[x] exists.
   - C.TABLES[x] is (at lim rt).
 
@@ -31459,7 +31461,8 @@ free_instr instr'
 61. If instr' is some I31.GET, then:
   a. Return {}.
 62. If instr' is some STRUCT.NEW, then:
-  a. Return {}.
+  a. Let (STRUCT.NEW typeidx) be instr'.
+  b. Return $free_typeidx(typeidx).
 63. If instr' is some STRUCT.NEW_DEFAULT, then:
   a. Let (STRUCT.NEW_DEFAULT typeidx) be instr'.
   b. Return $free_typeidx(typeidx).
