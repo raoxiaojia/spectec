@@ -2370,8 +2370,8 @@ def $free_instr(instr : instr) : free
   def $free_instr(`REF.I31`_instr) = {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], ELEMS [], DATAS [], LOCALS [], LABELS [], TAGS []}
   ;; ../../../../specification/wasm-latest/1.3-syntax.instructions.spectec:516.1-516.33
   def $free_instr{sx : sx}(`I31.GET`_instr(sx)) = {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], ELEMS [], DATAS [], LOCALS [], LABELS [], TAGS []}
-  ;; ../../../../specification/wasm-latest/1.3-syntax.instructions.spectec:518.1-518.41
-  def $free_instr{typeidx : typeidx}(`STRUCT.NEW`_instr(typeidx)) = {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], ELEMS [], DATAS [], LOCALS [], LABELS [], TAGS []}
+  ;; ../../../../specification/wasm-latest/1.3-syntax.instructions.spectec:518.1-518.61
+  def $free_instr{typeidx : typeidx}(`STRUCT.NEW`_instr(typeidx)) = $free_typeidx(typeidx)
   ;; ../../../../specification/wasm-latest/1.3-syntax.instructions.spectec:519.1-519.69
   def $free_instr{typeidx : typeidx}(`STRUCT.NEW_DEFAULT`_instr(typeidx)) = $free_typeidx(typeidx)
   ;; ../../../../specification/wasm-latest/1.3-syntax.instructions.spectec:520.1-520.69
@@ -3723,7 +3723,7 @@ relation Instr_ok: `%|-%:%`(context, instr, instrtype)
 
   ;; ../../../../specification/wasm-latest/2.3-validation.instructions.spectec:381.1-383.32
   rule `table.grow`{C : context, x : idx, rt : reftype, at : addrtype, lim : limits}:
-    `%|-%:%`(C, `TABLE.GROW`_instr(x), `%->_%%`_instrtype(`%`_resulttype([(rt : reftype <: valtype) (at : addrtype <: valtype)]), [], `%`_resulttype([I32_valtype])))
+    `%|-%:%`(C, `TABLE.GROW`_instr(x), `%->_%%`_instrtype(`%`_resulttype([(rt : reftype <: valtype) (at : addrtype <: valtype)]), [], `%`_resulttype([(at : addrtype <: valtype)])))
     -- if (C.TABLES_context[x!`%`_idx.0] = `%%%`_tabletype(at, lim, rt))
 
   ;; ../../../../specification/wasm-latest/2.3-validation.instructions.spectec:385.1-387.32
@@ -10600,9 +10600,9 @@ grammar Tplaininstr_(I : I) : instr
   ;; ../../../../specification/wasm-latest/6.3-text.instructions.spectec
   prod "i32.trunc_sat_f64_u" => CVTOP_instr(I32_numtype, F64_numtype, TRUNC_SAT_cvtop__(U_sx))
   ;; ../../../../specification/wasm-latest/6.3-text.instructions.spectec
-  prod "i64.extend_i64_s" => CVTOP_instr(I64_numtype, I64_numtype, EXTEND_cvtop__(S_sx))
+  prod "i64.extend_i32_s" => CVTOP_instr(I64_numtype, I32_numtype, EXTEND_cvtop__(S_sx))
   ;; ../../../../specification/wasm-latest/6.3-text.instructions.spectec
-  prod "i64.extend_i64_u" => CVTOP_instr(I64_numtype, I64_numtype, EXTEND_cvtop__(U_sx))
+  prod "i64.extend_i32_u" => CVTOP_instr(I64_numtype, I32_numtype, EXTEND_cvtop__(U_sx))
   ;; ../../../../specification/wasm-latest/6.3-text.instructions.spectec
   prod "i64.trunc_f32_s" => CVTOP_instr(I64_numtype, F32_numtype, TRUNC_cvtop__(S_sx))
   ;; ../../../../specification/wasm-latest/6.3-text.instructions.spectec
