@@ -22321,9 +22321,9 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Assert: Due to validation, :math:`{\mathit{externtype}}` is some :math:`\mathsf{func}~{\mathit{typeuse}}`.
 
-#. Let :math:`(\mathsf{func}~{\mathit{dt}})` be the destructuring of :math:`{\mathit{externtype}}`.
+#. Let :math:`(\mathsf{func}~{\mathit{tu}}_1)` be the destructuring of :math:`{\mathit{externtype}}`.
 
-#. Return :math:`(\mathsf{func}~{{\mathit{dt}}}{{}[ {{\mathit{tv}}^\ast} := {{\mathit{tu}}^\ast} ]})`.
+#. Return :math:`(\mathsf{func}~{{\mathit{tu}}_1}{{}[ {{\mathit{tv}}^\ast} := {{\mathit{tu}}^\ast} ]})`.
 
 
 :math:`{{{\mathit{xt}}_1^\ast}~\rightarrow~{{\mathit{xt}}_2^\ast}}{{}[ {{\mathit{tv}}^\ast} := {{\mathit{tu}}^\ast} ]}`
@@ -31066,8 +31066,8 @@ subst_externtype externtype tv* tu*
   a. Let (MEM mt) be externtype.
   b. Return (MEM $subst_memtype(mt, tv*, tu*)).
 5. Assert: Due to validation, externtype is some FUNC.
-6. Let (FUNC dt) be externtype.
-7. Return (FUNC $subst_deftype(dt, tv*, tu*)).
+6. Let (FUNC tu_1) be externtype.
+7. Return (FUNC $subst_typeuse(tu_1, tv*, tu*)).
 
 subst_moduletype xt_1* -> xt_2* tv* tu*
 1. Return $subst_externtype(xt_1, tv*, tu*)* -> $subst_externtype(xt_2, tv*, tu*)*.
