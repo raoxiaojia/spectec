@@ -5814,6 +5814,7 @@ def $growtable(tableinst : tableinst, nat : nat, ref : ref) : tableinst
     -- if (tableinst' = {TYPE `%%%`_tabletype(at, `[%..%]`_limits(i', j?{j <- `j?`}), rt), REFS r'*{r' <- `r'*`} ++ r^n{}})
     -- if (i'!`%`_u64.0 = (|r'*{r' <- `r'*`}| + n))
     -- (if (i'!`%`_u64.0 <= j!`%`_u64.0))?{j <- `j?`}
+    -- if ((i'!`%`_u64.0 : nat <:> int) <= (((2 ^ $size((at : addrtype <: numtype))) : nat <:> int) - (1 : nat <:> int)))
 
 ;; ../../../../specification/wasm-latest/4.0-execution.configurations.spectec
 def $growmem(meminst : meminst, nat : nat) : meminst
@@ -5823,6 +5824,7 @@ def $growmem(meminst : meminst, nat : nat) : meminst
     -- if (meminst' = {TYPE `%%PAGE`_memtype(at, `[%..%]`_limits(i', j?{j <- `j?`})), BYTES b*{b <- `b*`} ++ `%`_byte(0)^(n * (64 * $Ki)){}})
     -- if ((i'!`%`_u64.0 : nat <:> rat) = (((|b*{b <- `b*`}| : nat <:> rat) / ((64 * $Ki) : nat <:> rat)) + (n : nat <:> rat)))
     -- (if (i'!`%`_u64.0 <= j!`%`_u64.0))?{j <- `j?`}
+    -- if (i'!`%`_u64.0 <= (2 ^ ((($size((at : addrtype <: numtype)) : nat <:> int) - (16 : nat <:> int)) : int <:> nat)))
 
 ;; ../../../../specification/wasm-latest/4.1-execution.values.spectec
 relation Num_ok: `%|-%:%`(store, num, numtype)
@@ -17236,6 +17238,7 @@ def $growtable(tableinst : tableinst, nat : nat, ref : ref) : tableinst?
     -- if (tableinst' = {TYPE `%%%`_tabletype(at, `[%..%]`_limits(i', j?{j <- `j?`}), rt), REFS r'*{r' <- `r'*`} ++ r^n{}})
     -- if (i'!`%`_u64.0 = (|r'*{r' <- `r'*`}| + n))
     -- (if (i'!`%`_u64.0 <= j!`%`_u64.0))?{j <- `j?`}
+    -- if ((i'!`%`_u64.0 : nat <:> int) <= (((2 ^ $size((at : addrtype <: numtype))) : nat <:> int) - (1 : nat <:> int)))
   def $growtable{x0 : tableinst, x1 : nat, x2 : ref}(x0, x1, x2) = ?()
 
 ;; ../../../../specification/wasm-latest/4.0-execution.configurations.spectec
@@ -17246,6 +17249,7 @@ def $growmem(meminst : meminst, nat : nat) : meminst?
     -- if (meminst' = {TYPE `%%PAGE`_memtype(at, `[%..%]`_limits(i', j?{j <- `j?`})), BYTES b*{b <- `b*`} ++ `%`_byte(0)^(n * (64 * $Ki)){}})
     -- if ((i'!`%`_u64.0 : nat <:> rat) = (((|b*{b <- `b*`}| : nat <:> rat) / ((64 * $Ki) : nat <:> rat)) + (n : nat <:> rat)))
     -- (if (i'!`%`_u64.0 <= j!`%`_u64.0))?{j <- `j?`}
+    -- if (i'!`%`_u64.0 <= (2 ^ ((($size((at : addrtype <: numtype)) : nat <:> int) - (16 : nat <:> int)) : int <:> nat)))
   def $growmem{x0 : meminst, x1 : nat}(x0, x1) = ?()
 
 ;; ../../../../specification/wasm-latest/4.1-execution.values.spectec
@@ -28784,6 +28788,7 @@ def $growtable(tableinst : tableinst, nat : nat, ref : ref) : tableinst?
     -- if (tableinst' = {TYPE `%%%`_tabletype(at, `[%..%]`_limits(i', j?{j <- `j?`}), rt), REFS r'*{r' <- `r'*`} ++ r^n{}})
     -- if (i'!`%`_u64.0 = (|r'*{r' <- `r'*`}| + n))
     -- (if (i'!`%`_u64.0 <= j!`%`_u64.0))?{j <- `j?`}
+    -- if ((i'!`%`_u64.0 : nat <:> int) <= (((2 ^ $size((at : addrtype <: numtype))) : nat <:> int) - (1 : nat <:> int)))
   def $growtable{x0 : tableinst, x1 : nat, x2 : ref}(x0, x1, x2) = ?()
 
 ;; ../../../../specification/wasm-latest/4.0-execution.configurations.spectec
@@ -28794,6 +28799,7 @@ def $growmem(meminst : meminst, nat : nat) : meminst?
     -- if (meminst' = {TYPE `%%PAGE`_memtype(at, `[%..%]`_limits(i', j?{j <- `j?`})), BYTES b*{b <- `b*`} ++ `%`_byte(0)^(n * (64 * $Ki)){}})
     -- if ((i'!`%`_u64.0 : nat <:> rat) = (((|b*{b <- `b*`}| : nat <:> rat) / ((64 * $Ki) : nat <:> rat)) + (n : nat <:> rat)))
     -- (if (i'!`%`_u64.0 <= j!`%`_u64.0))?{j <- `j?`}
+    -- if (i'!`%`_u64.0 <= (2 ^ ((($size((at : addrtype <: numtype)) : nat <:> int) - (16 : nat <:> int)) : int <:> nat)))
   def $growmem{x0 : meminst, x1 : nat}(x0, x1) = ?()
 
 ;; ../../../../specification/wasm-latest/4.1-execution.values.spectec
