@@ -80,8 +80,15 @@ def $refresh_params(p*) =
   $refresh_list(param, $refresh_param, $subst_param, p*)
 
 
+def $refresh_typ(typ) : (typ, subst)
 def $refresh_typbind(typbind) : (typbind, subst)
 def $refresh_typbinds(typbind*) : (typbind*, subst)
+
+def $refresh_typ(VAR x a*) = (VAR x a*, {})
+def $refresh_typ(optyp) = (optyp, {})
+def $refresh_typ(TUP tb*) = (TUP tb'*, s') -- if (tb'*, s') = $refresh_typbinds(tb*)
+def $refresh_typ(ITER t it) = (ITER t it, {})
+def $refresh_typ(MATCH x a* WITH inst*) = (MATCH x a*  WITH inst*, {})
 
 def $refresh_typbind(x `: t) = (x' `: t, s)
   -- if (x', s) = $refresh_expid(x)
@@ -125,25 +132,20 @@ def $subst_fun(s, x) = x  -- otherwise
 ;; Types
 
 def $subst_typ(subst, typ) : typ
-def $subst_typ(s, t) = t' -- if (t', s') = $subst_refresh_typ(s, t)
-
-def $subst_refresh_typ(subst, typ) : (typ, subst)
-def $subst_refresh_typ(s, VAR x a*) = (t, {})                        -- if (x,t) <- s.TYP /\ a* = eps
-def $subst_refresh_typ(s, VAR x a*) = (VAR x $subst_arg(s, a)*, {})  -- otherwise
-def $subst_refresh_typ(s, optyp) = (optyp, {})
-def $subst_refresh_typ(s, TUP tb*) = (TUP $subst_typbind(s, tb')*, s')
-  -- if (tb'*, s') = $refresh_typbinds(tb*)
-def $subst_refresh_typ(s, ITER t it) = (ITER $subst_typ(s ++ s', t) $subst_iter(s, it'), {})
-  -- if (it', s') = $refresh_iter(it)
-def $subst_refresh_typ(s, MATCH x a* WITH inst*) = (MATCH x $subst_arg(s, a)*  WITH $subst_inst(s, inst)*, {})
+def $subst_typ(s, VAR x a*) = t                        -- if (x,t) <- s.TYP /\ a* = eps
+def $subst_typ(s, VAR x a*) = VAR x $subst_arg(s, a)*  -- otherwise
+def $subst_typ(s, optyp) = optyp
+def $subst_typ(s, TUP tb*) = TUP $subst_typbind(s, tb)*
+def $subst_typ(s, ITER t it) = ITER $subst_typ(s ++ s', t) $subst_iter(s, it')
+def $subst_typ(s, MATCH x a* WITH inst*) = MATCH x $subst_arg(s, a)*  WITH $subst_inst(s, inst)*
 
 def $subst_deftyp(subst, deftyp) : deftyp
 def $subst_deftyp(s, ALIAS t) = ALIAS $subst_typ(s, t)
-def $subst_deftyp(s, STRUCT (a `: t `- `{q*} pr*)*) = STRUCT (a `: t' `- `{$subst_param(s ++ s', q')*} $subst_prem(s ++ s' ++ s'', pr)*)*
-  -- if (t', s') = $subst_refresh_typ(s, t)
+def $subst_deftyp(s, STRUCT (a `: t `- `{q*} pr*)*) = STRUCT (a `: $subst_typ(s, t') `- `{$subst_param(s ++ s', q')*} $subst_prem(s ++ s' ++ s'', pr)*)*
+  -- if (t', s') = $refresh_typ(t)
   -- if (q'*, s'') = $refresh_params(q*)
-def $subst_deftyp(s, VARIANT (m `: t `- `{q*} pr*)*) = VARIANT (m `: t' `- `{$subst_param(s ++ s', q')*} $subst_prem(s ++ s' ++ s'', pr)*)*
-  -- if (t', s') = $subst_refresh_typ(s, t)
+def $subst_deftyp(s, VARIANT (m `: t `- `{q*} pr*)*) = VARIANT (m `: $subst_typ(s, t') `- `{$subst_param(s ++ s', q')*} $subst_prem(s ++ s' ++ s'', pr)*)*
+  -- if (t', s') = $refresh_typ(t)
   -- if (q'*, s'') = $refresh_params(q*)
 
 def $subst_typbind(subst, typbind) : typbind
