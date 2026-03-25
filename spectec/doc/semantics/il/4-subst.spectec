@@ -137,6 +137,7 @@ def $subst_typ(s, VAR x a*) = VAR x $subst_arg(s, a)*  -- otherwise
 def $subst_typ(s, optyp) = optyp
 def $subst_typ(s, TUP tb*) = TUP $subst_typbind(s, tb)*
 def $subst_typ(s, ITER t it) = ITER $subst_typ(s ++ s', t) $subst_iter(s, it')
+  -- if (it', s') = $refresh_iter(it)
 def $subst_typ(s, MATCH x a* WITH inst*) = MATCH x $subst_arg(s, a)*  WITH $subst_inst(s, inst)*
 
 def $subst_deftyp(subst, deftyp) : deftyp
