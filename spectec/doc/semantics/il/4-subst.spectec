@@ -96,8 +96,8 @@ def $refresh_exppulls(exppull*) : (exppull*, subst)
 def $refresh_exppull(x `: t `<- e) = (x' `: t `<- e, s)
   -- if (x', s) = $refresh_expid(x)
 
-def $refresh_exppulls(tb*) =
-  $refresh_list(exppull, $refresh_exppull, $subst_exppull, tb*)
+def $refresh_exppulls(ep*) = (ep', $composesubsts(s*))
+  -- (if (ep', s) = $refresh_exppull(ep))*
 
 
 def $refresh_iter(iter) : (iter, subst)
