@@ -851,7 +851,6 @@ let vec_pat mode = function
 let ref_pat = function
   | RefPat r -> ref_ r.it
   | RefTypePat t -> Node ("ref." ^ heaptype t, [])
-  | NullPat -> Node ("ref.null", [])
 
 let rec result mode res =
   match res.it with

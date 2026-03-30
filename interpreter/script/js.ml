@@ -435,7 +435,6 @@ let type_of_vec_pat = function
 let type_of_ref_pat = function
   | RefPat ref -> type_of_ref ref.it
   | RefTypePat ht -> (NoNull, ht)
-  | NullPat -> (Null, BotHT)
 
 let rec type_of_result res =
   match res.it with
@@ -553,10 +552,6 @@ let assert_return ress ts at =
       [ BrOnNull (0l @@ at) @@ at ]
     | RefResult (RefTypePat t) ->
       [ RefTest (NoNull, t) @@ at;
-        Test (I32 I32Op.Eqz) @@ at;
-        BrIf (0l @@ at) @@ at ]
-    | RefResult NullPat ->
-      [ RefIsNull @@ at;
         Test (I32 I32Op.Eqz) @@ at;
         BrIf (0l @@ at) @@ at ]
     | EitherResult ress ->
@@ -733,7 +728,6 @@ let of_vec_pat = function
 let of_ref_pat = function
   | RefPat r -> of_ref r.it
   | RefTypePat t -> "\"ref." ^ string_of_heaptype t ^ "\""
-  | NullPat -> "\"ref.null\""
 
 let rec of_result res =
   match res.it with
