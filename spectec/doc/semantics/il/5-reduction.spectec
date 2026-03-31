@@ -155,20 +155,20 @@ rule Step_exp/CMP-ctx2:
   -- Step_exp: S |- e_2 ~> e_2'
 
 rule Step_exp/CMP-EQ-true:
-  S |- CMP EQ e_1 e_2 ~> BOOL true
-  -- if e_1 = e_2
+  S |- CMP EQ val_1 val_2 ~> BOOL true
+  -- if val_1 = val_2
 
 rule Step_exp/CMP-EQ-false:
   S |- CMP EQ val_1 val_2 ~> BOOL false
   -- if val_1 =/= val_2
 
-rule Step_exp/CMP-NE-false:
-  S |- CMP NE e_1 e_2 ~> BOOL false
-  -- if e_1 = e_2
-
 rule Step_exp/CMP-NE-true:
   S |- CMP NE val_1 val_2 ~> BOOL true
   -- if val_1 =/= val_2
+
+rule Step_exp/CMP-NE-false:
+  S |- CMP NE val_1 val_2 ~> BOOL false
+  -- if val_1 = val_2
 
 rule Step_exp/CMP-NUM:
   S |- CMP numcmpop num_1 num_2 ~> BOOL $numcmp(numcmpop, num_1, num_2)
@@ -557,6 +557,8 @@ rule Step_argmatch/EXP-fail:
   S |- `{q*} (EXP e / EXP e')  ~>_s  `{} FAIL
   -- Step_expmatch: S |- `{q*} (e / e')  ~>_s  `{} FAIL
 
+;; TODO: EXP disjointness?
+
 
 rule Step_argmatch_plain/ctx1:
   S |- a / a'  ~>  a'' / a'
@@ -565,14 +567,6 @@ rule Step_argmatch_plain/ctx1:
 rule Step_argmatch_plain/ctx2:
   S |- a / a'  ~>  a / a''
   -- Step_arg: S |- a' ~> a''
-
-rule Step_argmatch_plain/eq:
-  S |- a / a  ~>  eps
-
-;; TODO: disjointness
-;;rule Step_argmatch_plain/neq:
-;;  S |- a / a' ~> FAIL
-;;  -- Disj_arg: S |- a =/= a'
 
 
 rule Step_expmatch/plain:
@@ -616,7 +610,7 @@ rule Step_expmatch_plain/ctx2:
   -- Step_exp: S |- e' ~> e''
 
 rule Step_expmatch_plain/eq:
-  S |- e / e  ~>  eps
+  S |- val / val  ~>  eps
 
 rule Step_expmatch_plain/UN-PLUS:
   S |- num / UN PLUS e ~> num / e
@@ -721,7 +715,7 @@ rule Step_expmatch_plain/SUB-SUB:
     SUB e t_1 t'_1 / e'
   -- Sub_typ: $storeenv(S) |- t_1 <: t'_1
 
-;; TODO: disjointness
+;; TODO: disjointness?
 
 rule Step_expmatch_plain/SUB-TUP:
   S |- TUP e^n / SUB e' (TUP (x_1 `: t'_1)^n) (TUP (x_2 `: t'_2)^n) ~>
