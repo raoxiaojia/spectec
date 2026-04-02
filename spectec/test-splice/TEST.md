@@ -229,7 +229,7 @@ $$
 {{\mathrm{default}}}_{{\mathsf{i}}{N}} & = & ({\mathsf{i}}{N}{.}\mathsf{const}~0) \\
 {{\mathrm{default}}}_{{\mathsf{f}}{N}} & = & ({\mathsf{f}}{N}{.}\mathsf{const}~{+0}) \\
 {{\mathrm{default}}}_{{\mathsf{v}}{N}} & = & ({\mathsf{v}}{N}{.}\mathsf{const}~0) \\
-{{\mathrm{default}}}_{\mathsf{ref}~\mathsf{null}~{\mathit{ht}}} & = & (\mathsf{ref{.}null}~{\mathit{ht}}) \\
+{{\mathrm{default}}}_{\mathsf{ref}~\mathsf{null}~{\mathit{ht}}} & = & \mathsf{ref{.}null} \\
 {{\mathrm{default}}}_{\mathsf{ref}~{\mathit{ht}}} & = & \epsilon \\
 \end{array}
 $$
@@ -237,8 +237,8 @@ $$
 $$
 \begin{array}[t]{@{}lcl@{}l@{}}
 (s ; f){.}\mathsf{funcs} & = & s{.}\mathsf{funcs} \\[0.8ex]
-(s ; f){.}\mathsf{funcs}{}[x] & = & s{.}\mathsf{funcs}{}[f{.}\mathsf{module}{.}\mathsf{funcs}{}[x]] \\
-(s ; f){.}\mathsf{tables}{}[x] & = & s{.}\mathsf{tables}{}[f{.}\mathsf{module}{.}\mathsf{tables}{}[x]] \\
+z{.}\mathsf{funcs}{}[x] & = & s{.}\mathsf{funcs}{}[f{.}\mathsf{module}{.}\mathsf{funcs}{}[x]] \\
+z{.}\mathsf{tables}{}[x] & = & s{.}\mathsf{tables}{}[f{.}\mathsf{module}{.}\mathsf{tables}{}[x]] \\
 \end{array}
 $$
 
@@ -292,7 +292,6 @@ warning: syntax `abbreviated` was never spliced
 warning: syntax `absheaptype/syn` was never spliced
 warning: syntax `absheaptype/sem` was never spliced
 warning: syntax `addr` was never spliced
-warning: syntax `addrref` was never spliced
 warning: syntax `addrtype` was never spliced
 warning: syntax `arrayaddr` was never spliced
 warning: syntax `arrayinst` was never spliced
@@ -1368,7 +1367,7 @@ warning: rule `Step_read/memory.copy-gt` was never spliced
 warning: rule `Step_read/memory.init-oob` was never spliced
 warning: rule `Step_read/memory.init-zero` was never spliced
 warning: rule `Step_read/memory.init-succ` was never spliced
-warning: rule `Step_read/ref.null-idx` was never spliced
+warning: rule `Step_read/ref.null` was never spliced
 warning: rule `Step_read/ref.func` was never spliced
 warning: rule `Step_read/ref.test-true` was never spliced
 warning: rule `Step_read/ref.test-false` was never spliced
@@ -1559,6 +1558,7 @@ warning: definition `fnat` was never spliced
 warning: definition `fne_` was never spliced
 warning: definition `fnearest_` was never spliced
 warning: definition `fneg_` was never spliced
+warning: definition `fof` was never spliced
 warning: definition `fone` was never spliced
 warning: definition `fpmax_` was never spliced
 warning: definition `fpmin_` was never spliced
@@ -1567,6 +1567,7 @@ warning: definition `free_absheaptype` was never spliced
 warning: definition `free_addrtype` was never spliced
 warning: definition `free_block` was never spliced
 warning: definition `free_blocktype` was never spliced
+warning: definition `free_catch` was never spliced
 warning: definition `free_comptype` was never spliced
 warning: definition `free_consttype` was never spliced
 warning: definition `free_data` was never spliced
@@ -1615,6 +1616,7 @@ warning: definition `free_table` was never spliced
 warning: definition `free_tableidx` was never spliced
 warning: definition `free_tabletype` was never spliced
 warning: definition `free_tag` was never spliced
+warning: definition `free_tagidx` was never spliced
 warning: definition `free_tagtype` was never spliced
 warning: definition `free_type` was never spliced
 warning: definition `free_typeidx` was never spliced
@@ -1796,6 +1798,7 @@ warning: definition `signif` was never spliced
 warning: definition `sizenn` was never spliced
 warning: definition `sizenn1` was never spliced
 warning: definition `sizenn2` was never spliced
+warning: definition `sof` was never spliced
 warning: definition `startsd` was never spliced
 warning: definition `store` was never spliced
 warning: definition `structinst` was never spliced
@@ -2414,12 +2417,14 @@ warning: definition prose `expanddt` was never spliced
 warning: definition prose `expon` was never spliced
 warning: definition prose `exportsd` was never spliced
 warning: definition prose `fnat` was never spliced
+warning: definition prose `fof` was never spliced
 warning: definition prose `fone` was never spliced
 warning: definition prose `frame` was never spliced
 warning: definition prose `free_absheaptype` was never spliced
 warning: definition prose `free_addrtype` was never spliced
 warning: definition prose `free_block` was never spliced
 warning: definition prose `free_blocktype` was never spliced
+warning: definition prose `free_catch` was never spliced
 warning: definition prose `free_comptype` was never spliced
 warning: definition prose `free_consttype` was never spliced
 warning: definition prose `free_data` was never spliced
@@ -2468,6 +2473,7 @@ warning: definition prose `free_table` was never spliced
 warning: definition prose `free_tableidx` was never spliced
 warning: definition prose `free_tabletype` was never spliced
 warning: definition prose `free_tag` was never spliced
+warning: definition prose `free_tagidx` was never spliced
 warning: definition prose `free_tagtype` was never spliced
 warning: definition prose `free_type` was never spliced
 warning: definition prose `free_typeidx` was never spliced
@@ -2605,6 +2611,7 @@ warning: definition prose `size` was never spliced
 warning: definition prose `sizenn` was never spliced
 warning: definition prose `sizenn1` was never spliced
 warning: definition prose `sizenn2` was never spliced
+warning: definition prose `sof` was never spliced
 warning: definition prose `startsd` was never spliced
 warning: definition prose `store` was never spliced
 warning: definition prose `structinst` was never spliced

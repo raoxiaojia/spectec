@@ -8415,11 +8415,11 @@ The module :math:`(\mathsf{module}~{{\mathit{type}}^\ast}~{{\mathit{import}}^\as
 
       1) Return :math:`{{\mathrm{ipopcnt}}}_{N}({\mathit{iN}})`.
 
-   #. Assert: Due to validation, :math:`{\mathit{unop}}` is some :math:`\mathsf{extend}~n`.
+   #. If :math:`{\mathit{unop}}` is some :math:`\mathsf{extend}~n`, then:
 
-   #. Let :math:`(\mathsf{extend}~M)` be the destructuring of :math:`{\mathit{unop}}`.
+      1) Let :math:`(\mathsf{extend}~M)` be the destructuring of :math:`{\mathit{unop}}`.
 
-   #. Return :math:`{{{{\mathrm{extend}}}_{M, N}^{\mathsf{s}}}}{({{\mathrm{wrap}}}_{N, M}({\mathit{iN}}))}`.
+      #) Return :math:`{{{{\mathrm{extend}}}_{M, N}^{\mathsf{s}}}}{({{\mathrm{wrap}}}_{N, M}({\mathit{iN}}))}`.
 
 #. Assert: Due to validation, :math:`{\mathit{numtype}}` is :math:`{\mathsf{f}}{n}`.
 
@@ -12644,9 +12644,9 @@ unop_ numtype unop_ iN
     1) Return [$ictz_($sizenn(numtype), iN)].
   c. If (unop_ = POPCNT), then:
     1) Return [$ipopcnt_($sizenn(numtype), iN)].
-  d. Assert: Due to validation, unop_ is some EXTEND.
-  e. Let (EXTEND M) be unop_.
-  f. Return [$extend__(M, $sizenn(numtype), S, $wrap__($sizenn(numtype), M, iN))].
+  d. If unop_ is some EXTEND, then:
+    1) Let (EXTEND M) be unop_.
+    2) Return [$extend__(M, $sizenn(numtype), S, $wrap__($sizenn(numtype), M, iN))].
 2. Assert: Due to validation, numtype is Fnn.
 3. If (unop_ = ABS), then:
   a. Return $fabs_($sizenn(numtype), iN).
@@ -14359,21 +14359,29 @@ The heap type :math:`{\mathit{heaptype}}_1` :ref:`matches <match>` the heap type
       * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`\mathsf{none}`.
 
       * The heap type :math:`{\mathit{heaptype}}_2` :ref:`matches <match>` the heap type :math:`\mathsf{any}`.
+
+      * The heap type :math:`{\mathit{heaptype}}_2` is not of the form :math:`\mathsf{bot}`.
    * Or:
 
       * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`\mathsf{nofunc}`.
 
       * The heap type :math:`{\mathit{heaptype}}_2` :ref:`matches <match>` the heap type :math:`\mathsf{func}`.
+
+      * The heap type :math:`{\mathit{heaptype}}_2` is not of the form :math:`\mathsf{bot}`.
    * Or:
 
       * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`\mathsf{noexn}`.
 
       * The heap type :math:`{\mathit{heaptype}}_2` :ref:`matches <match>` the heap type :math:`\mathsf{exn}`.
+
+      * The heap type :math:`{\mathit{heaptype}}_2` is not of the form :math:`\mathsf{bot}`.
    * Or:
 
       * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`\mathsf{noextern}`.
 
       * The heap type :math:`{\mathit{heaptype}}_2` :ref:`matches <match>` the heap type :math:`\mathsf{extern}`.
+
+      * The heap type :math:`{\mathit{heaptype}}_2` is not of the form :math:`\mathsf{bot}`.
    * Or:
 
       * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`\mathsf{bot}`.
@@ -14487,6 +14495,8 @@ The heap type :math:`\mathsf{none}` :ref:`matches <match>` the heap type :math:`
 
    * The heap type :math:`{\mathit{heaptype}}` :ref:`matches <match>` the heap type :math:`\mathsf{any}`.
 
+   * The heap type :math:`{\mathit{heaptype}}` is not of the form :math:`\mathsf{bot}`.
+
 
 
 
@@ -14494,6 +14504,8 @@ The heap type :math:`\mathsf{nofunc}` :ref:`matches <match>` the heap type :math
 
 
    * The heap type :math:`{\mathit{heaptype}}` :ref:`matches <match>` the heap type :math:`\mathsf{func}`.
+
+   * The heap type :math:`{\mathit{heaptype}}` is not of the form :math:`\mathsf{bot}`.
 
 
 
@@ -14503,6 +14515,8 @@ The heap type :math:`\mathsf{noexn}` :ref:`matches <match>` the heap type :math:
 
    * The heap type :math:`{\mathit{heaptype}}` :ref:`matches <match>` the heap type :math:`\mathsf{exn}`.
 
+   * The heap type :math:`{\mathit{heaptype}}` is not of the form :math:`\mathsf{bot}`.
+
 
 
 
@@ -14510,6 +14524,8 @@ The heap type :math:`\mathsf{noextern}` :ref:`matches <match>` the heap type :ma
 
 
    * The heap type :math:`{\mathit{heaptype}}` :ref:`matches <match>` the heap type :math:`\mathsf{extern}`.
+
+   * The heap type :math:`{\mathit{heaptype}}` is not of the form :math:`\mathsf{bot}`.
 
 
 
@@ -15947,7 +15963,7 @@ The instruction :math:`(\mathsf{table{.}size}~x)` is :ref:`valid <valid-val>` wi
 
 
 
-The instruction :math:`(\mathsf{table{.}grow}~x)` is :ref:`valid <valid-val>` with the instruction type :math:`{\mathit{rt}}~{\mathit{at}}~\rightarrow~\mathsf{i{\scriptstyle 32}}` if:
+The instruction :math:`(\mathsf{table{.}grow}~x)` is :ref:`valid <valid-val>` with the instruction type :math:`{\mathit{rt}}~{\mathit{at}}~\rightarrow~{\mathit{at}}` if:
 
 
    * The table :math:`C{.}\mathsf{tables}{}[x]` exists.
@@ -17274,11 +17290,9 @@ The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the 
 
    * Either:
 
-      * The reference value :math:`{\mathit{ref}}` is of the form :math:`(\mathsf{ref{.}null}~{\mathit{ht}})`.
+      * The reference value :math:`{\mathit{ref}}` is of the form :math:`\mathsf{ref{.}null}`.
 
-      * The reference type :math:`{\mathit{rt}}` is of the form :math:`(\mathsf{ref}~\mathsf{null}~{\mathit{ht}'})`.
-
-      * The heap type :math:`{\mathit{ht}'}` :ref:`matches <match>` the heap type :math:`{\mathit{ht}}`.
+      * The reference type :math:`{\mathit{rt}}` is of the form :math:`(\mathsf{ref}~\mathsf{null}~\mathsf{bot})`.
 
    * Or:
 
@@ -17326,11 +17340,13 @@ The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the 
       * The reference type :math:`{\mathit{rt}}` is of the form :math:`(\mathsf{ref}~\mathsf{any})`.
    * Or:
 
-      * The reference value :math:`{\mathit{ref}}` is of the form :math:`(\mathsf{ref{.}extern}~{\mathit{addrref}})`.
+      * The reference value :math:`{\mathit{ref}}` is of the form :math:`(\mathsf{ref{.}extern}~{\mathit{ref}'})`.
 
       * The reference type :math:`{\mathit{rt}}` is of the form :math:`(\mathsf{ref}~\mathsf{extern})`.
 
-      * The reference value :math:`{\mathit{addrref}}` is :ref:`valid <valid-val>` with the reference type :math:`(\mathsf{ref}~\mathsf{any})`.
+      * The reference value :math:`{\mathit{ref}'}` is :ref:`valid <valid-val>` with the reference type :math:`(\mathsf{ref}~\mathsf{any})`.
+
+      * The reference value :math:`{\mathit{ref}'}` is not of the form :math:`\mathsf{ref{.}null}`.
    * Or:
 
       * The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the reference type :math:`{\mathit{rt}'}`.
@@ -17340,10 +17356,7 @@ The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the 
 
 
 
-The reference value :math:`(\mathsf{ref{.}null}~{\mathit{ht}})` is :ref:`valid <valid-val>` with the reference type :math:`(\mathsf{ref}~\mathsf{null}~{\mathit{ht}'})` if:
-
-
-   * The heap type :math:`{\mathit{ht}'}` :ref:`matches <match>` the heap type :math:`{\mathit{ht}}`.
+The reference value :math:`\mathsf{ref{.}null}` is :ref:`valid <valid-val>` with the reference type :math:`(\mathsf{ref}~\mathsf{null}~\mathsf{bot})`.
 
 
 
@@ -17396,10 +17409,12 @@ The reference value :math:`(\mathsf{ref{.}host}~a)` is :ref:`valid <valid-val>` 
 
 
 
-The reference value :math:`(\mathsf{ref{.}extern}~{\mathit{addrref}})` is :ref:`valid <valid-val>` with the reference type :math:`(\mathsf{ref}~\mathsf{extern})` if:
+The reference value :math:`(\mathsf{ref{.}extern}~{\mathit{ref}})` is :ref:`valid <valid-val>` with the reference type :math:`(\mathsf{ref}~\mathsf{extern})` if:
 
 
-   * The reference value :math:`{\mathit{addrref}}` is :ref:`valid <valid-val>` with the reference type :math:`(\mathsf{ref}~\mathsf{any})`.
+   * The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the reference type :math:`(\mathsf{ref}~\mathsf{any})`.
+
+   * The reference value :math:`{\mathit{ref}}` is not of the form :math:`\mathsf{ref{.}null}`.
 
 
 
@@ -17724,7 +17739,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Assert: Due to validation, the first non-value entry of the stack is a :math:`\mathsf{frame}`.
 
-#. If :math:`{\mathit{val}''}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}''} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -18355,7 +18370,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
    a. Execute the instruction :math:`(\mathsf{br}~l)`.
 
@@ -18372,7 +18387,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
    a. Do nothing.
 
@@ -18516,7 +18531,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{ref}}` from the stack.
 
-#. If :math:`{\mathit{ref}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{ref}} = \mathsf{ref{.}null}`, then:
 
    a. Push the value :math:`(\mathsf{i{\scriptstyle 32}}{.}\mathsf{const}~1)` to the stack.
 
@@ -18533,7 +18548,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{ref}}` from the stack.
 
-#. If :math:`{\mathit{ref}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{ref}} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -18552,7 +18567,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{ref}}_1` from the stack.
 
-#. If :math:`{\mathit{ref}}_1` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}` and :math:`{\mathit{ref}}_2` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{ref}}_1 = \mathsf{ref{.}null}` and :math:`{\mathit{ref}}_2 = \mathsf{ref{.}null}`, then:
 
    a. Push the value :math:`(\mathsf{i{\scriptstyle 32}}{.}\mathsf{const}~1)` to the stack.
 
@@ -18573,7 +18588,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -18605,17 +18620,17 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 ......................................
 
 
-1. Assert: Due to validation, a value is on the top of the stack.
+1. Assert: Due to validation, a reference value is on the top of the stack.
 
-#. Pop the value :math:`{\mathit{val}}` from the stack.
+#. Pop the value :math:`{\mathit{ref}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{ref}} = \mathsf{ref{.}null}`, then:
 
-   a. Push the value :math:`(\mathsf{ref{.}null}~\mathsf{extern})` to the stack.
+   a. Push the value :math:`\mathsf{ref{.}null}` to the stack.
 
-#. If :math:`{\mathit{val}}` is address value, then:
+#. Else:
 
-   a. Push the value :math:`(\mathsf{ref{.}extern}~{\mathit{val}})` to the stack.
+   a. Push the value :math:`(\mathsf{ref{.}extern}~{\mathit{ref}})` to the stack.
 
 
 :math:`\mathsf{any{.}convert\_extern}`
@@ -18626,15 +18641,15 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
-   a. Push the value :math:`(\mathsf{ref{.}null}~\mathsf{any})` to the stack.
+   a. Push the value :math:`\mathsf{ref{.}null}` to the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}extern}~{\mathit{addrref}}`, then:
+#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}extern}~{\mathit{ref}}`, then:
 
-   a. Let :math:`(\mathsf{ref{.}extern}~{\mathit{addrref}})` be the destructuring of :math:`{\mathit{val}}`.
+   a. Let :math:`(\mathsf{ref{.}extern}~{\mathit{ref}})` be the destructuring of :math:`{\mathit{val}}`.
 
-   #. Push the value :math:`{\mathit{addrref}}` to the stack.
+   #. Push the value :math:`{\mathit{ref}}` to the stack.
 
 
 :math:`{\mathit{nt}} {.} {\mathit{unop}}`
@@ -19208,7 +19223,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}'}` from the stack.
 
-#. If :math:`{\mathit{val}'}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}'} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -19302,7 +19317,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
    #. Pop the value :math:`{\mathit{val}''}` from the stack.
 
-   #. If :math:`{\mathit{val}''}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+   #. If :math:`{\mathit{val}''} = \mathsf{ref{.}null}`, then:
 
       1) Trap.
 
@@ -19341,7 +19356,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}'}` from the stack.
 
-#. If :math:`{\mathit{val}'}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}'} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -20079,13 +20094,11 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
    #. Execute the instruction :math:`(\mathsf{memory{.}init}~x~y)`.
 
 
-:math:`\mathsf{ref{.}null}~x`
-.............................
+:math:`\mathsf{ref{.}null}~{\mathit{ht}}`
+.........................................
 
 
-1. Let :math:`z` be the current state.
-
-#. Push the value :math:`(\mathsf{ref{.}null}~z{.}\mathsf{types}{}[x])` to the stack.
+1. Push the value :math:`\mathsf{ref{.}null}` to the stack.
 
 
 :math:`\mathsf{ref{.}func}~x`
@@ -20178,7 +20191,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -20298,7 +20311,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -20306,19 +20319,19 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Let :math:`(\mathsf{ref{.}array}~a)` be the destructuring of :math:`{\mathit{val}}`.
 
-#. If :math:`a < {|z{.}\mathsf{arrays}|}` and :math:`i \geq {|z{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}|}`, then:
+#. Assert: Due to validation, :math:`a < {|z{.}\mathsf{arrays}|}`.
+
+#. If :math:`i \geq {|z{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}|}`, then:
 
    a. Trap.
 
-#. If :math:`i < {|z{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}|}` and :math:`a < {|z{.}\mathsf{arrays}|}`, then:
+#. Assert: Due to validation, the :ref:`expansion <aux-expand-deftype>` of :math:`z{.}\mathsf{types}{}[x]` is some :math:`\mathsf{array}~{\mathit{fieldtype}}`.
 
-   a. Assert: Due to validation, the :ref:`expansion <aux-expand-deftype>` of :math:`z{.}\mathsf{types}{}[x]` is some :math:`\mathsf{array}~{\mathit{fieldtype}}`.
+#. Let :math:`(\mathsf{array}~{\mathit{fieldtype}}_0)` be the destructuring of the :ref:`expansion <aux-expand-deftype>` of :math:`z{.}\mathsf{types}{}[x]`.
 
-   #. Let :math:`(\mathsf{array}~{\mathit{fieldtype}}_0)` be the destructuring of the :ref:`expansion <aux-expand-deftype>` of :math:`z{.}\mathsf{types}{}[x]`.
+#. Let :math:`({\mathsf{mut}^?}~{\mathit{zt}})` be the destructuring of :math:`{\mathit{fieldtype}}_0`.
 
-   #. Let :math:`({\mathsf{mut}^?}~{\mathit{zt}})` be the destructuring of :math:`{\mathit{fieldtype}}_0`.
-
-   #. Push the value :math:`{{{{\mathrm{unpack}}}_{{\mathit{zt}}}^{{{\mathit{sx}}^?}}}}{(z{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i])}` to the stack.
+#. Push the value :math:`{{{{\mathrm{unpack}}}_{{\mathit{zt}}}^{{{\mathit{sx}}^?}}}}{(z{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i])}` to the stack.
 
 
 :math:`\mathsf{array{.}len}`
@@ -20331,7 +20344,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -20366,7 +20379,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}'}` from the stack.
 
-#. If :math:`{\mathit{val}'}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}'} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -20433,11 +20446,11 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}'}` from the stack.
 
-#. If :math:`{\mathit{val}'}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}` and :math:`{\mathit{val}}` is reference value, then:
+#. If :math:`{\mathit{val}'} = \mathsf{ref{.}null}` and :math:`{\mathit{val}}` is reference value, then:
 
    a. Trap.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}` and :math:`{\mathit{val}'}` is reference value, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}` and :math:`{\mathit{val}'}` is reference value, then:
 
    a. Trap.
 
@@ -20544,7 +20557,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -20609,7 +20622,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}}` from the stack.
 
-#. If :math:`{\mathit{val}}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -20938,7 +20951,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}'}` from the stack.
 
-#. If :math:`{\mathit{val}'}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}'} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -21000,7 +21013,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{val}'}` from the stack.
 
-#. If :math:`{\mathit{val}'}` is some :math:`\mathsf{ref{.}null}~{\mathit{heaptype}}`, then:
+#. If :math:`{\mathit{val}'} = \mathsf{ref{.}null}`, then:
 
    a. Trap.
 
@@ -22346,9 +22359,9 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Assert: Due to validation, :math:`{\mathit{externtype}}` is some :math:`\mathsf{func}~{\mathit{typeuse}}`.
 
-#. Let :math:`(\mathsf{func}~{\mathit{dt}})` be the destructuring of :math:`{\mathit{externtype}}`.
+#. Let :math:`(\mathsf{func}~{\mathit{tu}'})` be the destructuring of :math:`{\mathit{externtype}}`.
 
-#. Return :math:`(\mathsf{func}~{{\mathit{dt}}}{{}[ {{\mathit{tv}}^\ast} := {{\mathit{tu}}^\ast} ]})`.
+#. Return :math:`(\mathsf{func}~{{\mathit{tu}'}}{{}[ {{\mathit{tv}}^\ast} := {{\mathit{tu}}^\ast} ]})`.
 
 
 :math:`{{{\mathit{xt}}_1^\ast}~\rightarrow~{{\mathit{xt}}_2^\ast}}{{}[ {{\mathit{tv}}^\ast} := {{\mathit{tu}}^\ast} ]}`
@@ -23229,7 +23242,9 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. If :math:`{\mathit{instr}'}` is some :math:`\mathsf{struct{.}new}~{\mathit{typeidx}}`, then:
 
-   a. Return :math:`\{  \}`.
+   a. Let :math:`(\mathsf{struct{.}new}~{\mathit{typeidx}})` be the destructuring of :math:`{\mathit{instr}'}`.
+
+   #. Return :math:`{\mathrm{free}}_{\mathit{typeidx}}({\mathit{typeidx}})`.
 
 #. If :math:`{\mathit{instr}'}` is some :math:`\mathsf{struct{.}new\_default}~{\mathit{typeidx}}`, then:
 
@@ -23782,7 +23797,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. If :math:`{{\mathit{NULL}}_0^?} = \mathsf{null}`, then:
 
-   a. Return :math:`(\mathsf{ref{.}null}~{\mathit{ht}})`.
+   a. Return :math:`\mathsf{ref{.}null}`.
 
 #. If :math:`{{\mathit{NULL}}_0^?}` is not defined, then:
 
@@ -24248,11 +24263,11 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
       1) Return :math:`{{\mathrm{ipopcnt}}}_{N}(i)`.
 
-   #. Assert: Due to validation, :math:`{\mathit{unop}}` is some :math:`{\mathsf{extend}}{{\mathit{sz}}}{\mathsf{\_}}{\mathsf{s}}`.
+   #. If :math:`{\mathit{unop}}` is some :math:`{\mathsf{extend}}{{\mathit{sz}}}{\mathsf{\_}}{\mathsf{s}}`, then:
 
-   #. Let :math:`({\mathsf{extend}}{M}{\mathsf{\_}}{\mathsf{s}})` be the destructuring of :math:`{\mathit{unop}}`.
+      1) Let :math:`({\mathsf{extend}}{M}{\mathsf{\_}}{\mathsf{s}})` be the destructuring of :math:`{\mathit{unop}}`.
 
-   #. Return :math:`{{{{\mathrm{iextend}}}_{N, M}^{\mathsf{s}}}}{(i)}`.
+      #) Return :math:`{{{{\mathrm{iextend}}}_{N, M}^{\mathsf{s}}}}{(i)}`.
 
 #. Assert: Due to validation, :math:`{\mathit{numtype}}` is :math:`{\mathsf{f}}{N}`.
 
@@ -25713,155 +25728,169 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 1. Return :math:`s{.}\mathsf{exns}`.
 
 
-:math:`(s, f){.}\mathsf{types}{}[x]`
-....................................
+:math:`f`
+.........
+
+
+1. Return :math:`z{.}\mathsf{frame}`.
+
+
+:math:`z{.}\mathsf{types}{}[x]`
+...............................
 
 
 1. Return :math:`f{.}\mathsf{module}{.}\mathsf{types}{}[x]`.
 
 
-:math:`(s, f){.}\mathsf{tags}{}[x]`
-...................................
+:math:`s`
+.........
+
+
+1. Return :math:`z{.}\mathsf{store}`.
+
+
+:math:`z{.}\mathsf{tags}{}[x]`
+..............................
 
 
 1. Return :math:`s{.}\mathsf{tags}{}[f{.}\mathsf{module}{.}\mathsf{tags}{}[x]]`.
 
 
-:math:`(s, f){.}\mathsf{globals}{}[x]`
-......................................
+:math:`z{.}\mathsf{globals}{}[x]`
+.................................
 
 
 1. Return :math:`s{.}\mathsf{globals}{}[f{.}\mathsf{module}{.}\mathsf{globals}{}[x]]`.
 
 
-:math:`(s, f){.}\mathsf{mems}{}[x]`
-...................................
+:math:`z{.}\mathsf{mems}{}[x]`
+..............................
 
 
 1. Return :math:`s{.}\mathsf{mems}{}[f{.}\mathsf{module}{.}\mathsf{mems}{}[x]]`.
 
 
-:math:`(s, f){.}\mathsf{tables}{}[x]`
-.....................................
+:math:`z{.}\mathsf{tables}{}[x]`
+................................
 
 
 1. Return :math:`s{.}\mathsf{tables}{}[f{.}\mathsf{module}{.}\mathsf{tables}{}[x]]`.
 
 
-:math:`(s, f){.}\mathsf{funcs}{}[x]`
-....................................
+:math:`z{.}\mathsf{funcs}{}[x]`
+...............................
 
 
 1. Return :math:`s{.}\mathsf{funcs}{}[f{.}\mathsf{module}{.}\mathsf{funcs}{}[x]]`.
 
 
-:math:`(s, f){.}\mathsf{datas}{}[x]`
-....................................
+:math:`z{.}\mathsf{datas}{}[x]`
+...............................
 
 
 1. Return :math:`s{.}\mathsf{datas}{}[f{.}\mathsf{module}{.}\mathsf{datas}{}[x]]`.
 
 
-:math:`(s, f){.}\mathsf{elems}{}[x]`
-....................................
+:math:`z{.}\mathsf{elems}{}[x]`
+...............................
 
 
 1. Return :math:`s{.}\mathsf{elems}{}[f{.}\mathsf{module}{.}\mathsf{elems}{}[x]]`.
 
 
-:math:`(s, f){.}\mathsf{locals}{}[x]`
-.....................................
+:math:`z{.}\mathsf{locals}{}[x]`
+................................
 
 
 1. Return :math:`f{.}\mathsf{locals}{}[x]`.
 
 
-:math:`(s, f){}[{.}\mathsf{locals}{}[x] = v]`
-.............................................
+:math:`z{}[{.}\mathsf{locals}{}[x] = v]`
+........................................
 
 
 1. Replace :math:`f{.}\mathsf{locals}{}[x]` with :math:`v`.
 
 
-:math:`(s, f){}[{.}\mathsf{globals}{}[x]{.}\mathsf{value} = v]`
-...............................................................
+:math:`z{}[{.}\mathsf{globals}{}[x]{.}\mathsf{value} = v]`
+..........................................................
 
 
 1. Replace :math:`s{.}\mathsf{globals}{}[f{.}\mathsf{module}{.}\mathsf{globals}{}[x]]{.}\mathsf{value}` with :math:`v`.
 
 
-:math:`(s, f){}[{.}\mathsf{tables}{}[x]{.}\mathsf{refs}{}[i] = r]`
-..................................................................
+:math:`z{}[{.}\mathsf{tables}{}[x]{.}\mathsf{refs}{}[i] = r]`
+.............................................................
 
 
 1. Replace :math:`s{.}\mathsf{tables}{}[f{.}\mathsf{module}{.}\mathsf{tables}{}[x]]{.}\mathsf{refs}{}[i]` with :math:`r`.
 
 
-:math:`(s, f){}[{.}\mathsf{tables}{}[x] = {\mathit{ti}}]`
-.........................................................
+:math:`z{}[{.}\mathsf{tables}{}[x] = {\mathit{ti}}]`
+....................................................
 
 
 1. Replace :math:`s{.}\mathsf{tables}{}[f{.}\mathsf{module}{.}\mathsf{tables}{}[x]]` with :math:`{\mathit{ti}}`.
 
 
-:math:`(s, f){}[{.}\mathsf{mems}{}[x]{.}\mathsf{bytes}{}[i : j] = {b^\ast}]`
-............................................................................
+:math:`z{}[{.}\mathsf{mems}{}[x]{.}\mathsf{bytes}{}[i : j] = {b^\ast}]`
+.......................................................................
 
 
 1. Replace :math:`s{.}\mathsf{mems}{}[f{.}\mathsf{module}{.}\mathsf{mems}{}[x]]{.}\mathsf{bytes}{}[i : j]` with :math:`{b^\ast}`.
 
 
-:math:`(s, f){}[{.}\mathsf{mems}{}[x] = {\mathit{mi}}]`
-.......................................................
+:math:`z{}[{.}\mathsf{mems}{}[x] = {\mathit{mi}}]`
+..................................................
 
 
 1. Replace :math:`s{.}\mathsf{mems}{}[f{.}\mathsf{module}{.}\mathsf{mems}{}[x]]` with :math:`{\mathit{mi}}`.
 
 
-:math:`(s, f){}[{.}\mathsf{elems}{}[x]{.}\mathsf{refs} = {r^\ast}]`
-...................................................................
+:math:`z{}[{.}\mathsf{elems}{}[x]{.}\mathsf{refs} = {r^\ast}]`
+..............................................................
 
 
 1. Replace :math:`s{.}\mathsf{elems}{}[f{.}\mathsf{module}{.}\mathsf{elems}{}[x]]{.}\mathsf{refs}` with :math:`{r^\ast}`.
 
 
-:math:`(s, f){}[{.}\mathsf{datas}{}[x]{.}\mathsf{bytes} = {b^\ast}]`
-....................................................................
+:math:`z{}[{.}\mathsf{datas}{}[x]{.}\mathsf{bytes} = {b^\ast}]`
+...............................................................
 
 
 1. Replace :math:`s{.}\mathsf{datas}{}[f{.}\mathsf{module}{.}\mathsf{datas}{}[x]]{.}\mathsf{bytes}` with :math:`{b^\ast}`.
 
 
-:math:`(s, f){}[{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i] = {\mathit{fv}}]`
-.................................................................................
+:math:`z{}[{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i] = {\mathit{fv}}]`
+............................................................................
 
 
 1. Replace :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]` with :math:`{\mathit{fv}}`.
 
 
-:math:`(s, f){}[{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i] = {\mathit{fv}}]`
-................................................................................
+:math:`z{}[{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i] = {\mathit{fv}}]`
+...........................................................................
 
 
 1. Replace :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]` with :math:`{\mathit{fv}}`.
 
 
-:math:`(s, f){}[{.}\mathsf{structs} \mathrel{{=}{\oplus}} {{\mathit{si}}^\ast}]`
-................................................................................
+:math:`z{}[{.}\mathsf{structs} \mathrel{{=}{\oplus}} {{\mathit{si}}^\ast}]`
+...........................................................................
 
 
 1. Append :math:`{{\mathit{si}}^\ast}` to :math:`s{.}\mathsf{structs}`.
 
 
-:math:`(s, f){}[{.}\mathsf{arrays} \mathrel{{=}{\oplus}} {{\mathit{ai}}^\ast}]`
-...............................................................................
+:math:`z{}[{.}\mathsf{arrays} \mathrel{{=}{\oplus}} {{\mathit{ai}}^\ast}]`
+..........................................................................
 
 
 1. Append :math:`{{\mathit{ai}}^\ast}` to :math:`s{.}\mathsf{arrays}`.
 
 
-:math:`(s, f){}[{.}\mathsf{exns} \mathrel{{=}{\oplus}} {{\mathit{exn}}^\ast}]`
-..............................................................................
+:math:`z{}[{.}\mathsf{exns} \mathrel{{=}{\oplus}} {{\mathit{exn}}^\ast}]`
+.........................................................................
 
 
 1. Append :math:`{{\mathit{exn}}^\ast}` to :math:`s{.}\mathsf{exns}`.
@@ -25875,7 +25904,11 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Let :math:`{i'}` be :math:`{|{{r'}^\ast}|} + n`.
 
-#. If :math:`{({i'} \leq j)^?}`, then:
+#. If not :math:`{({i'} \leq j)^?}`, then:
+
+   a. Fail.
+
+#. If :math:`{i'} \leq {2^{{|{\mathit{at}}|}}} - 1`, then:
 
    a. Let :math:`{\mathit{tableinst}'}` be the table instance :math:`\{ \mathsf{type}~({\mathit{at}}~{}[ {i'} .. {j^?} ]~{\mathit{rt}}),\;\allowbreak \mathsf{refs}~{{r'}^\ast}~{r^{n}} \}`.
 
@@ -25892,7 +25925,11 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Let :math:`{i'}` be :math:`{|{b^\ast}|} / (64 \, {\mathrm{Ki}}) + n`.
 
-#. If :math:`{({i'} \leq j)^?}`, then:
+#. If not :math:`{({i'} \leq j)^?}`, then:
+
+   a. Fail.
+
+#. If :math:`{i'} \leq {2^{{|{\mathit{at}}|} - 16}}`, then:
 
    a. Let :math:`{\mathit{meminst}'}` be the memory instance :math:`\{ \mathsf{type}~({\mathit{at}}~{}[ {i'} .. {j^?} ]~\mathsf{page}),\;\allowbreak \mathsf{bytes}~{b^\ast}~{\mathtt{0x00}^{n \cdot 64 \, {\mathrm{Ki}}}} \}`.
 
@@ -27209,15 +27246,19 @@ Heaptype_sub
   - Or:
     - heaptype_1 is NONE.
     - heaptype_2 matches the heap type ANY.
+    - heaptype_2 is not BOT.
   - Or:
     - heaptype_1 is NOFUNC.
     - heaptype_2 matches the heap type FUNC.
+    - heaptype_2 is not BOT.
   - Or:
     - heaptype_1 is NOEXN.
     - heaptype_2 matches the heap type EXN.
+    - heaptype_2 is not BOT.
   - Or:
     - heaptype_1 is NOEXTERN.
     - heaptype_2 matches the heap type EXTERN.
+    - heaptype_2 is not BOT.
   - Or:
     - heaptype_1 is BOT.
 
@@ -27277,18 +27318,22 @@ Heaptype_sub/rec
 Heaptype_sub/none
 - the heap type NONE matches the heap type heaptype if:
   - heaptype matches the heap type ANY.
+  - heaptype is not BOT.
 
 Heaptype_sub/nofunc
 - the heap type NOFUNC matches the heap type heaptype if:
   - heaptype matches the heap type FUNC.
+  - heaptype is not BOT.
 
 Heaptype_sub/noexn
 - the heap type NOEXN matches the heap type heaptype if:
   - heaptype matches the heap type EXN.
+  - heaptype is not BOT.
 
 Heaptype_sub/noextern
 - the heap type NOEXTERN matches the heap type heaptype if:
   - heaptype matches the heap type EXTERN.
+  - heaptype is not BOT.
 
 Heaptype_sub/bot
 - the heap type BOT matches heaptype.
@@ -28016,7 +28061,7 @@ Instr_ok/table.size
   - C.TABLES[x] is (at lim rt).
 
 Instr_ok/table.grow
-- the instruction (TABLE.GROW x) is valid with the instruction type [rt, at] -> [I32] if:
+- the instruction (TABLE.GROW x) is valid with the instruction type [rt, at] -> [at] if:
   - the table C.TABLES[x] exists.
   - C.TABLES[x] is (at lim rt).
 
@@ -28711,9 +28756,8 @@ Vec_ok
 Ref_ok
 - the reference value ref is valid with the reference type rt if:
   - Either:
-    - ref is (REF.NULL ht).
-    - rt is (REF ?(NULL) ht').
-    - the heap type ht' matches the heap type ht.
+    - ref is REF.NULL_ADDR.
+    - rt is (REF ?(NULL) BOT).
   - Or:
     - ref is (REF.I31_NUM i).
     - rt is (REF ?() I31).
@@ -28740,16 +28784,16 @@ Ref_ok
     - ref is (REF.HOST_ADDR a).
     - rt is (REF ?() ANY).
   - Or:
-    - ref is (REF.EXTERN addrref).
+    - ref is (REF.EXTERN ref').
     - rt is (REF ?() EXTERN).
-    - the reference value addrref is valid with the reference type (REF ?() ANY).
+    - the reference value ref' is valid with the reference type (REF ?() ANY).
+    - ref' is not REF.NULL_ADDR.
   - Or:
     - ref is valid with the reference type rt'.
     - rt' matches rt.
 
 Ref_ok/null
-- the reference value (REF.NULL ht) is valid with the reference type (REF ?(NULL) ht') if:
-  - the heap type ht' matches the heap type ht.
+- the reference value REF.NULL_ADDR is valid with the reference type (REF ?(NULL) BOT).
 
 Ref_ok/i31
 - the reference value (REF.I31_NUM i) is valid with the reference type (REF ?() I31).
@@ -28777,8 +28821,9 @@ Ref_ok/host
 - the reference value (REF.HOST_ADDR a) is valid with the reference type (REF ?() ANY).
 
 Ref_ok/extern
-- the reference value (REF.EXTERN addrref) is valid with the reference type (REF ?() EXTERN) if:
-  - the reference value addrref is valid with the reference type (REF ?() ANY).
+- the reference value (REF.EXTERN ref) is valid with the reference type (REF ?() EXTERN) if:
+  - the reference value ref is valid with the reference type (REF ?() ANY).
+  - ref is not REF.NULL_ADDR.
 
 Ref_ok/sub
 - the reference value ref is valid with the reference type rt if:
@@ -28942,7 +28987,7 @@ Step_read/return_call_ref-frame-* yy
 2. Assert: Due to validation, a value is on the top of the stack.
 3. Pop the value val'' from the stack.
 4. Assert: Due to validation, the first non-value entry of the stack is a FRAME_.
-5. If val'' is some REF.NULL, then:
+5. If (val'' = REF.NULL_ADDR), then:
   a. Trap.
 6. Assert: Due to validation, val'' is some REF.FUNC_ADDR.
 7. Let (REF.FUNC_ADDR a) be val''.
@@ -29238,7 +29283,7 @@ Step_pure/br_table l* l'
 Step_pure/br_on_null l
 1. Assert: Due to validation, a value is on the top of the stack.
 2. Pop the value val from the stack.
-3. If val is some REF.NULL, then:
+3. If (val = REF.NULL_ADDR), then:
   a. Execute the instruction (BR l).
 4. Else:
   a. Push the value val to the stack.
@@ -29246,7 +29291,7 @@ Step_pure/br_on_null l
 Step_pure/br_on_non_null l
 1. Assert: Due to validation, a value is on the top of the stack.
 2. Pop the value val from the stack.
-3. If val is some REF.NULL, then:
+3. If (val = REF.NULL_ADDR), then:
   a. Do nothing.
 4. Else:
   a. Push the value val to the stack.
@@ -29312,7 +29357,7 @@ Step_pure/ref.i31
 Step_pure/ref.is_null
 1. Assert: Due to validation, a value of value type ref is on the top of the stack.
 2. Pop the value ref from the stack.
-3. If ref is some REF.NULL, then:
+3. If (ref = REF.NULL_ADDR), then:
   a. Push the value (I32.CONST 1) to the stack.
 4. Else:
   a. Push the value (I32.CONST 0) to the stack.
@@ -29320,7 +29365,7 @@ Step_pure/ref.is_null
 Step_pure/ref.as_non_null
 1. Assert: Due to validation, a value of value type ref is on the top of the stack.
 2. Pop the value ref from the stack.
-3. If ref is some REF.NULL, then:
+3. If (ref = REF.NULL_ADDR), then:
   a. Trap.
 4. Push the value ref to the stack.
 
@@ -29329,7 +29374,7 @@ Step_pure/ref.eq
 2. Pop the value ref_2 from the stack.
 3. Assert: Due to validation, a value of value type ref is on the top of the stack.
 4. Pop the value ref_1 from the stack.
-5. If (ref_1 is some REF.NULL /\ ref_2 is some REF.NULL), then:
+5. If ((ref_1 = REF.NULL_ADDR) /\ (ref_2 = REF.NULL_ADDR)), then:
   a. Push the value (I32.CONST 1) to the stack.
 6. Else if (ref_1 = ref_2), then:
   a. Push the value (I32.CONST 1) to the stack.
@@ -29339,7 +29384,7 @@ Step_pure/ref.eq
 Step_pure/i31.get sx
 1. Assert: Due to validation, a value is on the top of the stack.
 2. Pop the value val from the stack.
-3. If val is some REF.NULL, then:
+3. If (val = REF.NULL_ADDR), then:
   a. Trap.
 4. Assert: Due to validation, val is some REF.I31_NUM.
 5. Let (REF.I31_NUM i) be val.
@@ -29354,21 +29399,21 @@ Step_pure/array.new x
 6. Execute the instruction (ARRAY.NEW_FIXED x n).
 
 Step_pure/extern.convert_any
-1. Assert: Due to validation, a value is on the top of the stack.
-2. Pop the value val from the stack.
-3. If val is some REF.NULL, then:
-  a. Push the value (REF.NULL EXTERN) to the stack.
-4. If val is addrref, then:
-  a. Push the value (REF.EXTERN val) to the stack.
+1. Assert: Due to validation, a value of value type ref is on the top of the stack.
+2. Pop the value ref from the stack.
+3. If (ref = REF.NULL_ADDR), then:
+  a. Push the value REF.NULL_ADDR to the stack.
+4. Else:
+  a. Push the value (REF.EXTERN ref) to the stack.
 
 Step_pure/any.convert_extern
 1. Assert: Due to validation, a value is on the top of the stack.
 2. Pop the value val from the stack.
-3. If val is some REF.NULL, then:
-  a. Push the value (REF.NULL ANY) to the stack.
+3. If (val = REF.NULL_ADDR), then:
+  a. Push the value REF.NULL_ADDR to the stack.
 4. If val is some REF.EXTERN, then:
-  a. Let (REF.EXTERN addrref) be val.
-  b. Push the value addrref to the stack.
+  a. Let (REF.EXTERN ref) be val.
+  b. Push the value ref to the stack.
 
 Step_pure/unop nt unop
 1. Assert: Due to validation, a value of value type nt is on the top of the stack.
@@ -29637,7 +29682,7 @@ Step_read/call_ref yy
 1. Let z be the current state.
 2. Assert: Due to validation, a value is on the top of the stack.
 3. Pop the value val' from the stack.
-4. If val' is some REF.NULL, then:
+4. If (val' = REF.NULL_ADDR), then:
   a. Trap.
 5. Assert: Due to validation, val' is some REF.FUNC_ADDR.
 6. Let (REF.FUNC_ADDR a) be val'.
@@ -29681,7 +29726,7 @@ Step_read/return_call_ref yy
   a. Assert: Due to validation, the first non-value entry of the stack is a FRAME_.
   b. Assert: Due to validation, a value is on the top of the stack.
   c. Pop the value val'' from the stack.
-  d. If val'' is some REF.NULL, then:
+  d. If (val'' = REF.NULL_ADDR), then:
     1) Trap.
   e. Assert: Due to validation, val'' is some REF.FUNC_ADDR.
   f. Let (REF.FUNC_ADDR a) be val''.
@@ -29700,7 +29745,7 @@ Step_read/throw_ref
 1. Let z be the current state.
 2. Assert: Due to validation, a value is on the top of the stack.
 3. Pop the value val' from the stack.
-4. If val' is some REF.NULL, then:
+4. If (val' = REF.NULL_ADDR), then:
   a. Trap.
 5. If val' is some REF.EXN_ADDR, then:
   a. Let (REF.EXN_ADDR a) be val'.
@@ -30052,9 +30097,8 @@ Step_read/memory.init x y
   g. Push the value (I32.CONST (n - 1)) to the stack.
   h. Execute the instruction (MEMORY.INIT x y).
 
-Step_read/ref.null (_IDX x)
-1. Let z be the current state.
-2. Push the value (REF.NULL $type(z, x)) to the stack.
+Step_read/ref.null ht
+1. Push the value REF.NULL_ADDR to the stack.
 
 Step_read/ref.func x
 1. Let z be the current state.
@@ -30098,7 +30142,7 @@ Step_read/struct.get sx? x i
 1. Let z be the current state.
 2. Assert: Due to validation, a value is on the top of the stack.
 3. Pop the value val from the stack.
-4. If val is some REF.NULL, then:
+4. If (val = REF.NULL_ADDR), then:
   a. Trap.
 5. Assert: Due to validation, val is some REF.STRUCT_ADDR.
 6. Let (REF.STRUCT_ADDR a) be val.
@@ -30156,23 +30200,23 @@ Step_read/array.get sx? x
 3. Pop the value (I32.CONST i) from the stack.
 4. Assert: Due to validation, a value is on the top of the stack.
 5. Pop the value val from the stack.
-6. If val is some REF.NULL, then:
+6. If (val = REF.NULL_ADDR), then:
   a. Trap.
 7. Assert: Due to validation, val is some REF.ARRAY_ADDR.
 8. Let (REF.ARRAY_ADDR a) be val.
-9. If ((a < |$arrayinst(z)|) /\ (i >= |$arrayinst(z)[a].FIELDS|)), then:
+9. Assert: Due to validation, (a < |$arrayinst(z)|).
+10. If (i >= |$arrayinst(z)[a].FIELDS|), then:
   a. Trap.
-10. If ((i < |$arrayinst(z)[a].FIELDS|) /\ (a < |$arrayinst(z)|)), then:
-  a. Assert: Due to validation, $Expand($type(z, x)) is some ARRAY.
-  b. Let (ARRAY fieldtype_0) be $Expand($type(z, x)).
-  c. Let (mut? zt) be fieldtype_0.
-  d. Push the value $unpackfield_(zt, sx?, $arrayinst(z)[a].FIELDS[i]) to the stack.
+11. Assert: Due to validation, $Expand($type(z, x)) is some ARRAY.
+12. Let (ARRAY fieldtype_0) be $Expand($type(z, x)).
+13. Let (mut? zt) be fieldtype_0.
+14. Push the value $unpackfield_(zt, sx?, $arrayinst(z)[a].FIELDS[i]) to the stack.
 
 Step_read/array.len
 1. Let z be the current state.
 2. Assert: Due to validation, a value is on the top of the stack.
 3. Pop the value val from the stack.
-4. If val is some REF.NULL, then:
+4. If (val = REF.NULL_ADDR), then:
   a. Trap.
 5. Assert: Due to validation, val is some REF.ARRAY_ADDR.
 6. Let (REF.ARRAY_ADDR a) be val.
@@ -30189,7 +30233,7 @@ Step_read/array.fill x
 7. Pop the value (I32.CONST i) from the stack.
 8. Assert: Due to validation, a value is on the top of the stack.
 9. Pop the value val' from the stack.
-10. If val' is some REF.NULL, then:
+10. If (val' = REF.NULL_ADDR), then:
   a. Trap.
 11. Assert: Due to validation, val' is some REF.ARRAY_ADDR.
 12. Let (REF.ARRAY_ADDR a) be val'.
@@ -30222,9 +30266,9 @@ Step_read/array.copy x_1 x_2
 9. Pop the value (I32.CONST i_1) from the stack.
 10. Assert: Due to validation, a value is on the top of the stack.
 11. Pop the value val' from the stack.
-12. If (val' is some REF.NULL /\ val is ref), then:
+12. If ((val' = REF.NULL_ADDR) /\ val is ref), then:
   a. Trap.
-13. If (val is some REF.NULL /\ val' is ref), then:
+13. If ((val = REF.NULL_ADDR) /\ val' is ref), then:
   a. Trap.
 14. If val' is some REF.ARRAY_ADDR, then:
   a. Let (REF.ARRAY_ADDR a_1) be val'.
@@ -30277,7 +30321,7 @@ Step_read/array.init_elem x y
 7. Pop the value (I32.CONST i) from the stack.
 8. Assert: Due to validation, a value is on the top of the stack.
 9. Pop the value val from the stack.
-10. If val is some REF.NULL, then:
+10. If (val = REF.NULL_ADDR), then:
   a. Trap.
 11. Assert: Due to validation, val is some REF.ARRAY_ADDR.
 12. Let (REF.ARRAY_ADDR a) be val.
@@ -30309,7 +30353,7 @@ Step_read/array.init_data x y
 7. Pop the value (I32.CONST i) from the stack.
 8. Assert: Due to validation, a value is on the top of the stack.
 9. Pop the value val from the stack.
-10. If val is some REF.NULL, then:
+10. If (val = REF.NULL_ADDR), then:
   a. Trap.
 11. Assert: Due to validation, val is some REF.ARRAY_ADDR.
 12. Let (REF.ARRAY_ADDR a) be val.
@@ -30467,7 +30511,7 @@ Step/struct.set x i
 3. Pop the value val from the stack.
 4. Assert: Due to validation, a value is on the top of the stack.
 5. Pop the value val' from the stack.
-6. If val' is some REF.NULL, then:
+6. If (val' = REF.NULL_ADDR), then:
   a. Trap.
 7. Assert: Due to validation, val' is some REF.STRUCT_ADDR.
 8. Let (REF.STRUCT_ADDR a) be val'.
@@ -30497,7 +30541,7 @@ Step/array.set x
 5. Pop the value (I32.CONST i) from the stack.
 6. Assert: Due to validation, a value is on the top of the stack.
 7. Pop the value val' from the stack.
-8. If val' is some REF.NULL, then:
+8. If (val' = REF.NULL_ADDR), then:
   a. Trap.
 9. Assert: Due to validation, val' is some REF.ARRAY_ADDR.
 10. Let (REF.ARRAY_ADDR a) be val'.
@@ -31115,8 +31159,8 @@ subst_externtype externtype tv* tu*
   a. Let (MEM mt) be externtype.
   b. Return (MEM $subst_memtype(mt, tv*, tu*)).
 5. Assert: Due to validation, externtype is some FUNC.
-6. Let (FUNC dt) be externtype.
-7. Return (FUNC $subst_deftype(dt, tv*, tu*)).
+6. Let (FUNC tu') be externtype.
+7. Return (FUNC $subst_typeuse(tu', tv*, tu*)).
 
 subst_moduletype xt_1* -> xt_2* tv* tu*
 1. Return $subst_externtype(xt_1, tv*, tu*)* -> $subst_externtype(xt_2, tv*, tu*)*.
@@ -31530,7 +31574,8 @@ free_instr instr'
 61. If instr' is some I31.GET, then:
   a. Return {}.
 62. If instr' is some STRUCT.NEW, then:
-  a. Return {}.
+  a. Let (STRUCT.NEW typeidx) be instr'.
+  b. Return $free_typeidx(typeidx).
 63. If instr' is some STRUCT.NEW_DEFAULT, then:
   a. Let (STRUCT.NEW_DEFAULT typeidx) be instr'.
   b. Return $free_typeidx(typeidx).
@@ -31792,7 +31837,7 @@ default_ valtype
   a. Fail.
 5. Let (REF NULL_0? ht) be valtype.
 6. If (NULL_0? = ?(NULL)), then:
-  a. Return ?((REF.NULL ht)).
+  a. Return ?(REF.NULL_ADDR).
 7. If NULL_0? is not defined, then:
   a. Return ?().
 8. Fail.
@@ -32007,9 +32052,9 @@ unop_ numtype unop_ i
     1) Return [$ictz_($sizenn(numtype), i)].
   c. If (unop_ = POPCNT), then:
     1) Return [$ipopcnt_($sizenn(numtype), i)].
-  d. Assert: Due to validation, unop_ is some EXTEND.
-  e. Let (EXTEND M) be unop_.
-  f. Return [$iextend_($sizenn(numtype), M, S, i)].
+  d. If unop_ is some EXTEND, then:
+    1) Let (EXTEND M) be unop_.
+    2) Return [$iextend_($sizenn(numtype), M, S, i)].
 2. Assert: Due to validation, numtype is Fnn.
 3. If (unop_ = ABS), then:
   a. Return $fabs_($sizenn(numtype), i).
@@ -32705,87 +32750,97 @@ arrayinst (s, f)
 exninst (s, f)
 1. Return s.EXNS.
 
-type (s, f) x
-1. Return f.MODULE.TYPES[x].
+fof z
+1. Return $frame(z).
 
-tag (s, f) x
-1. Return s.TAGS[f.MODULE.TAGS[x]].
+type z x
+1. Return $fof(z).MODULE.TYPES[x].
 
-global (s, f) x
-1. Return s.GLOBALS[f.MODULE.GLOBALS[x]].
+sof z
+1. Return $store(z).
 
-mem (s, f) x
-1. Return s.MEMS[f.MODULE.MEMS[x]].
+tag z x
+1. Return $sof(z).TAGS[$fof(z).MODULE.TAGS[x]].
 
-table (s, f) x
-1. Return s.TABLES[f.MODULE.TABLES[x]].
+global z x
+1. Return $sof(z).GLOBALS[$fof(z).MODULE.GLOBALS[x]].
 
-func (s, f) x
-1. Return s.FUNCS[f.MODULE.FUNCS[x]].
+mem z x
+1. Return $sof(z).MEMS[$fof(z).MODULE.MEMS[x]].
 
-data (s, f) x
-1. Return s.DATAS[f.MODULE.DATAS[x]].
+table z x
+1. Return $sof(z).TABLES[$fof(z).MODULE.TABLES[x]].
 
-elem (s, f) x
-1. Return s.ELEMS[f.MODULE.ELEMS[x]].
+func z x
+1. Return $sof(z).FUNCS[$fof(z).MODULE.FUNCS[x]].
 
-local (s, f) x
-1. Return f.LOCALS[x].
+data z x
+1. Return $sof(z).DATAS[$fof(z).MODULE.DATAS[x]].
 
-with_local (s, f) x v
-1. Replace f.LOCALS[x] with ?(v).
+elem z x
+1. Return $sof(z).ELEMS[$fof(z).MODULE.ELEMS[x]].
 
-with_global (s, f) x v
-1. Replace s.GLOBALS[f.MODULE.GLOBALS[x]].VALUE with v.
+local z x
+1. Return $fof(z).LOCALS[x].
 
-with_table (s, f) x i r
-1. Replace s.TABLES[f.MODULE.TABLES[x]].REFS[i] with r.
+with_local z x v
+1. Replace $fof(z).LOCALS[x] with ?(v).
 
-with_tableinst (s, f) x ti
-1. Replace s.TABLES[f.MODULE.TABLES[x]] with ti.
+with_global z x v
+1. Replace $sof(z).GLOBALS[$fof(z).MODULE.GLOBALS[x]].VALUE with v.
 
-with_mem (s, f) x i j b*
-1. Replace s.MEMS[f.MODULE.MEMS[x]].BYTES[i : j] with b*.
+with_table z x i r
+1. Replace $sof(z).TABLES[$fof(z).MODULE.TABLES[x]].REFS[i] with r.
 
-with_meminst (s, f) x mi
-1. Replace s.MEMS[f.MODULE.MEMS[x]] with mi.
+with_tableinst z x ti
+1. Replace $sof(z).TABLES[$fof(z).MODULE.TABLES[x]] with ti.
 
-with_elem (s, f) x r*
-1. Replace s.ELEMS[f.MODULE.ELEMS[x]].REFS with r*.
+with_mem z x i j b*
+1. Replace $sof(z).MEMS[$fof(z).MODULE.MEMS[x]].BYTES[i : j] with b*.
 
-with_data (s, f) x b*
-1. Replace s.DATAS[f.MODULE.DATAS[x]].BYTES with b*.
+with_meminst z x mi
+1. Replace $sof(z).MEMS[$fof(z).MODULE.MEMS[x]] with mi.
 
-with_struct (s, f) a i fv
-1. Replace s.STRUCTS[a].FIELDS[i] with fv.
+with_elem z x r*
+1. Replace $sof(z).ELEMS[$fof(z).MODULE.ELEMS[x]].REFS with r*.
 
-with_array (s, f) a i fv
-1. Replace s.ARRAYS[a].FIELDS[i] with fv.
+with_data z x b*
+1. Replace $sof(z).DATAS[$fof(z).MODULE.DATAS[x]].BYTES with b*.
 
-add_structinst (s, f) si*
-1. Append si* to the s.STRUCTS.
+with_struct z a i fv
+1. Replace $sof(z).STRUCTS[a].FIELDS[i] with fv.
 
-add_arrayinst (s, f) ai*
-1. Append ai* to the s.ARRAYS.
+with_array z a i fv
+1. Replace $sof(z).ARRAYS[a].FIELDS[i] with fv.
 
-add_exninst (s, f) exn*
-1. Append exn* to the s.EXNS.
+add_structinst z si*
+1. Append si* to the $sof(z).STRUCTS.
+
+add_arrayinst z ai*
+1. Append ai* to the $sof(z).ARRAYS.
+
+add_exninst z exn*
+1. Append exn* to the $sof(z).EXNS.
 
 growtable tableinst n r
 1. Let { TYPE: (at ([ i .. j? ]) rt); REFS: r'* } be tableinst.
 2. Let i' be (|r'*| + n).
-3. If (i' <= j)?, then:
+3. If not (i' <= j)?, then:
+  a. Fail.
+4. If (i' <= ((2 ^ $size(at)) - 1)), then:
   a. Let tableinst' be { TYPE: (at ([ i' .. j? ]) rt); REFS: r'* :: r^n }.
   b. Return tableinst'.
-4. Fail.
+5. Fail.
 
 growmem meminst n
 1. Let { TYPE: at ([ i .. j? ]) PAGE; BYTES: b* } be meminst.
 2. Let i' be ((|b*| / (64 * $Ki())) + n).
-3. If (i' <= j)?, then:
+3. If not (i' <= j)?, then:
+  a. Fail.
+4. If (i' <= (2 ^ ($size(at) - 16))), then:
   a. Let meminst' be { TYPE: at ([ i' .. j? ]) PAGE; BYTES: b* :: 0^(n * (64 * $Ki())) }.
   b. Return meminst'.
-4. Fail.
+5. Fail.
 
 inst_valtype moduleinst t
 1. Let dt* be moduleinst.TYPES.
