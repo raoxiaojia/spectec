@@ -214,6 +214,8 @@ and eval_expr env expr =
   let rec to_bool source = function
     | BoolV b -> b
     | ListV _ as v -> List.for_all (to_bool source) (unwrap_listv_to_list v)
+    | OptV None -> true
+    | OptV Some v -> to_bool source v
     | _ -> fail_expr source "type mismatch for boolean value"
   in
 
@@ -359,6 +361,7 @@ and eval_expr env expr =
       fail_expr expr (sprintf "cannot choose an element from %s because it's empty" (string_of_expr e))
     else
       Array.get a 0
+  (* HARDCODE: The variable s is always assumed to be the implicit store *)
   | VarE "s" -> Store.get ()
   | VarE name -> lookup_env name env
   (* Optimized getter for simple IterE(VarE, ...) *)
@@ -806,6 +809,9 @@ and create_context (name: string) (args: value list) : AlContext.mode =
   AlContext.al (name, params, body, env, 0)
 
 and call_func (name: string) (args: value list) : value option =
+   (* HARDCODE: Calling the function named `store` is always implicitly assumed to be the getting the global store, as if the variable named `s`. *)
+   if name = "store" then Some (Store.get ()) else
+
    let builtin_name, is_builtin =
      match find_hint name "builtin" with
      | None -> name, false
