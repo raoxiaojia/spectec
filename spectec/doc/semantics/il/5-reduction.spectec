@@ -232,8 +232,8 @@ rule Step_exp/MEM-ctx2:
   -- Step_exp: S |- e_2 ~> e'_2
 
 rule Step_exp/MEM-true:
-  S |- MEM e_1 (LIST e_2*) ~> BOOL true
-  -- if e_1 = e_2*[n]
+  S |- MEM val_1 (LIST val_2*) ~> BOOL true
+  -- if val_1 = val_2*[n]
 
 rule Step_exp/MEM-false:
   S |- MEM val_1 (LIST val_2*) ~> BOOL false
