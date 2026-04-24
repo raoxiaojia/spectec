@@ -13788,7 +13788,7 @@ The number type :math:`{\mathit{numtype}}` :ref:`matches <match>` only itself.
 The :ref:`expansion <aux-expand-deftype>` of :math:`{\mathit{deftype}}` is :math:`{\mathit{comptype}}` if:
 
 
-   * The composite type :math:`{\mathrm{expand}}({\mathit{deftype}})` is of the form :math:`{\mathit{comptype}}`.
+   * The sub type :math:`{\mathrm{unroll}}({\mathit{deftype}})` is of the form :math:`(\mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{\mathit{comptype}})`.
 
 
 
@@ -23249,15 +23249,6 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 #. Return :math:`{{\mathit{subtype}}^\ast}{}[i]`.
 
 
-:math:`{\mathrm{expand}}({\mathit{deftype}})`
-.............................................
-
-
-1. Let :math:`(\mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{\mathit{comptype}})` be the destructuring of :math:`{\mathrm{unroll}}({\mathit{deftype}})`.
-
-#. Return :math:`{\mathit{comptype}}`.
-
-
 :math:`{\mathrm{free}}_{\mathit{addrtype}}({\mathit{addrtype}})`
 ................................................................
 
@@ -27708,7 +27699,7 @@ Numtype_sub
 
 Expand
 - The :ref:`expansion <aux-expand-deftype>` of deftype is comptype if:
-  - the composite type $expanddt(deftype) is comptype.
+  - the sub type $unrolldt(deftype) is (SUB final? typeuse* comptype).
 
 Vectype_sub
 - the vector type vectype matches only itself.
@@ -32363,10 +32354,6 @@ rolldt x rectype
 unrolldt (_DEF rectype i)
 1. Let (REC subtype*) be $unrollrt(rectype).
 2. Return subtype*[i].
-
-expanddt deftype
-1. Let (SUB final? typeuse* comptype) be $unrolldt(deftype).
-2. Return comptype.
 
 free_addrtype addrtype
 1. Return {}.

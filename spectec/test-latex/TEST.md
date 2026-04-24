@@ -3440,12 +3440,6 @@ $$
 \end{array}
 $$
 
-$$
-\begin{array}[t]{@{}lcl@{}l@{}}
-{\mathrm{expand}}({\mathit{deftype}}) & = & {\mathit{comptype}} & \quad \mbox{if}~ {\mathrm{unroll}}({\mathit{deftype}}) = \mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{\mathit{comptype}} \\
-\end{array}
-$$
-
 \vspace{1ex}
 
 \vspace{1ex}
@@ -4764,7 +4758,7 @@ $\boxed{{\mathit{typeuse}} \approx_{{\mathit{context}}} {\mathit{comptype}}}$
 
 $$
 \begin{array}[t]{@{}lrcl@{}l@{}}
-{[\textsc{\scriptsize Expand}]} \quad & {\mathit{deftype}} & \approx & {\mathit{comptype}} & \quad \mbox{if}~ {\mathrm{expand}}({\mathit{deftype}}) = {\mathit{comptype}} \\
+{[\textsc{\scriptsize Expand}]} \quad & {\mathit{deftype}} & \approx & {\mathit{comptype}} & \quad \mbox{if}~ {\mathrm{unroll}}({\mathit{deftype}}) = \mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{\mathit{comptype}} \\
 \end{array}
 $$
 
