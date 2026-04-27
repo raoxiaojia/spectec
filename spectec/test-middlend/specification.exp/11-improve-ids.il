@@ -2041,13 +2041,6 @@ def $unrolldt(v_deftype : deftype) : subtype
     -- if ($unrollrt(v_rectype) = REC_rectype(`%`_list(subtype_lst)))
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
-def $expanddt(v_deftype : deftype) : comptype
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
-  def $expanddt{v_deftype : deftype, v_comptype : comptype, final_opt : final?, typeuse_lst : typeuse*}(v_deftype) = v_comptype
-    -- wf_subtype: `%`(SUB_subtype(final_opt, typeuse_lst, v_comptype))
-    -- if ($unrolldt(v_deftype) = SUB_subtype(final_opt, typeuse_lst, v_comptype))
-
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $free_addrtype(v_addrtype : addrtype) : free
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $free_addrtype{v_addrtype : addrtype}(v_addrtype) = {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], ELEMS [], DATAS [], LOCALS [], LABELS [], TAGS []}
@@ -2116,126 +2109,126 @@ def $free_typevar(v_typevar : typevar) : free
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 rec {
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:484.1-484.36
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:481.1-481.36
 def $free_heaptype(v_heaptype : heaptype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(ANY_heaptype) = $free_absheaptype(ANY_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(EQ_heaptype) = $free_absheaptype(EQ_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(I31_heaptype) = $free_absheaptype(I31_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(STRUCT_heaptype) = $free_absheaptype(STRUCT_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(ARRAY_heaptype) = $free_absheaptype(ARRAY_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(NONE_heaptype) = $free_absheaptype(NONE_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(FUNC_heaptype) = $free_absheaptype(FUNC_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(NOFUNC_heaptype) = $free_absheaptype(NOFUNC_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(EXN_heaptype) = $free_absheaptype(EXN_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(NOEXN_heaptype) = $free_absheaptype(NOEXN_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(EXTERN_heaptype) = $free_absheaptype(EXTERN_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(NOEXTERN_heaptype) = $free_absheaptype(NOEXTERN_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.65
   def $free_heaptype(BOT_heaptype) = $free_absheaptype(BOT_absheaptype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:533.1-533.53
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:530.1-530.53
   def $free_heaptype{n_0 : n}(REC_heaptype(n_0)) = $free_typeuse(REC_typeuse(n_0))
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:533.1-533.53
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:530.1-530.53
   def $free_heaptype{v_rectype : rectype, v_n : n}(_DEF_heaptype(v_rectype, v_n)) = $free_typeuse(_DEF_typeuse(v_rectype, v_n))
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:533.1-533.53
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:530.1-530.53
   def $free_heaptype{v_typeidx : typeidx}(_IDX_heaptype(v_typeidx)) = $free_typeuse(_IDX_typeuse(v_typeidx))
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:485.1-485.34
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:482.1-482.34
 def $free_reftype(v_reftype : reftype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:535.1-535.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:532.1-532.65
   def $free_reftype{null_opt : null?, v_heaptype : heaptype}(REF_reftype(null_opt, v_heaptype)) = $free_heaptype(v_heaptype)
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:487.1-487.34
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:484.1-484.34
 def $free_typeuse(v_typeuse : typeuse) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:526.1-526.52
   def $free_typeuse{v_n : n}(REC_typeuse(v_n)) = $free_typevar(REC_typevar(v_n))
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:529.1-529.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:526.1-526.52
   def $free_typeuse{v_typeidx : typeidx}(_IDX_typeuse(v_typeidx)) = $free_typevar(_IDX_typevar(v_typeidx))
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:530.1-530.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:527.1-527.52
   def $free_typeuse{v_rectype : rectype, v_n : n}(_DEF_typeuse(v_rectype, v_n)) = $free_deftype(_DEF_deftype(v_rectype, v_n))
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:488.1-488.34
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:485.1-485.34
 def $free_valtype(v_valtype : valtype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:537.1-537.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:534.1-534.52
   def $free_valtype(I32_valtype) = $free_numtype(I32_numtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:537.1-537.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:534.1-534.52
   def $free_valtype(I64_valtype) = $free_numtype(I64_numtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:537.1-537.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:534.1-534.52
   def $free_valtype(F32_valtype) = $free_numtype(F32_numtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:537.1-537.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:534.1-534.52
   def $free_valtype(F64_valtype) = $free_numtype(F64_numtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:538.1-538.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:535.1-535.52
   def $free_valtype(V128_valtype) = $free_vectype(V128_vectype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:539.1-539.52
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:536.1-536.52
   def $free_valtype{null_opt : null?, v_heaptype : heaptype}(REF_valtype(null_opt, v_heaptype)) = $free_reftype(REF_reftype(null_opt, v_heaptype))
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:540.1-540.28
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:537.1-537.28
   def $free_valtype(BOT_valtype) = {TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], ELEMS [], DATAS [], LOCALS [], LABELS [], TAGS []}
     -- wf_free: `%`({TYPES [], FUNCS [], GLOBALS [], TABLES [], MEMS [], ELEMS [], DATAS [], LOCALS [], LABELS [], TAGS []})
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:490.1-490.40
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:487.1-487.40
 def $free_resulttype(v_resulttype : resulttype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:542.1-542.69
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:539.1-539.69
   def $free_resulttype{valtype_lst : valtype*}(`%`_resulttype(valtype_lst)) = $free_list($free_valtype(v_valtype)*{v_valtype <- valtype_lst})
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:491.1-491.42
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:488.1-488.42
 def $free_storagetype(v_storagetype : storagetype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:544.1-544.56
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:541.1-541.56
   def $free_storagetype(BOT_storagetype) = $free_valtype(BOT_valtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:544.1-544.56
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:541.1-541.56
   def $free_storagetype{null_opt : null?, v_heaptype : heaptype}(REF_storagetype(null_opt, v_heaptype)) = $free_valtype(REF_valtype(null_opt, v_heaptype))
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:544.1-544.56
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:541.1-541.56
   def $free_storagetype(V128_storagetype) = $free_valtype(V128_valtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:544.1-544.56
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:541.1-541.56
   def $free_storagetype(F64_storagetype) = $free_valtype(F64_valtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:544.1-544.56
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:541.1-541.56
   def $free_storagetype(F32_storagetype) = $free_valtype(F32_valtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:544.1-544.56
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:541.1-541.56
   def $free_storagetype(I64_storagetype) = $free_valtype(I64_valtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:544.1-544.56
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:541.1-541.56
   def $free_storagetype(I32_storagetype) = $free_valtype(I32_valtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:545.1-545.59
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:542.1-542.59
   def $free_storagetype(I8_storagetype) = $free_packtype(I8_packtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:545.1-545.59
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:542.1-542.59
   def $free_storagetype(I16_storagetype) = $free_packtype(I16_packtype)
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:492.1-492.38
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:489.1-489.38
 def $free_fieldtype(v_fieldtype : fieldtype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:547.1-547.71
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:544.1-544.71
   def $free_fieldtype{mut_opt : mut?, v_storagetype : storagetype}(`%%`_fieldtype(mut_opt, v_storagetype)) = $free_storagetype(v_storagetype)
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:493.1-493.36
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:490.1-490.36
 def $free_comptype(v_comptype : comptype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:549.1-549.80
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:546.1-546.80
   def $free_comptype{fieldtype_lst : fieldtype*}(STRUCT_comptype(`%`_list(fieldtype_lst))) = $free_list($free_fieldtype(v_fieldtype)*{v_fieldtype <- fieldtype_lst})
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:550.1-550.65
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:547.1-547.65
   def $free_comptype{v_fieldtype : fieldtype}(ARRAY_comptype(v_fieldtype)) = $free_fieldtype(v_fieldtype)
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:551.1-551.121
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:548.1-548.121
   def $free_comptype{resulttype_1 : list(syntax valtype), resulttype_2 : list(syntax valtype)}(`FUNC%->%`_comptype(resulttype_1, resulttype_2)) = $free_resulttype(resulttype_1) +++ $free_resulttype(resulttype_2)
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:494.1-494.34
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:491.1-491.34
 def $free_subtype(v_subtype : subtype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:553.1-554.66
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:550.1-551.66
   def $free_subtype{final_opt : final?, typeuse_lst : typeuse*, v_comptype : comptype}(SUB_subtype(final_opt, typeuse_lst, v_comptype)) = $free_list($free_typeuse(v_typeuse)*{v_typeuse <- typeuse_lst}) +++ $free_comptype(v_comptype)
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:495.1-495.34
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:492.1-492.34
 def $free_rectype(v_rectype : rectype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:556.1-556.70
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:553.1-553.70
   def $free_rectype{subtype_lst : subtype*}(REC_rectype(`%`_list(subtype_lst))) = $free_list($free_subtype(v_subtype)*{v_subtype <- subtype_lst})
 
-;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:523.1-523.34
+;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:520.1-520.34
 def $free_deftype(v_deftype : deftype) : free
-  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:524.1-524.59
+  ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec:521.1-521.59
   def $free_deftype{v_rectype : rectype, v_n : nat}(_DEF_deftype(v_rectype, v_n)) = $free_rectype(v_rectype)
 }
 
@@ -5322,10 +5315,10 @@ relation Numtype_sub: `%|-%<:%`(context, numtype, numtype)
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
 relation Expand: `%~~%`(deftype, comptype)
   ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
-  rule mk_Expand{v_deftype : deftype, v_comptype : comptype}:
+  rule mk_Expand{v_deftype : deftype, v_comptype : comptype, final_opt : final?, typeuse_lst : typeuse*}:
     `%~~%`(v_deftype, v_comptype)
-    -- wf_comptype: `%`(v_comptype)
-    -- if ($expanddt(v_deftype) = v_comptype)
+    -- wf_subtype: `%`(SUB_subtype(final_opt, typeuse_lst, v_comptype))
+    -- if ($unrolldt(v_deftype) = SUB_subtype(final_opt, typeuse_lst, v_comptype))
 
 ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec
 relation Vectype_sub: `%|-%<:%`(context, vectype, vectype)
@@ -5411,7 +5404,7 @@ relation Valtype_ok: `%|-%:OK`(context, valtype)
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:12.1-12.94
 relation Typeuse_ok: `%|-%:OK`(context, typeuse)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:107.1-109.30
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:106.1-108.30
   rule typeidx{C : context, v_typeidx : typeidx, dt : deftype}:
     `%|-%:OK`(C, _IDX_typeuse(v_typeidx))
     -- wf_context: `%`(C)
@@ -5419,7 +5412,7 @@ relation Typeuse_ok: `%|-%:OK`(context, typeuse)
     -- if ($proj_uN_0(v_typeidx).0 < |C.TYPES_context|)
     -- if (C.TYPES_context[$proj_uN_0(v_typeidx).0] = dt)
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:111.1-113.23
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:110.1-112.23
   rule rec{C : context, i : n, st : subtype}:
     `%|-%:OK`(C, REC_typeuse(i))
     -- wf_context: `%`(C)
@@ -5428,7 +5421,7 @@ relation Typeuse_ok: `%|-%:OK`(context, typeuse)
     -- if (i < |C.RECS_context|)
     -- if (C.RECS_context[i] = st)
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:115.1-117.35
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:114.1-116.35
   rule deftype{C : context, v_deftype : deftype}:
     `%|-%:OK`(C, $typeuse_deftype(v_deftype))
     -- wf_context: `%`(C)
@@ -5443,47 +5436,47 @@ relation Resulttype_ok: `%|-%:OK`(context, resulttype)
     -- (wf_valtype: `%`(t))*{t <- t_lst}
     -- (Valtype_ok: `%|-%:OK`(C, t))*{t <- t_lst}
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:93.1-93.104
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:92.1-92.104
 relation Fieldtype_ok: `%|-%:OK`(context, fieldtype)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:131.1-133.43
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:130.1-132.43
   rule mk_Fieldtype_ok{C : context, v_storagetype : storagetype}:
     `%|-%:OK`(C, `%%`_fieldtype(?(MUT_mut), v_storagetype))
     -- wf_context: `%`(C)
     -- wf_fieldtype: `%`(`%%`_fieldtype(?(MUT_mut), v_storagetype))
     -- Storagetype_ok: `%|-%:OK`(C, v_storagetype)
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:94.1-94.106
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:93.1-93.106
 relation Storagetype_ok: `%|-%:OK`(context, storagetype)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:123.1-125.35
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:122.1-124.35
   rule val{C : context, v_valtype : valtype}:
     `%|-%:OK`(C, $storagetype_valtype(v_valtype))
     -- wf_context: `%`(C)
     -- wf_valtype: `%`(v_valtype)
     -- Valtype_ok: `%|-%:OK`(C, v_valtype)
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:127.1-129.37
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:126.1-128.37
   rule pack{C : context, v_packtype : packtype}:
     `%|-%:OK`(C, $storagetype_packtype(v_packtype))
     -- wf_context: `%`(C)
     -- Packtype_ok: `%|-%:OK`(C, v_packtype)
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:95.1-95.103
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:94.1-94.103
 relation Comptype_ok: `%|-%:OK`(context, comptype)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:136.1-138.42
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:135.1-137.42
   rule struct{C : context, fieldtype_lst : fieldtype*}:
     `%|-%:OK`(C, STRUCT_comptype(`%`_list(fieldtype_lst)))
     -- wf_context: `%`(C)
     -- wf_comptype: `%`(STRUCT_comptype(`%`_list(fieldtype_lst)))
     -- (Fieldtype_ok: `%|-%:OK`(C, v_fieldtype))*{v_fieldtype <- fieldtype_lst}
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:140.1-142.39
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:139.1-141.39
   rule array{C : context, v_fieldtype : fieldtype}:
     `%|-%:OK`(C, ARRAY_comptype(v_fieldtype))
     -- wf_context: `%`(C)
     -- wf_comptype: `%`(ARRAY_comptype(v_fieldtype))
     -- Fieldtype_ok: `%|-%:OK`(C, v_fieldtype)
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:144.1-147.35
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:143.1-146.35
   rule func{C : context, t_1_lst : valtype*, t_2_lst : valtype*}:
     `%|-%:OK`(C, `FUNC%->%`_comptype(`%`_resulttype(t_1_lst), `%`_resulttype(t_2_lst)))
     -- wf_context: `%`(C)
@@ -5491,9 +5484,9 @@ relation Comptype_ok: `%|-%:OK`(context, comptype)
     -- Resulttype_ok: `%|-%:OK`(C, `%`_resulttype(t_1_lst))
     -- Resulttype_ok: `%|-%:OK`(C, `%`_resulttype(t_2_lst))
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:98.1-98.126
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:97.1-97.126
 relation Subtype_ok2: `%|-%:%`(context, subtype, oktypenat)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:168.1-176.49
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:167.1-175.49
   rule mk_Subtype_ok2{C : context, typeuse_lst : typeuse*, v_comptype : comptype, i : nat, comptype'_lst : comptype*, typeuse'_lst_lst : typeuse**}:
     `%|-%:%`(C, SUB_subtype(?(FINAL_final), typeuse_lst, v_comptype), OK_oktypenat(i))
     -- wf_context: `%`(C)
@@ -5508,14 +5501,14 @@ relation Subtype_ok2: `%|-%:%`(context, subtype, oktypenat)
     -- Comptype_ok: `%|-%:OK`(C, v_comptype)
     -- (Comptype_sub: `%|-%<:%`(C, v_comptype, comptype'))*{comptype' <- comptype'_lst}
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:99.1-99.126
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:98.1-98.126
 relation Rectype_ok2: `%|-%:%`(context, rectype, oktypenat)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:188.1-189.23
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:187.1-188.23
   rule empty{C : context, i : nat}:
     `%|-%:%`(C, REC_rectype(`%`_list([])), OK_oktypenat(i))
     -- wf_context: `%`(C)
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:191.1-194.49
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:190.1-193.49
   rule cons{C : context, subtype_1 : subtype, subtype_lst : subtype*, i : nat}:
     `%|-%:%`(C, REC_rectype(`%`_list([subtype_1] ++ subtype_lst)), OK_oktypenat(i))
     -- wf_context: `%`(C)
@@ -5524,9 +5517,9 @@ relation Rectype_ok2: `%|-%:%`(context, rectype, oktypenat)
     -- Subtype_ok2: `%|-%:%`(C, subtype_1, OK_oktypenat(i))
     -- Rectype_ok2: `%|-%:%`(C, REC_rectype(`%`_list(subtype_lst)), OK_oktypenat((i + 1)))
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:100.1-100.102
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:99.1-99.102
 relation Deftype_ok: `%|-%:OK`(context, deftype)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:197.1-201.14
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:196.1-200.14
   rule mk_Deftype_ok{C : context, v_rectype : rectype, i : n, v_n : n, subtype_lst : subtype*}:
     `%|-%:OK`(C, _DEF_deftype(v_rectype, i))
     -- wf_context: `%`(C)
@@ -5535,7 +5528,7 @@ relation Deftype_ok: `%|-%:OK`(context, deftype)
     -- if (v_rectype = REC_rectype(`%`_list(subtype_lst)))
     -- if (i < v_n)
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:103.1-103.108
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:102.1-102.108
 relation Comptype_sub: `%|-%<:%`(context, comptype, comptype)
   ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:169.1-171.41
   rule struct{C : context, ft_1_lst : fieldtype*, ft'_1_lst : fieldtype*, ft_2_lst : fieldtype*}:
@@ -5563,7 +5556,7 @@ relation Comptype_sub: `%|-%<:%`(context, comptype, comptype)
     -- Resulttype_sub: `%|-%<:%`(C, `%`_resulttype(t_21_lst), `%`_resulttype(t_11_lst))
     -- Resulttype_sub: `%|-%<:%`(C, `%`_resulttype(t_12_lst), `%`_resulttype(t_22_lst))
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:104.1-104.107
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:103.1-103.107
 relation Deftype_sub: `%|-%<:%`(context, deftype, deftype)
   ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:183.1-185.66
   rule refl{C : context, deftype_1 : deftype, deftype_2 : deftype}:
@@ -5903,15 +5896,15 @@ relation Subtype_ok: `%|-%:%`(context, subtype, oktypeidx)
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
 rec {
 
-;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:97.1-97.126
+;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:96.1-96.126
 relation Rectype_ok: `%|-%:%`(context, rectype, oktypeidx)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:179.1-180.23
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:178.1-179.23
   rule empty{C : context, x : idx}:
     `%|-%:%`(C, REC_rectype(`%`_list([])), OK_oktypeidx(x))
     -- wf_context: `%`(C)
     -- wf_oktypeidx: `%`(OK_oktypeidx(x))
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:182.1-185.48
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:181.1-184.48
   rule cons{C : context, subtype_1 : subtype, subtype_lst : subtype*, x : idx}:
     `%|-%:%`(C, REC_rectype(`%`_list([subtype_1] ++ subtype_lst)), OK_oktypeidx(x))
     -- wf_context: `%`(C)
