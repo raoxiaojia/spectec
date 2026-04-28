@@ -1741,55 +1741,55 @@ def $subst_moduletype(moduletype : moduletype, typevar*, typeuse*) : moduletype
 def $subst_all_valtype(valtype : valtype, typeuse*) : valtype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_valtype{t : valtype, n : nat, `tu*` : typeuse*, i : nat}(t, tu^n{tu <- `tu*`}) = $subst_valtype(t, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $subst_all_reftype(reftype : reftype, typeuse*) : reftype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_reftype{rt : reftype, n : nat, `tu*` : typeuse*, i : nat}(rt, tu^n{tu <- `tu*`}) = $subst_reftype(rt, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $subst_all_deftype(deftype : deftype, typeuse*) : deftype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_deftype{dt : deftype, n : nat, `tu*` : typeuse*, i : nat}(dt, tu^n{tu <- `tu*`}) = $subst_deftype(dt, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $subst_all_tagtype(tagtype : tagtype, typeuse*) : tagtype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_tagtype{jt : typeuse, n : nat, `tu*` : typeuse*, i : nat}(jt, tu^n{tu <- `tu*`}) = $subst_tagtype(jt, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $subst_all_globaltype(globaltype : globaltype, typeuse*) : globaltype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_globaltype{gt : globaltype, n : nat, `tu*` : typeuse*, i : nat}(gt, tu^n{tu <- `tu*`}) = $subst_globaltype(gt, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $subst_all_memtype(memtype : memtype, typeuse*) : memtype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_memtype{mt : memtype, n : nat, `tu*` : typeuse*, i : nat}(mt, tu^n{tu <- `tu*`}) = $subst_memtype(mt, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $subst_all_tabletype(tabletype : tabletype, typeuse*) : tabletype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_tabletype{tt : tabletype, n : nat, `tu*` : typeuse*, i : nat}(tt, tu^n{tu <- `tu*`}) = $subst_tabletype(tt, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $subst_all_externtype(externtype : externtype, typeuse*) : externtype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_externtype{xt : externtype, n : nat, `tu*` : typeuse*, i : nat}(xt, tu^n{tu <- `tu*`}) = $subst_externtype(xt, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 def $subst_all_moduletype(moduletype : moduletype, typeuse*) : moduletype
   ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
   def $subst_all_moduletype{mmt : moduletype, n : nat, `tu*` : typeuse*, i : nat}(mmt, tu^n{tu <- `tu*`}) = $subst_moduletype(mmt, _IDX_typevar(`%`_typeidx(i))^(i<n){}, tu^n{tu <- `tu*`})
-    -- wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i)))
+    -- (wf_typevar: `%`(_IDX_typevar(`%`_typeidx(i))))^(i<n){}
 
 ;; ../../../../specification/wasm-3.0/1.2-syntax.types.spectec
 rec {
@@ -12311,8 +12311,8 @@ def $instantiate(store : store, module : module, externaddr*) : config
     -- wf_moduleinst: `%`({TYPES $alloctypes(type*{type <- `type*`}), TAGS [], GLOBALS $globalsxa(externaddr*{externaddr <- `externaddr*`}), MEMS [], TABLES [], FUNCS $funcsxa(externaddr*{externaddr <- `externaddr*`}) ++ (|s.FUNCS_store| + i_F)^(i_F<|func*{func <- `func*`}|){}, DATAS [], ELEMS [], EXPORTS []})
     -- wf_state: `%`(`%;%`_state(s, {LOCALS [], MODULE moduleinst_0}))
     -- wf_state: `%`(`%;%`_state(s''', f))
-    -- wf_uN: `%%`(32, `%`_uN(i_D))
-    -- wf_uN: `%%`(32, `%`_uN(i_E))
+    -- (wf_uN: `%%`(32, `%`_uN(i_D)))^(i_D<|data*{data <- `data*`}|){}
+    -- (wf_uN: `%%`(32, `%`_uN(i_E)))^(i_E<|elem*{elem <- `elem*`}|){}
     -- (wf_instr: `%`(CALL_instr(x)))?{x <- `x?`}
     -- Module_ok: `|-%:%`(module, `%->%`_moduletype(xt_I*{xt_I <- `xt_I*`}, xt_E*{xt_E <- `xt_E*`}))
     -- (Externaddr_ok: `%|-%:%`(s, externaddr, xt_I))*{externaddr <- `externaddr*`, xt_I <- `xt_I*`}
