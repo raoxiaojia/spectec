@@ -495,31 +495,45 @@ and transform_param env p =
   | GramP (id, params, typ) -> GramP (id, List.map (transform_param env) params, transform_typ StringMap.empty env typ)
   ) $ p.at 
 
-let rec transform_prem quant_map env prem = 
-  (match prem.it with
-  | RulePr (id, args, m, e) -> RulePr (id, List.map (transform_arg quant_map env) args, m, transform_exp quant_map env e)
-  | IfPr e -> IfPr (transform_exp quant_map env e)
-  | LetPr (quants, e1, e2) ->
-    let quant_map = extend_quant_set quant_map quants in
-    LetPr (List.map (transform_param env) quants, transform_exp quant_map env e1, transform_exp quant_map env e2)
-  | ElsePr -> ElsePr
-  | IterPr (prem1, (iter, id_exp_pairs)) -> 
-    let new_quant_map = add_iter_ids_to_map env id_exp_pairs quant_map in
-    IterPr (transform_prem new_quant_map env prem1, 
-      (transform_iter new_quant_map env iter, List.map (fun (id, exp) -> (id, transform_exp new_quant_map env exp)) id_exp_pairs)
-    )
-  | NegPr prem1 -> NegPr (transform_prem quant_map env prem1)
-  ) $ prem.at
+let rec transform_prem quant_map env prem =
+  let new_quant_map, prem' =
+    match prem.it with
+    | RulePr (id, args, m, e) ->
+      quant_map,
+      RulePr (id, List.map (transform_arg quant_map env) args, m, transform_exp quant_map env e)
+    | IfPr e -> quant_map, IfPr (transform_exp quant_map env e)
+    | LetPr (quants, e1, e2) ->
+      let new_quant_map = extend_quant_set quant_map quants in
+      new_quant_map,
+      LetPr (List.map (transform_param env) quants, transform_exp new_quant_map env e1, transform_exp quant_map env e2)
+    | ElsePr -> quant_map, ElsePr
+    | IterPr (prem1, (iter, id_exp_pairs)) -> 
+      let new_quant_map = add_iter_ids_to_map env id_exp_pairs quant_map in
+      quant_map,
+      IterPr (snd (transform_prem new_quant_map env prem1),
+        (transform_iter new_quant_map env iter, List.map (fun (id, exp) -> (id, transform_exp new_quant_map env exp)) id_exp_pairs)
+      )
+    | NegPr prem1 -> quant_map, NegPr (snd (transform_prem quant_map env prem1))
+  in new_quant_map, prem' $ prem.at
+
+let rec transform_prems quant_map env = function
+  | [] -> quant_map, []
+  | prem::prems ->
+    let new_quant_map, new_prem = transform_prem quant_map env prem in
+    let new_new_quant_map, new_prems = transform_prems new_quant_map env prems in
+    new_new_quant_map, new_prem::new_prems
 
 let transform_rule env rule = 
   match rule.it with
   | RuleD (id, quants, m, exp, prems) -> 
-    let quant_map = make_quant_set quants in 
-    RuleD (id, 
-    List.map (transform_param env) quants, 
-    m, 
-    transform_exp quant_map env exp, 
-    List.map (transform_prem quant_map env) prems) $ rule.at
+    let quant_map = make_quant_set quants in
+    let new_quant_map, new_prems = transform_prems quant_map env prems in
+    RuleD (id,
+      List.map (transform_param env) quants,
+      m,
+      transform_exp new_quant_map env exp,
+      new_prems
+    ) $ rule.at
 
 (* Reducing quants as conversion functions actively change the type of variables when matching *)
 let reduce_quant env q = 
@@ -533,24 +547,27 @@ let transform_clause _id params env rt clause =
     let subst = create_arg_param_subst args params in
     let reduced_quants = List.map (reduce_quant env) quants in 
     let quant_map = make_quant_set reduced_quants in
-    let t_exp = transform_exp quant_map env exp in
-    let real_typ = get_real_typ_from_exp quant_map env t_exp in
+    let new_quant_map, new_prems = transform_prems quant_map env prems in
+    let t_exp = transform_exp new_quant_map env exp in
+    let real_typ = get_real_typ_from_exp new_quant_map env t_exp in
     let s_rt = Subst.subst_typ subst rt in 
     let new_exp = if check_type_equality env real_typ s_rt then t_exp else apply_conversion env t_exp real_typ s_rt in 
     DefD ((List.map (transform_param env) reduced_quants), 
-    List.map (transform_arg quant_map env) args, 
-    new_exp, 
-    List.map (transform_prem quant_map env) prems) $ clause.at
+      List.map (transform_arg quant_map env) args,
+      new_exp,
+      new_prems
+    ) $ clause.at
 
 let transform_prod env prod = 
   (match prod.it with 
   | ProdD (quants, sym, exp, prems) -> 
     let quant_map = make_quant_set quants in
+    let new_quant_map, new_prems = transform_prems quant_map env prems in
     ProdD (List.map (transform_param env) quants,
-    transform_sym quant_map env sym,
-    transform_exp quant_map env exp,
-    List.map (transform_prem quant_map env) prems
-  )
+      transform_sym quant_map env sym,
+      transform_exp new_quant_map env exp,
+      new_prems
+    )
   ) $ prod.at
 
 let transform_deftyp env deftyp = 
@@ -558,10 +575,12 @@ let transform_deftyp env deftyp =
   | AliasT typ -> AliasT (transform_typ StringMap.empty env typ)
   | StructT typfields -> StructT (List.map (fun (a, (t, qs, prems), hints) -> 
     let quant_map = make_quant_set qs in
-    (a, (transform_typ quant_map env t, List.map (transform_param env) qs, List.map (transform_prem quant_map env) prems), hints)) typfields)
+    let _, new_prems = transform_prems quant_map env prems in
+    (a, (transform_typ quant_map env t, List.map (transform_param env) qs, new_prems), hints)) typfields)
   | VariantT typcases -> VariantT (List.map (fun (m, (t, qs, prems), hints) -> 
     let quant_map = make_quant_set qs in
-    (m, (transform_typ quant_map env t, List.map (transform_param env) qs, List.map (transform_prem quant_map env) prems), hints)) typcases)
+    let _, new_prems = transform_prems quant_map env prems in
+    (m, (transform_typ quant_map env t, List.map (transform_param env) qs, new_prems), hints)) typcases)
   ) $ deftyp.at
 
 let transform_inst env inst =
