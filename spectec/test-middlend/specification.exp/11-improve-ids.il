@@ -5190,7 +5190,6 @@ relation wf_instrtype: `%`(instrtype)
 syntax context = 
 {
   TYPES deftype*,
-  RECS subtype*,
   TAGS tagtype*,
   GLOBALS globaltype*,
   MEMS memtype*,
@@ -5201,31 +5200,32 @@ syntax context =
   LOCALS localtype*,
   LABELS resulttype*,
   RETURN resulttype?,
-  REFS funcidx*
+  REFS funcidx*,
+  RECS subtype*
 }
 
 ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec
 relation wf_context: `%`(context)
   ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec
-  rule context_case_{var_0 : deftype*, var_1 : subtype*, var_2 : tagtype*, var_3 : globaltype*, var_4 : memtype*, var_5 : tabletype*, var_6 : deftype*, var_7 : datatype*, var_8 : elemtype*, var_9 : localtype*, var_10 : resulttype*, var_11 : resulttype?, var_12 : funcidx*}:
-    `%`({TYPES var_0, RECS var_1, TAGS var_2, GLOBALS var_3, MEMS var_4, TABLES var_5, FUNCS var_6, DATAS var_7, ELEMS var_8, LOCALS var_9, LABELS var_10, RETURN var_11, REFS var_12})
-    -- (wf_subtype: `%`(var_1))*{var_1 <- var_1}
-    -- (wf_typeuse: `%`(var_2))*{var_2 <- var_2}
-    -- (wf_globaltype: `%`(var_3))*{var_3 <- var_3}
-    -- (wf_memtype: `%`(var_4))*{var_4 <- var_4}
-    -- (wf_tabletype: `%`(var_5))*{var_5 <- var_5}
-    -- (wf_reftype: `%`(var_8))*{var_8 <- var_8}
-    -- (wf_localtype: `%`(var_9))*{var_9 <- var_9}
-    -- (wf_uN: `%%`(32, var_12))*{var_12 <- var_12}
+  rule context_case_{var_0 : deftype*, var_1 : tagtype*, var_2 : globaltype*, var_3 : memtype*, var_4 : tabletype*, var_5 : deftype*, var_6 : datatype*, var_7 : elemtype*, var_8 : localtype*, var_9 : resulttype*, var_10 : resulttype?, var_11 : funcidx*, var_12 : subtype*}:
+    `%`({TYPES var_0, TAGS var_1, GLOBALS var_2, MEMS var_3, TABLES var_4, FUNCS var_5, DATAS var_6, ELEMS var_7, LOCALS var_8, LABELS var_9, RETURN var_10, REFS var_11, RECS var_12})
+    -- (wf_typeuse: `%`(var_1))*{var_1 <- var_1}
+    -- (wf_globaltype: `%`(var_2))*{var_2 <- var_2}
+    -- (wf_memtype: `%`(var_3))*{var_3 <- var_3}
+    -- (wf_tabletype: `%`(var_4))*{var_4 <- var_4}
+    -- (wf_reftype: `%`(var_7))*{var_7 <- var_7}
+    -- (wf_localtype: `%`(var_8))*{var_8 <- var_8}
+    -- (wf_uN: `%%`(32, var_11))*{var_11 <- var_11}
+    -- (wf_subtype: `%`(var_12))*{var_12 <- var_12}
 
 ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec
 rec {
 
-;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:46.1-46.158
+;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:49.1-49.158
 def $with_locals(v_context : context, var_0 : localidx*, var_1 : localtype*) : context?
-  ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:48.1-48.34
+  ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:51.1-51.34
   def $with_locals{C : context}(C, [], []) = ?(C)
-  ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:49.1-49.90
+  ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:52.1-52.90
   def $with_locals{C : context, x_1 : uN, x_lst : idx*, lct_1 : localtype, lct_lst : localtype*}(C, [x_1] ++ x_lst, [lct_1] ++ lct_lst) = $with_locals(C[LOCALS_context[$proj_uN_0(x_1).0] = lct_1], x_lst, lct_lst)
   def $with_locals{x0 : context, x1 : localidx*, x2 : localtype*}(x0, x1, x2) = ?()
     -- otherwise
@@ -5234,11 +5234,11 @@ def $with_locals(v_context : context, var_0 : localidx*, var_1 : localtype*) : c
 ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec
 rec {
 
-;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:59.1-59.94
+;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:62.1-62.94
 def $clos_deftypes(var_0 : deftype*) : deftype*
-  ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:68.1-68.30
+  ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:71.1-71.30
   def $clos_deftypes([]) = []
-  ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:69.1-69.101
+  ;; ../../../../specification/wasm-3.0/2.0-validation.contexts.spectec:72.1-72.101
   def $clos_deftypes{dt_lst : deftype*, dt_n : deftype, dt'_lst : deftype*}(dt_lst ++ [dt_n]) = dt'_lst ++ [$subst_all_deftype(dt_n, $typeuse_deftype(dt')*{dt' <- dt'_lst})]
     -- if (dt'_lst = $clos_deftypes(dt_lst))
 }
@@ -5335,13 +5335,13 @@ def $before(v_typeuse : typeuse, nat : nat) : bool
   def $before{v_typeuse : typeuse, i : nat}(v_typeuse, i) = true
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
-def $unrollht(v_context : context, v_heaptype : heaptype) : subtype
+def $unrollht_(v_context : context, v_heaptype : heaptype) : subtype
   ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
-  def $unrollht{v_rectype : rectype, v_n : n, C : context}(C, _DEF_heaptype(v_rectype, v_n)) = $unrolldt(_DEF_deftype(v_rectype, v_n))
+  def $unrollht_{v_rectype : rectype, v_n : n, C : context}(C, _DEF_heaptype(v_rectype, v_n)) = $unrolldt(_DEF_deftype(v_rectype, v_n))
   ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
-  def $unrollht{C : context, v_typeidx : uN}(C, _IDX_heaptype(v_typeidx)) = $unrolldt(C.TYPES_context[$proj_uN_0(v_typeidx).0])
+  def $unrollht_{C : context, v_typeidx : uN}(C, _IDX_heaptype(v_typeidx)) = $unrolldt(C.TYPES_context[$proj_uN_0(v_typeidx).0])
   ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
-  def $unrollht{C : context, i : nat}(C, REC_heaptype(i)) = C.RECS_context[i]
+  def $unrollht_{C : context, i : nat}(C, REC_heaptype(i)) = C.RECS_context[i]
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
 rec {
@@ -5486,7 +5486,7 @@ relation Comptype_ok: `%|-%:OK`(context, comptype)
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:97.1-97.126
 relation Subtype_ok2: `%|-%:%`(context, subtype, oktypenat)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:167.1-175.49
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:167.1-176.49
   rule mk_Subtype_ok2{C : context, typeuse_lst : typeuse*, v_comptype : comptype, i : nat, comptype'_lst : comptype*, typeuse'_lst_lst : typeuse**}:
     `%|-%:%`(C, SUB_subtype(?(FINAL_final), typeuse_lst, v_comptype), OK_oktypenat(i))
     -- wf_context: `%`(C)
@@ -5497,18 +5497,18 @@ relation Subtype_ok2: `%|-%:%`(context, subtype, oktypenat)
     -- (Typeuse_ok: `%|-%:OK`(C, v_typeuse))*{v_typeuse <- typeuse_lst}
     -- (if $before(v_typeuse, i))*{v_typeuse <- typeuse_lst}
     -- if (|comptype'_lst| = |typeuse_lst|)
-    -- (if ($unrollht(C, $heaptype_typeuse(v_typeuse)) = SUB_subtype(?(), typeuse'_lst, comptype')))*{comptype' <- comptype'_lst, v_typeuse <- typeuse_lst, typeuse'_lst <- typeuse'_lst_lst}
+    -- (if ($unrollht_(C, $heaptype_typeuse(v_typeuse)) = SUB_subtype(?(), typeuse'_lst, comptype')))*{comptype' <- comptype'_lst, v_typeuse <- typeuse_lst, typeuse'_lst <- typeuse'_lst_lst}
     -- Comptype_ok: `%|-%:OK`(C, v_comptype)
     -- (Comptype_sub: `%|-%<:%`(C, v_comptype, comptype'))*{comptype' <- comptype'_lst}
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:98.1-98.126
 relation Rectype_ok2: `%|-%:%`(context, rectype, oktypenat)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:187.1-188.23
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:188.1-189.23
   rule empty{C : context, i : nat}:
     `%|-%:%`(C, REC_rectype(`%`_list([])), OK_oktypenat(i))
     -- wf_context: `%`(C)
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:190.1-193.49
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:191.1-194.49
   rule cons{C : context, subtype_1 : subtype, subtype_lst : subtype*, i : nat}:
     `%|-%:%`(C, REC_rectype(`%`_list([subtype_1] ++ subtype_lst)), OK_oktypenat(i))
     -- wf_context: `%`(C)
@@ -5519,12 +5519,12 @@ relation Rectype_ok2: `%|-%:%`(context, rectype, oktypenat)
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:99.1-99.102
 relation Deftype_ok: `%|-%:OK`(context, deftype)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:196.1-200.14
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:197.1-201.14
   rule mk_Deftype_ok{C : context, v_rectype : rectype, i : n, v_n : n, subtype_lst : subtype*}:
     `%|-%:OK`(C, _DEF_deftype(v_rectype, i))
     -- wf_context: `%`(C)
-    -- wf_context: `%`({TYPES [], RECS subtype_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- Rectype_ok2: `%|-%:%`({TYPES [], RECS subtype_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []} +++ C, v_rectype, OK_oktypenat(0))
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS subtype_lst})
+    -- Rectype_ok2: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS subtype_lst} +++ C, v_rectype, OK_oktypenat(0))
     -- if (v_rectype = REC_rectype(`%`_list(subtype_lst)))
     -- if (i < v_n)
 
@@ -5898,13 +5898,13 @@ rec {
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:96.1-96.126
 relation Rectype_ok: `%|-%:%`(context, rectype, oktypeidx)
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:178.1-179.23
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:179.1-180.23
   rule empty{C : context, x : idx}:
     `%|-%:%`(C, REC_rectype(`%`_list([])), OK_oktypeidx(x))
     -- wf_context: `%`(C)
     -- wf_oktypeidx: `%`(OK_oktypeidx(x))
 
-  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:181.1-184.48
+  ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:182.1-185.48
   rule cons{C : context, subtype_1 : subtype, subtype_lst : subtype*, x : idx}:
     `%|-%:%`(C, REC_rectype(`%`_list([subtype_1] ++ subtype_lst)), OK_oktypeidx(x))
     -- wf_context: `%`(C)
@@ -6295,10 +6295,10 @@ relation Instr_ok: `%|-%:%`(context, instr, instrtype)
     -- wf_context: `%`(C)
     -- wf_instr: `%`(BLOCK_instr(bt, instr_lst))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []})
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
     -- Blocktype_ok: `%|-%:%`(C, bt, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- Instrs_ok: `%|-%:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
+    -- Instrs_ok: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
 
   ;; ../../../../specification/wasm-3.0/2.3-validation.instructions.spectec:58.1-61.67
   rule loop{C : context, bt : blocktype, instr_lst : instr*, t_1_lst : valtype*, t_2_lst : valtype*, x_lst : idx*}:
@@ -6306,10 +6306,10 @@ relation Instr_ok: `%|-%:%`(context, instr, instrtype)
     -- wf_context: `%`(C)
     -- wf_instr: `%`(LOOP_instr(bt, instr_lst))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_1_lst)], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_1_lst)], RETURN ?(), REFS [], RECS []})
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
     -- Blocktype_ok: `%|-%:%`(C, bt, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- Instrs_ok: `%|-%:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_1_lst)], RETURN ?(), REFS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
+    -- Instrs_ok: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_1_lst)], RETURN ?(), REFS [], RECS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
 
   ;; ../../../../specification/wasm-3.0/2.3-validation.instructions.spectec:63.1-67.71
   rule if{C : context, bt : blocktype, instr_1_lst : instr*, instr_2_lst : instr*, t_1_lst : valtype*, t_2_lst : valtype*, x_1_lst : idx*, x_2_lst : idx*}:
@@ -6318,12 +6318,12 @@ relation Instr_ok: `%|-%:%`(context, instr, instrtype)
     -- wf_instr: `%`(`IF%%ELSE%`_instr(bt, instr_1_lst, instr_2_lst))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst ++ [I32_valtype]), [], `%`_resulttype(t_2_lst)))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []})
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_1_lst, `%`_resulttype(t_2_lst)))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_2_lst, `%`_resulttype(t_2_lst)))
     -- Blocktype_ok: `%|-%:%`(C, bt, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- Instrs_ok: `%|-%:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []} +++ C, instr_1_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_1_lst, `%`_resulttype(t_2_lst)))
-    -- Instrs_ok: `%|-%:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []} +++ C, instr_2_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_2_lst, `%`_resulttype(t_2_lst)))
+    -- Instrs_ok: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []} +++ C, instr_1_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_1_lst, `%`_resulttype(t_2_lst)))
+    -- Instrs_ok: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []} +++ C, instr_2_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_2_lst, `%`_resulttype(t_2_lst)))
 
   ;; ../../../../specification/wasm-3.0/2.3-validation.instructions.spectec:72.1-75.42
   rule br{C : context, l : labelidx, t_1_lst : valtype*, t_lst : valtype*, t_2_lst : valtype*}:
@@ -6527,10 +6527,10 @@ relation Instr_ok: `%|-%:%`(context, instr, instrtype)
     -- wf_context: `%`(C)
     -- wf_instr: `%`(TRY_TABLE_instr(bt, `%`_list(catch_lst), instr_lst))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []})
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
     -- Blocktype_ok: `%|-%:%`(C, bt, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- Instrs_ok: `%|-%:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
+    -- Instrs_ok: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), x_lst, `%`_resulttype(t_2_lst)))
     -- (Catch_ok: `%|-%:OK`(C, v_catch))*{v_catch <- catch_lst}
 
   ;; ../../../../specification/wasm-3.0/2.3-validation.instructions.spectec:202.1-204.31
@@ -7518,11 +7518,11 @@ relation Type_ok: `%|-%:%`(context, type, deftype*)
   rule mk_Type_ok{C : context, v_rectype : rectype, dt_lst : deftype*, x : idx}:
     `%|-%:%`(C, TYPE_type(v_rectype), dt_lst)
     -- wf_context: `%`(C)
-    -- wf_context: `%`({TYPES dt_lst, RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES dt_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- wf_oktypeidx: `%`(OK_oktypeidx(x))
     -- if ($proj_uN_0(x).0 = |C.TYPES_context|)
     -- if (dt_lst = $rolldt(x, v_rectype))
-    -- Rectype_ok: `%|-%:%`(C +++ {TYPES dt_lst, RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, v_rectype, OK_oktypeidx(x))
+    -- Rectype_ok: `%|-%:%`(C +++ {TYPES dt_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, v_rectype, OK_oktypeidx(x))
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
 relation Tag_ok: `%|-%:%`(context, tag, tagtype)
@@ -7593,11 +7593,11 @@ relation Func_ok: `%|-%:%`(context, func, deftype)
     -- wf_context: `%`(C)
     -- wf_func: `%`(FUNC_func(x, local_lst, v_expr))
     -- wf_comptype: `%`(`FUNC%->%`_comptype(`%`_resulttype(t_1_lst), `%`_resulttype(t_2_lst)))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS `%%`_localtype(SET_init, t_1)*{t_1 <- t_1_lst} ++ lct_lst, LABELS [`%`_resulttype(t_2_lst)], RETURN ?(`%`_resulttype(t_2_lst)), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS `%%`_localtype(SET_init, t_1)*{t_1 <- t_1_lst} ++ lct_lst, LABELS [`%`_resulttype(t_2_lst)], RETURN ?(`%`_resulttype(t_2_lst)), REFS [], RECS []})
     -- Expand: `%~~%`(C.TYPES_context[$proj_uN_0(x).0], `FUNC%->%`_comptype(`%`_resulttype(t_1_lst), `%`_resulttype(t_2_lst)))
     -- if (|lct_lst| = |local_lst|)
     -- (Local_ok: `%|-%:%`(C, v_local, lct))*{lct <- lct_lst, v_local <- local_lst}
-    -- Expr_ok: `%|-%:%`(C +++ {TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS `%%`_localtype(SET_init, t_1)*{t_1 <- t_1_lst} ++ lct_lst, LABELS [`%`_resulttype(t_2_lst)], RETURN ?(`%`_resulttype(t_2_lst)), REFS []}, v_expr, `%`_resulttype(t_2_lst))
+    -- Expr_ok: `%|-%:%`(C +++ {TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS `%%`_localtype(SET_init, t_1)*{t_1 <- t_1_lst} ++ lct_lst, LABELS [`%`_resulttype(t_2_lst)], RETURN ?(`%`_resulttype(t_2_lst)), REFS [], RECS []}, v_expr, `%`_resulttype(t_2_lst))
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
 relation Datamode_ok: `%|-%:%`(context, datamode, datatype)
@@ -7759,9 +7759,9 @@ relation Globals_ok: `%|-%:%`(context, global*, globaltype*)
     -- wf_global: `%`(global_1)
     -- (wf_global: `%`(v_global))*{v_global <- global_lst}
     -- (wf_globaltype: `%`(gt))*{gt <- gt_lst}
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [gt_1], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [gt_1], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Global_ok: `%|-%:%`(C, global_1, gt_1)
-    -- Globals_ok: `%|-%:%`(C +++ {TYPES [], RECS [], TAGS [], GLOBALS [gt_1], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, global_lst, gt_lst)
+    -- Globals_ok: `%|-%:%`(C +++ {TYPES [], TAGS [], GLOBALS [gt_1], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, global_lst, gt_lst)
 }
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
@@ -7778,9 +7778,9 @@ relation Types_ok: `%|-%:%`(context, type*, deftype*)
   rule cons{C : context, type_1 : type, type_lst : type*, dt_1_lst : deftype*, dt_lst : deftype*}:
     `%|-%:%`(C, [type_1] ++ type_lst, dt_1_lst ++ dt_lst)
     -- wf_context: `%`(C)
-    -- wf_context: `%`({TYPES dt_1_lst, RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES dt_1_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Type_ok: `%|-%:%`(C, type_1, dt_1_lst)
-    -- Types_ok: `%|-%:%`(C +++ {TYPES dt_1_lst, RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, type_lst, dt_lst)
+    -- Types_ok: `%|-%:%`(C +++ {TYPES dt_1_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, type_lst, dt_lst)
 }
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
@@ -7813,14 +7813,14 @@ relation Module_ok: `|-%:%`(module, moduletype)
     -- (wf_name: `%`(nm))*{nm <- nm_lst}
     -- wf_module: `%`(MODULE_module(`%`_list(type_lst), `%`_list(import_lst), `%`_list(tag_lst), `%`_list(global_lst), `%`_list(mem_lst), `%`_list(table_lst), `%`_list(func_lst), `%`_list(data_lst), `%`_list(elem_lst), start_opt, `%`_list(export_lst)))
     -- wf_moduletype: `%`(`%->%`_moduletype(xt_I_lst, xt_E_lst))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- wf_context: `%`({TYPES dt'_lst, RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- wf_context: `%`({TYPES [], RECS [], TAGS jt_I_lst ++ jt_lst, GLOBALS gt_lst, MEMS mt_I_lst ++ mt_lst, TABLES tt_I_lst ++ tt_lst, FUNCS [], DATAS ok_lst, ELEMS rt_lst, LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- wf_context: `%`({TYPES dt'_lst, RECS [], TAGS [], GLOBALS gt_I_lst, MEMS [], TABLES [], FUNCS dt_I_lst ++ dt_lst, DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS x_lst})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- wf_context: `%`({TYPES dt'_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- wf_context: `%`({TYPES [], TAGS jt_I_lst ++ jt_lst, GLOBALS gt_lst, MEMS mt_I_lst ++ mt_lst, TABLES tt_I_lst ++ tt_lst, FUNCS [], DATAS ok_lst, ELEMS rt_lst, LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- wf_context: `%`({TYPES dt'_lst, TAGS [], GLOBALS gt_I_lst, MEMS [], TABLES [], FUNCS dt_I_lst ++ dt_lst, DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS x_lst, RECS []})
     -- wf_nonfuncs: `%`(`%%%%`_nonfuncs(global_lst, mem_lst, table_lst, elem_lst))
-    -- Types_ok: `%|-%:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, type_lst, dt'_lst)
+    -- Types_ok: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, type_lst, dt'_lst)
     -- if (|import_lst| = |xt_I_lst|)
-    -- (Import_ok: `%|-%:%`({TYPES dt'_lst, RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, v_import, xt_I))*{v_import <- import_lst, xt_I <- xt_I_lst}
+    -- (Import_ok: `%|-%:%`({TYPES dt'_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, v_import, xt_I))*{v_import <- import_lst, xt_I <- xt_I_lst}
     -- if (|jt_lst| = |tag_lst|)
     -- (Tag_ok: `%|-%:%`(C', v_tag, jt))*{jt <- jt_lst, v_tag <- tag_lst}
     -- Globals_ok: `%|-%:%`(C', global_lst, gt_lst)
@@ -7839,8 +7839,8 @@ relation Module_ok: `|-%:%`(module, moduletype)
     -- if (|export_lst| = |xt_E_lst|)
     -- (Export_ok: `%|-%:%%`(C, v_export, nm, xt_E))*{v_export <- export_lst, nm <- nm_lst, xt_E <- xt_E_lst}
     -- if $disjoint_(syntax name, nm_lst)
-    -- if (C = C' +++ {TYPES [], RECS [], TAGS jt_I_lst ++ jt_lst, GLOBALS gt_lst, MEMS mt_I_lst ++ mt_lst, TABLES tt_I_lst ++ tt_lst, FUNCS [], DATAS ok_lst, ELEMS rt_lst, LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- if (C' = {TYPES dt'_lst, RECS [], TAGS [], GLOBALS gt_I_lst, MEMS [], TABLES [], FUNCS dt_I_lst ++ dt_lst, DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS x_lst})
+    -- if (C = C' +++ {TYPES [], TAGS jt_I_lst ++ jt_lst, GLOBALS gt_lst, MEMS mt_I_lst ++ mt_lst, TABLES tt_I_lst ++ tt_lst, FUNCS [], DATAS ok_lst, ELEMS rt_lst, LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- if (C' = {TYPES dt'_lst, TAGS [], GLOBALS gt_I_lst, MEMS [], TABLES [], FUNCS dt_I_lst ++ dt_lst, DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS x_lst, RECS []})
     -- if (x_lst = $funcidx_nonfuncs(`%%%%`_nonfuncs(global_lst, mem_lst, table_lst, elem_lst)))
     -- if (jt_I_lst = $tagsxt(xt_I_lst))
     -- if (gt_I_lst = $globalsxt(xt_I_lst))
@@ -12585,9 +12585,9 @@ relation Ref_ok: `%|-%:%`(store, ref, reftype)
     -- wf_ref: `%`(v_ref)
     -- wf_reftype: `%`(rt)
     -- wf_reftype: `%`(rt')
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt')
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt', rt)
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt', rt)
 }
 
 ;; ../../../../specification/wasm-3.0/4.1-execution.values.spectec
@@ -12690,9 +12690,9 @@ relation Externaddr_ok: `%|-%:%`(store, externaddr, externtype)
     -- wf_store: `%`(s)
     -- wf_externtype: `%`(xt)
     -- wf_externtype: `%`(xt')
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Externaddr_ok: `%|-%:%`(s, v_externaddr, xt')
-    -- Externtype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, xt', xt)
+    -- Externtype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, xt', xt)
 }
 
 ;; ../../../../specification/wasm-3.0/4.2-execution.types.spectec
@@ -13482,9 +13482,9 @@ relation Step_read_before_br_on_cast_fail: `%`(config)
     -- wf_reftype: `%`(rt)
     -- wf_config: `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) BR_ON_CAST_instr(l, rt_1, rt_2)]))
     -- wf_instr: `%`(BR_instr(l))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt)
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt, $inst_reftype(f.MODULE_frame, rt_2))
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt, $inst_reftype(f.MODULE_frame, rt_2))
 
 ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
 relation Step_read_before_br_on_cast_fail_fail: `%`(config)
@@ -13493,9 +13493,9 @@ relation Step_read_before_br_on_cast_fail_fail: `%`(config)
     `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) BR_ON_CAST_FAIL_instr(l, rt_1, rt_2)]))
     -- wf_reftype: `%`(rt)
     -- wf_config: `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) BR_ON_CAST_FAIL_instr(l, rt_1, rt_2)]))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt)
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt, $inst_reftype(f.MODULE_frame, rt_2))
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt, $inst_reftype(f.MODULE_frame, rt_2))
 
 ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
 relation Step_read_before_throw_ref_handler_next: `%`(config)
@@ -13783,9 +13783,9 @@ relation Step_read_before_ref_test_false: `%`(config)
     -- wf_reftype: `%`(rt')
     -- wf_config: `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) `REF.TEST`_instr(rt)]))
     -- wf_instr: `%`(CONST_instr(I32_numtype, mk_num__0_num_(I32_Inn, `%`_uN(1))))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt')
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt', $inst_reftype(f.MODULE_frame, rt))
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt', $inst_reftype(f.MODULE_frame, rt))
 
 ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
 relation Step_read_before_ref_cast_fail: `%`(config)
@@ -13794,9 +13794,9 @@ relation Step_read_before_ref_cast_fail: `%`(config)
     `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) `REF.CAST`_instr(rt)]))
     -- wf_reftype: `%`(rt')
     -- wf_config: `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) `REF.CAST`_instr(rt)]))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt')
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt', $inst_reftype(f.MODULE_frame, rt))
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt', $inst_reftype(f.MODULE_frame, rt))
 
 ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
 relation Step_read_before_array_fill_zero: `%`(config)
@@ -14043,9 +14043,9 @@ relation Step_read: `%~>%`(config, instr*)
     -- wf_reftype: `%`(rt)
     -- wf_config: `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) BR_ON_CAST_instr(l, rt_1, rt_2)]))
     -- wf_instr: `%`(BR_instr(l))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt)
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt, $inst_reftype(f.MODULE_frame, rt_2))
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt, $inst_reftype(f.MODULE_frame, rt_2))
 
   ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
   rule br_on_cast_fail{s : store, f : frame, v_ref : ref, l : labelidx, rt_1 : reftype, rt_2 : reftype}:
@@ -14058,9 +14058,9 @@ relation Step_read: `%~>%`(config, instr*)
     `%~>%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) BR_ON_CAST_FAIL_instr(l, rt_1, rt_2)]), [$instr_ref(v_ref)])
     -- wf_reftype: `%`(rt)
     -- wf_config: `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) BR_ON_CAST_FAIL_instr(l, rt_1, rt_2)]))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt)
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt, $inst_reftype(f.MODULE_frame, rt_2))
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt, $inst_reftype(f.MODULE_frame, rt_2))
 
   ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
   rule br_on_cast_fail_fail{s : store, f : frame, v_ref : ref, l : labelidx, rt_1 : reftype, rt_2 : reftype}:
@@ -14632,9 +14632,9 @@ relation Step_read: `%~>%`(config, instr*)
     -- wf_reftype: `%`(rt')
     -- wf_config: `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) `REF.TEST`_instr(rt)]))
     -- wf_instr: `%`(CONST_instr(I32_numtype, mk_num__0_num_(I32_Inn, `%`_uN(1))))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt')
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt', $inst_reftype(f.MODULE_frame, rt))
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt', $inst_reftype(f.MODULE_frame, rt))
 
   ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
   rule ref_test_false{s : store, f : frame, v_ref : ref, rt : reftype}:
@@ -14648,9 +14648,9 @@ relation Step_read: `%~>%`(config, instr*)
     `%~>%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) `REF.CAST`_instr(rt)]), [$instr_ref(v_ref)])
     -- wf_reftype: `%`(rt')
     -- wf_config: `%`(`%;%`_config(`%;%`_state(s, f), [$instr_ref(v_ref) `REF.CAST`_instr(rt)]))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- Ref_ok: `%|-%:%`(s, v_ref, rt')
-    -- Reftype_sub: `%|-%<:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt', $inst_reftype(f.MODULE_frame, rt))
+    -- Reftype_sub: `%|-%<:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt', $inst_reftype(f.MODULE_frame, rt))
 
   ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
   rule ref_cast_fail{s : store, f : frame, v_ref : ref, rt : reftype}:
@@ -16035,21 +16035,21 @@ def $ordered(var_0 : decl*) : bool
 ;; ../../../../specification/wasm-3.0/7.0-soundness.contexts.spectec
 relation Context_ok: `|-%:OK`(context)
   ;; ../../../../specification/wasm-3.0/7.0-soundness.contexts.spectec
-  rule mk_Context_ok{C : context, v_n : n, dt_lst : deftype*, v_m : m, st_lst : subtype*, jt_lst : tagtype*, gt_lst : globaltype*, mt_lst : memtype*, tt_lst : tabletype*, dt_F_lst : deftype*, ok_lst : datatype*, et_lst : elemtype*, lct_lst : localtype*, rt_lst : reftype*, rt'_opt : reftype?, x_lst : idx*, C_0 : context, t_1_lst : valtype*, t_2_lst : valtype*}:
+  rule mk_Context_ok{C : context, v_n : n, dt_lst : deftype*, jt_lst : tagtype*, gt_lst : globaltype*, mt_lst : memtype*, tt_lst : tabletype*, dt_F_lst : deftype*, ok_lst : datatype*, et_lst : elemtype*, lct_lst : localtype*, rt_lst : reftype*, rt'_opt : reftype?, x_lst : idx*, v_m : m, st_lst : subtype*, C_0 : context, t_1_lst : valtype*, t_2_lst : valtype*}:
     `|-%:OK`(C)
     -- wf_context: `%`(C)
     -- wf_context: `%`(C_0)
-    -- wf_context: `%`({TYPES dt_lst, RECS st_lst, TAGS jt_lst, GLOBALS gt_lst, MEMS mt_lst, TABLES tt_lst, FUNCS dt_F_lst, DATAS ok_lst, ELEMS et_lst, LOCALS lct_lst, LABELS [`%`_resulttype($valtype_reftype(rt)*{rt <- rt_lst})], RETURN ?(`%`_resulttype(lift($valtype_reftype(rt')?{rt' <- rt'_opt}))), REFS x_lst})
-    -- wf_context: `%`({TYPES dt_lst, RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- (wf_context: `%`({TYPES dt_lst[0 : i], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}))^(i<v_n){}
-    -- (wf_context: `%`({TYPES dt_lst[0 : i], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}))^(i<v_n){dt <- dt_lst}
-    -- wf_context: `%`({TYPES dt_lst, RECS st_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES dt_lst, TAGS jt_lst, GLOBALS gt_lst, MEMS mt_lst, TABLES tt_lst, FUNCS dt_F_lst, DATAS ok_lst, ELEMS et_lst, LOCALS lct_lst, LABELS [`%`_resulttype($valtype_reftype(rt)*{rt <- rt_lst})], RETURN ?(`%`_resulttype(lift($valtype_reftype(rt')?{rt' <- rt'_opt}))), REFS x_lst, RECS st_lst})
+    -- wf_context: `%`({TYPES dt_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- (wf_context: `%`({TYPES dt_lst[0 : i], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}))^(i<v_n){}
+    -- (wf_context: `%`({TYPES dt_lst[0 : i], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}))^(i<v_n){dt <- dt_lst}
+    -- wf_context: `%`({TYPES dt_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS st_lst})
     -- if (|t_1_lst| = |t_2_lst|)
     -- (wf_comptype: `%`(`FUNC%->%`_comptype(`%`_resulttype([t_1]), `%`_resulttype([t_2]))))*{t_1 <- t_1_lst, t_2 <- t_2_lst}
-    -- if (C = {TYPES dt_lst, RECS st_lst, TAGS jt_lst, GLOBALS gt_lst, MEMS mt_lst, TABLES tt_lst, FUNCS dt_F_lst, DATAS ok_lst, ELEMS et_lst, LOCALS lct_lst, LABELS [`%`_resulttype($valtype_reftype(rt)*{rt <- rt_lst})], RETURN ?(`%`_resulttype(lift($valtype_reftype(rt')?{rt' <- rt'_opt}))), REFS x_lst})
-    -- if (C_0 = {TYPES dt_lst, RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- (Deftype_ok: `%|-%:OK`({TYPES dt_lst[0 : i], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, dt))^(i<v_n){dt <- dt_lst}
-    -- (Subtype_ok2: `%|-%:%`({TYPES dt_lst, RECS st_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, st, OK_oktypenat(i)))^(i<v_m){st <- st_lst}
+    -- if (C = {TYPES dt_lst, TAGS jt_lst, GLOBALS gt_lst, MEMS mt_lst, TABLES tt_lst, FUNCS dt_F_lst, DATAS ok_lst, ELEMS et_lst, LOCALS lct_lst, LABELS [`%`_resulttype($valtype_reftype(rt)*{rt <- rt_lst})], RETURN ?(`%`_resulttype(lift($valtype_reftype(rt')?{rt' <- rt'_opt}))), REFS x_lst, RECS st_lst})
+    -- if (C_0 = {TYPES dt_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- (Deftype_ok: `%|-%:OK`({TYPES dt_lst[0 : i], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, dt))^(i<v_n){dt <- dt_lst}
+    -- (Subtype_ok2: `%|-%:%`({TYPES dt_lst, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS st_lst}, st, OK_oktypenat(i)))^(i<v_m){st <- st_lst}
     -- (Tagtype_ok: `%|-%:OK`(C_0, jt))*{jt <- jt_lst}
     -- (Globaltype_ok: `%|-%:OK`(C_0, gt))*{gt <- gt_lst}
     -- (Memtype_ok: `%|-%:OK`(C_0, mt))*{mt <- mt_lst}
@@ -16095,8 +16095,8 @@ relation Eleminst_ok: `%|-%:%`(store, eleminst, elemtype)
     `%|-%:%`(s, {TYPE rt, REFS ref_lst}, rt)
     -- wf_store: `%`(s)
     -- wf_eleminst: `%`({TYPE rt, REFS ref_lst})
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- Reftype_ok: `%|-%:OK`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, rt)
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- Reftype_ok: `%|-%:OK`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, rt)
     -- (Ref_ok: `%|-%:%`(s, v_ref, rt))*{v_ref <- ref_lst}
 
 ;; ../../../../specification/wasm-3.0/7.1-soundness.configurations.spectec
@@ -16112,18 +16112,18 @@ relation Exportinst_ok: `%|-%:OK`(store, exportinst)
 ;; ../../../../specification/wasm-3.0/7.1-soundness.configurations.spectec
 relation Moduleinst_ok: `%|-%:%`(store, moduleinst, context)
   ;; ../../../../specification/wasm-3.0/7.1-soundness.configurations.spectec
-  rule mk_Moduleinst_ok{s : store, deftype_lst : deftype*, tagaddr_lst : tagaddr*, globaladdr_lst : globaladdr*, memaddr_lst : memaddr*, tableaddr_lst : tableaddr*, funcaddr_lst : funcaddr*, dataaddr_lst : dataaddr*, elemaddr_lst : elemaddr*, exportinst_lst : exportinst*, subtype_lst : subtype*, tagtype_lst : tagtype*, globaltype_lst : globaltype*, memtype_lst : memtype*, tabletype_lst : tabletype*, deftype_F_lst : deftype*, datatype_lst : datatype*, elemtype_lst : elemtype*}:
-    `%|-%:%`(s, {TYPES deftype_lst, TAGS tagaddr_lst, GLOBALS globaladdr_lst, MEMS memaddr_lst, TABLES tableaddr_lst, FUNCS funcaddr_lst, DATAS dataaddr_lst, ELEMS elemaddr_lst, EXPORTS exportinst_lst}, {TYPES deftype_lst, RECS subtype_lst, TAGS tagtype_lst, GLOBALS globaltype_lst, MEMS memtype_lst, TABLES tabletype_lst, FUNCS deftype_F_lst, DATAS datatype_lst, ELEMS elemtype_lst, LOCALS [], LABELS [], RETURN ?(), REFS `%`_funcidx(i)^(i<|funcaddr_lst|){}})
+  rule mk_Moduleinst_ok{s : store, deftype_lst : deftype*, tagaddr_lst : tagaddr*, globaladdr_lst : globaladdr*, memaddr_lst : memaddr*, tableaddr_lst : tableaddr*, funcaddr_lst : funcaddr*, dataaddr_lst : dataaddr*, elemaddr_lst : elemaddr*, exportinst_lst : exportinst*, tagtype_lst : tagtype*, globaltype_lst : globaltype*, memtype_lst : memtype*, tabletype_lst : tabletype*, deftype_F_lst : deftype*, datatype_lst : datatype*, elemtype_lst : elemtype*, subtype_lst : subtype*}:
+    `%|-%:%`(s, {TYPES deftype_lst, TAGS tagaddr_lst, GLOBALS globaladdr_lst, MEMS memaddr_lst, TABLES tableaddr_lst, FUNCS funcaddr_lst, DATAS dataaddr_lst, ELEMS elemaddr_lst, EXPORTS exportinst_lst}, {TYPES deftype_lst, TAGS tagtype_lst, GLOBALS globaltype_lst, MEMS memtype_lst, TABLES tabletype_lst, FUNCS deftype_F_lst, DATAS datatype_lst, ELEMS elemtype_lst, LOCALS [], LABELS [], RETURN ?(), REFS `%`_funcidx(i)^(i<|funcaddr_lst|){}, RECS subtype_lst})
     -- wf_store: `%`(s)
     -- wf_moduleinst: `%`({TYPES deftype_lst, TAGS tagaddr_lst, GLOBALS globaladdr_lst, MEMS memaddr_lst, TABLES tableaddr_lst, FUNCS funcaddr_lst, DATAS dataaddr_lst, ELEMS elemaddr_lst, EXPORTS exportinst_lst})
-    -- wf_context: `%`({TYPES deftype_lst, RECS subtype_lst, TAGS tagtype_lst, GLOBALS globaltype_lst, MEMS memtype_lst, TABLES tabletype_lst, FUNCS deftype_F_lst, DATAS datatype_lst, ELEMS elemtype_lst, LOCALS [], LABELS [], RETURN ?(), REFS `%`_funcidx(i)^(i<|funcaddr_lst|){}})
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES deftype_lst, TAGS tagtype_lst, GLOBALS globaltype_lst, MEMS memtype_lst, TABLES tabletype_lst, FUNCS deftype_F_lst, DATAS datatype_lst, ELEMS elemtype_lst, LOCALS [], LABELS [], RETURN ?(), REFS `%`_funcidx(i)^(i<|funcaddr_lst|){}, RECS subtype_lst})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- (wf_externtype: `%`(TAG_externtype(v_tagtype)))*{v_tagtype <- tagtype_lst}
     -- (wf_externtype: `%`(GLOBAL_externtype(v_globaltype)))*{v_globaltype <- globaltype_lst}
     -- (wf_externtype: `%`(FUNC_externtype($typeuse_deftype(deftype_F))))*{deftype_F <- deftype_F_lst}
     -- (wf_externtype: `%`(MEM_externtype(v_memtype)))*{v_memtype <- memtype_lst}
     -- (wf_externtype: `%`(TABLE_externtype(v_tabletype)))*{v_tabletype <- tabletype_lst}
-    -- (Deftype_ok: `%|-%:OK`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, v_deftype))*{v_deftype <- deftype_lst}
+    -- (Deftype_ok: `%|-%:OK`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, v_deftype))*{v_deftype <- deftype_lst}
     -- if (|tagaddr_lst| = |tagtype_lst|)
     -- (Externaddr_ok: `%|-%:%`(s, TAG_externaddr(v_tagaddr), TAG_externtype(v_tagtype)))*{v_tagaddr <- tagaddr_lst, v_tagtype <- tagtype_lst}
     -- if (|globaladdr_lst| = |globaltype_lst|)
@@ -16149,11 +16149,11 @@ relation Moduleinst_ok: `%|-%:%`(store, moduleinst, context)
 relation Frame_ok: `%|-%:%`(store, frame, context)
   ;; ../../../../specification/wasm-3.0/7.1-soundness.configurations.spectec
   rule mk_Frame_ok{s : store, val_opt_lst : val?*, v_moduleinst : moduleinst, C : context, lct_lst : localtype*}:
-    `%|-%:%`(s, {LOCALS val_opt_lst, MODULE v_moduleinst}, C +++ {TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS lct_lst, LABELS [], RETURN ?(), REFS []})
+    `%|-%:%`(s, {LOCALS val_opt_lst, MODULE v_moduleinst}, C +++ {TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS lct_lst, LABELS [], RETURN ?(), REFS [], RECS []})
     -- wf_store: `%`(s)
     -- wf_context: `%`(C)
     -- wf_frame: `%`({LOCALS val_opt_lst, MODULE v_moduleinst})
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS lct_lst, LABELS [], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS lct_lst, LABELS [], RETURN ?(), REFS [], RECS []})
     -- Moduleinst_ok: `%|-%:%`(s, v_moduleinst, C)
     -- if (|lct_lst| = |val_opt_lst|)
     -- (Localval_ok: `%|-%:%`(s, val_opt, lct))*{lct <- lct_lst, val_opt <- val_opt_lst}
@@ -16189,10 +16189,10 @@ relation Instr_ok2: `%;%|-%:%`(store, context, instr, instrtype)
     -- wf_instr: `%`(`LABEL_%{%}%`_instr(v_n, instr'_lst, instr_lst))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype([]), [], `%`_resulttype(t_lst)))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t'_lst), x'_lst, `%`_resulttype(t_lst)))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t'_lst)], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t'_lst)], RETURN ?(), REFS [], RECS []})
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype([]), x_lst, `%`_resulttype(t_lst)))
     -- Instrs_ok2: `%;%|-%:%`(s, C, instr'_lst, `%->_%%`_instrtype(`%`_resulttype(t'_lst), x'_lst, `%`_resulttype(t_lst)))
-    -- Instrs_ok2: `%;%|-%:%`(s, {TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t'_lst)], RETURN ?(), REFS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype([]), x_lst, `%`_resulttype(t_lst)))
+    -- Instrs_ok2: `%;%|-%:%`(s, {TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t'_lst)], RETURN ?(), REFS [], RECS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype([]), x_lst, `%`_resulttype(t_lst)))
 
   ;; ../../../../specification/wasm-3.0/7.1-soundness.configurations.spectec:23.1-26.37
   rule frame{s : store, C : context, v_n : n, f : frame, instr_lst : instr*, t_lst : valtype*, C' : context}:
@@ -16296,8 +16296,8 @@ relation Taginst_ok: `%|-%:%`(store, taginst, tagtype)
     `%|-%:%`(s, {TYPE jt}, jt)
     -- wf_store: `%`(s)
     -- wf_taginst: `%`({TYPE jt})
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- Tagtype_ok: `%|-%:OK`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, jt)
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- Tagtype_ok: `%|-%:OK`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, jt)
 
 ;; ../../../../specification/wasm-3.0/7.1-soundness.configurations.spectec
 relation Globalinst_ok: `%|-%:%`(store, globalinst, globaltype)
@@ -16307,8 +16307,8 @@ relation Globalinst_ok: `%|-%:%`(store, globalinst, globaltype)
     -- wf_store: `%`(s)
     -- wf_globalinst: `%`({TYPE `%%`_globaltype(mut_opt, t), VALUE v_val})
     -- wf_globaltype: `%`(`%%`_globaltype(mut_opt, t))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- Globaltype_ok: `%|-%:OK`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, `%%`_globaltype(mut_opt, t))
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- Globaltype_ok: `%|-%:OK`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, `%%`_globaltype(mut_opt, t))
     -- Val_ok: `%|-%:%`(s, v_val, t)
 
 ;; ../../../../specification/wasm-3.0/7.1-soundness.configurations.spectec
@@ -16319,8 +16319,8 @@ relation Meminst_ok: `%|-%:%`(store, meminst, memtype)
     -- wf_store: `%`(s)
     -- wf_meminst: `%`({TYPE `%%PAGE`_memtype(at, `[%..%]`_limits(`%`_u64(v_n), ?(`%`_u64(v_m)))), BYTES b_lst})
     -- wf_memtype: `%`(`%%PAGE`_memtype(at, `[%..%]`_limits(`%`_u64(v_n), ?(`%`_u64(v_m)))))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- Memtype_ok: `%|-%:OK`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, `%%PAGE`_memtype(at, `[%..%]`_limits(`%`_u64(v_n), ?(`%`_u64(v_m)))))
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- Memtype_ok: `%|-%:OK`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, `%%PAGE`_memtype(at, `[%..%]`_limits(`%`_u64(v_n), ?(`%`_u64(v_m)))))
     -- if (|b_lst| = (v_n * (64 * $Ki)))
 
 ;; ../../../../specification/wasm-3.0/7.1-soundness.configurations.spectec
@@ -16331,8 +16331,8 @@ relation Tableinst_ok: `%|-%:%`(store, tableinst, tabletype)
     -- wf_store: `%`(s)
     -- wf_tableinst: `%`({TYPE `%%%`_tabletype(at, `[%..%]`_limits(`%`_u64(v_n), ?(`%`_u64(v_m))), rt), REFS ref_lst})
     -- wf_tabletype: `%`(`%%%`_tabletype(at, `[%..%]`_limits(`%`_u64(v_n), ?(`%`_u64(v_m))), rt))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- Tabletype_ok: `%|-%:OK`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, `%%%`_tabletype(at, `[%..%]`_limits(`%`_u64(v_n), ?(`%`_u64(v_m))), rt))
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- Tabletype_ok: `%|-%:OK`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, `%%%`_tabletype(at, `[%..%]`_limits(`%`_u64(v_n), ?(`%`_u64(v_m))), rt))
     -- if (|ref_lst| = v_n)
     -- (Ref_ok: `%|-%:%`(s, v_ref, rt))*{v_ref <- ref_lst}
 
@@ -16344,8 +16344,8 @@ relation Funcinst_ok: `%|-%:%`(store, funcinst, deftype)
     -- wf_store: `%`(s)
     -- wf_context: `%`(C)
     -- wf_funcinst: `%`({TYPE dt, MODULE v_moduleinst, CODE $funccode_func(v_func)})
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []})
-    -- Deftype_ok: `%|-%:OK`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS []}, dt)
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
+    -- Deftype_ok: `%|-%:OK`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, dt)
     -- Moduleinst_ok: `%|-%:%`(s, v_moduleinst, C)
     -- Func_ok: `%|-%:%`(C, v_func, dt')
     -- Deftype_sub: `%|-%<:%`(C, dt', dt)
@@ -16727,9 +16727,9 @@ relation NotationTypingInstrScheme: `%|-%:%`(context, instr*, instrtype)
     -- wf_context: `%`(C)
     -- wf_instr: `%`(BLOCK_instr(v_blocktype, instr_lst))
     -- wf_instrtype: `%`(`%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- wf_context: `%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []})
+    -- wf_context: `%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []})
     -- Blocktype_ok: `%|-%:%`(C, v_blocktype, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
-    -- NotationTypingInstrScheme: `%|-%:%`({TYPES [], RECS [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
+    -- NotationTypingInstrScheme: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [`%`_resulttype(t_2_lst)], RETURN ?(), REFS [], RECS []} +++ C, instr_lst, `%->_%%`_instrtype(`%`_resulttype(t_1_lst), [], `%`_resulttype(t_2_lst)))
 }
 
 ;; ../../../../specification/wasm-3.0/X.3-notation.execution.spectec
