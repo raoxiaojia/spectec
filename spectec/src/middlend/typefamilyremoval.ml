@@ -174,13 +174,15 @@ let has_one_inst env family_typ =
     )
   | _ -> false
 
-let make_quant_set quants = 
+let extend_quant_set set quants = 
   List.fold_left (fun acc q -> 
     match q.it with 
     | ExpP (id, typ) -> StringMap.add id.it typ acc
     | DefP (id, _, typ) -> StringMap.add id.it typ acc
     | _ -> acc  
-  ) StringMap.empty quants
+  ) set quants
+
+let make_quant_set quants = extend_quant_set StringMap.empty quants
 
 let rec check_type_equality env t t' = 
   let r_t = reduce_type_aliasing env t in 
@@ -497,7 +499,9 @@ let rec transform_prem quant_map env prem =
   (match prem.it with
   | RulePr (id, args, m, e) -> RulePr (id, List.map (transform_arg quant_map env) args, m, transform_exp quant_map env e)
   | IfPr e -> IfPr (transform_exp quant_map env e)
-  | LetPr (e1, e2, ids) -> LetPr (transform_exp quant_map env e1, transform_exp quant_map env e2, ids)
+  | LetPr (quants, e1, e2) ->
+    let quant_map = extend_quant_set quant_map quants in
+    LetPr (List.map (transform_param env) quants, transform_exp quant_map env e1, transform_exp quant_map env e2)
   | ElsePr -> ElsePr
   | IterPr (prem1, (iter, id_exp_pairs)) -> 
     let new_quant_map = add_iter_ids_to_map env id_exp_pairs quant_map in
