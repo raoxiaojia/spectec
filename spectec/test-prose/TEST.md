@@ -1019,8 +1019,8 @@ The module :math:`(\mathsf{module}~{{\mathit{type}}^\ast}~{{\mathit{import}}^\as
    a. Push the value :math:`{\mathit{val}}_2` to the stack.
 
 
-:math:`\mathsf{if}~{t^?}~{{\mathit{instr}}_1^\ast}~{{\mathit{instr}}_2^\ast}`
-.............................................................................
+:math:`\mathsf{if}~{t^?}~{{\mathit{instr}}_1^\ast}~\mathsf{else}~{{\mathit{instr}}_2^\ast}`
+...........................................................................................
 
 
 1. Assert: Due to validation, a value of number type :math:`\mathsf{i{\scriptstyle 32}}` is on the top of the stack.
@@ -6249,8 +6249,8 @@ The module :math:`(\mathsf{module}~{{\mathit{type}}^\ast}~{{\mathit{import}}^\as
    a. Push the value :math:`{\mathit{val}}_2` to the stack.
 
 
-:math:`\mathsf{if}~{\mathit{bt}}~{{\mathit{instr}}_1^\ast}~{{\mathit{instr}}_2^\ast}`
-.....................................................................................
+:math:`\mathsf{if}~{\mathit{bt}}~{{\mathit{instr}}_1^\ast}~\mathsf{else}~{{\mathit{instr}}_2^\ast}`
+...................................................................................................
 
 
 1. Assert: Due to validation, a value of number type :math:`\mathsf{i{\scriptstyle 32}}` is on the top of the stack.
@@ -13760,6 +13760,166 @@ spectec 0.5 generator
 
 
 
+:math:`{\mathit{fv}}_2` is immutably reachable from :math:`{\mathit{fv}}_1` if:
+
+
+   * Either:
+
+      * :math:`{\mathit{fv}'}` is immutably reachable from :math:`{\mathit{fv}}_1`.
+
+      * :math:`{\mathit{fv}}_2` is immutably reachable from :math:`{\mathit{fv}'}`.
+
+   * Or:
+
+      * The field value :math:`{\mathit{fv}}_1` is of the form :math:`(\mathsf{ref{.}struct}~a)`.
+
+      * The field value :math:`{\mathit{fv}}_2` is of the form :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]`.
+
+      * The field value :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]` exists.
+
+      * The structure instance :math:`s{.}\mathsf{structs}{}[a]` exists.
+
+      * The :ref:`expansion <aux-expand-deftype>` of :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{type}` is :math:`(\mathsf{struct}~{{\mathit{ft}}^\ast})`.
+
+      * The length of :math:`{{\mathit{ft}}^\ast}` is greater than :math:`i`.
+
+      * The field type :math:`{{\mathit{ft}}^\ast}{}[i]` is of the form :math:`(\epsilon~{\mathit{zt}})`.
+   * Or:
+
+      * The field value :math:`{\mathit{fv}}_1` is of the form :math:`(\mathsf{ref{.}array}~a)`.
+
+      * The field value :math:`{\mathit{fv}}_2` is of the form :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]`.
+
+      * The field value :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]` exists.
+
+      * The array instance :math:`s{.}\mathsf{arrays}{}[a]` exists.
+
+      * The :ref:`expansion <aux-expand-deftype>` of :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{type}` is :math:`(\mathsf{array}~(\epsilon~{\mathit{zt}}))`.
+   * Or:
+
+      * The field value :math:`{\mathit{fv}}_1` is of the form :math:`(\mathsf{ref{.}exn}~a)`.
+
+      * The field value :math:`{\mathit{fv}}_2` is of the form :math:`s{.}\mathsf{exns}{}[a]{.}\mathsf{fields}{}[i]`.
+
+      * The value :math:`s{.}\mathsf{exns}{}[a]{.}\mathsf{fields}{}[i]` exists.
+
+      * The exception instance :math:`s{.}\mathsf{exns}{}[a]` exists.
+   * Or:
+
+      * The field value :math:`{\mathit{fv}}_1` is of the form :math:`(\mathsf{ref{.}extern}~{\mathit{ref}})`.
+
+      * The field value :math:`{\mathit{fv}}_2` is of the form :math:`{\mathit{ref}}`.
+
+
+
+
+:math:`{\mathit{fv}}_2` is immutably reachable from :math:`{\mathit{fv}}_1` if:
+
+
+   * :math:`{\mathit{fv}'}` is immutably reachable from :math:`{\mathit{fv}}_1`.
+
+   * :math:`{\mathit{fv}}_2` is immutably reachable from :math:`{\mathit{fv}'}`.
+
+
+
+
+:math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]` is immutably reachable from :math:`(\mathsf{ref{.}struct}~a)` if:
+
+
+   * The field value :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]` exists.
+
+   * The structure instance :math:`s{.}\mathsf{structs}{}[a]` exists.
+
+   * The :ref:`expansion <aux-expand-deftype>` of :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{type}` is :math:`(\mathsf{struct}~{{\mathit{ft}}^\ast})`.
+
+   * The length of :math:`{{\mathit{ft}}^\ast}` is greater than :math:`i`.
+
+   * The field type :math:`{{\mathit{ft}}^\ast}{}[i]` is of the form :math:`(\epsilon~{\mathit{zt}})`.
+
+
+
+
+:math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]` is immutably reachable from :math:`(\mathsf{ref{.}array}~a)` if:
+
+
+   * The field value :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]` exists.
+
+   * The array instance :math:`s{.}\mathsf{arrays}{}[a]` exists.
+
+   * The :ref:`expansion <aux-expand-deftype>` of :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{type}` is :math:`(\mathsf{array}~(\epsilon~{\mathit{zt}}))`.
+
+
+
+
+:math:`s{.}\mathsf{exns}{}[a]{.}\mathsf{fields}{}[i]` is immutably reachable from :math:`(\mathsf{ref{.}exn}~a)` if:
+
+
+   * The value :math:`s{.}\mathsf{exns}{}[a]{.}\mathsf{fields}{}[i]` exists.
+
+   * The exception instance :math:`s{.}\mathsf{exns}{}[a]` exists.
+
+
+
+
+:math:`{\mathit{ref}}` is immutably reachable from :math:`(\mathsf{ref{.}extern}~{\mathit{ref}})`.
+
+
+
+
+The :ref:`expansion <aux-expand-deftype>` of :math:`{\mathit{deftype}}` is :math:`{\mathit{comptype}}` if:
+
+
+   * The sub type :math:`{\mathrm{unroll}}({\mathit{deftype}})` is of the form :math:`(\mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{\mathit{comptype}})`.
+
+
+
+
+The :ref:`expansion <aux-expand-typeuse>` of :math:`C` is :math:`{\mathit{comptype}}` if:
+
+
+   * Either:
+
+      * The type use :math:`{\mathit{typeuse}}` is of the form :math:`{\mathit{deftype}}`.
+
+      * The :ref:`expansion <aux-expand-deftype>` of :math:`{\mathit{deftype}}` is :math:`{\mathit{comptype}}`.
+
+   * Or:
+
+      * The type use :math:`{\mathit{typeuse}}` is of the form :math:`{\mathit{typeidx}}`.
+
+      * The type :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` exists.
+
+      * The :ref:`expansion <aux-expand-deftype>` of :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` is :math:`{\mathit{comptype}}`.
+
+
+
+
+The :ref:`expansion <aux-expand-typeuse>` of :math:`C` is :math:`{\mathit{comptype}}` if:
+
+
+   * The :ref:`expansion <aux-expand-deftype>` of :math:`{\mathit{deftype}}` is :math:`{\mathit{comptype}}`.
+
+
+
+
+The :ref:`expansion <aux-expand-typeuse>` of :math:`C` is :math:`{\mathit{comptype}}` if:
+
+
+   * The type :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` exists.
+
+   * The :ref:`expansion <aux-expand-deftype>` of :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` is :math:`{\mathit{comptype}}`.
+
+
+
+
+:math:`{\mathit{fv}}_2` is not immutably reachable from :math:`{\mathit{fv}}_1` if:
+
+
+   * NotImmutReachable(:math:`{\mathit{fv}}_1`, :math:`s`, :math:`{\mathit{fv}}_2`) is true.
+
+
+
+
 The number type :math:`{\mathit{numtype}}` is always :ref:`valid <valid-val>`.
 
 
@@ -13781,14 +13941,6 @@ The packed type :math:`{\mathit{packtype}}` :ref:`matches <match>` only itself.
 
 
 The number type :math:`{\mathit{numtype}}` :ref:`matches <match>` only itself.
-
-
-
-
-The :ref:`expansion <aux-expand-deftype>` of :math:`{\mathit{deftype}}` is :math:`{\mathit{comptype}}` if:
-
-
-   * The composite type :math:`{\mathrm{expand}}({\mathit{deftype}})` is of the form :math:`{\mathit{comptype}}`.
 
 
 
@@ -14052,7 +14204,7 @@ The composite type :math:`(\mathsf{func}~{t_1^\ast}~\rightarrow~{t_2^\ast})` is 
 
 
 
-The sub type :math:`(\mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{\mathit{comptype}})` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i})` if:
+The sub type :math:`(\mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{\mathit{comptype}})` is :ref:`valid <valid-val>` for :math:`i` if:
 
 
    * The length of :math:`{{\mathit{typeuse}}^\ast}` is less than or equal to :math:`1`.
@@ -14063,7 +14215,7 @@ The sub type :math:`(\mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{
 
       * :math:`{\mathit{typeuse}} \prec i` is true.
 
-      * The sub type :math:`{{\mathrm{unroll}}}_{C}({\mathit{typeuse}})` is of the form :math:`(\mathsf{sub}~{{\mathit{typeuse}'}^\ast}~{\mathit{comptype}'})`.
+      * The sub type :math:`{{\mathrm{unrollht}}}_{C}({\mathit{typeuse}})` is of the form :math:`(\mathsf{sub}~{{\mathit{typeuse}'}^\ast}~{\mathit{comptype}'})`.
 
    * :math:`{{\mathit{comptype}'}^\ast}` is the concatenation of all such :math:`{\mathit{comptype}'}`.
 
@@ -14076,7 +14228,7 @@ The sub type :math:`(\mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{
 
 
 
-The recursive type :math:`(\mathsf{rec}~{{\mathit{subtype}}^\ast})` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i})` if:
+The recursive type :math:`(\mathsf{rec}~{{\mathit{subtype}}^\ast})` is :ref:`valid <valid-val>` for :math:`i` if:
 
 
    * Either:
@@ -14087,24 +14239,24 @@ The recursive type :math:`(\mathsf{rec}~{{\mathit{subtype}}^\ast})` is :ref:`val
 
       * The sub type sequence :math:`{{\mathit{subtype}}^\ast}` is of the form :math:`{\mathit{subtype}}_1~{{\mathit{subtype}'}^\ast}`.
 
-      * The sub type :math:`{\mathit{subtype}}_1` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i})`.
+      * The sub type :math:`{\mathit{subtype}}_1` is :ref:`valid <valid-val>` for :math:`i`.
 
-      * The recursive type :math:`(\mathsf{rec}~{{\mathit{subtype}'}^\ast})` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i + 1})`.
-
-
-
-
-The recursive type :math:`(\mathsf{rec})` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i})`.
+      * The recursive type :math:`(\mathsf{rec}~{{\mathit{subtype}'}^\ast})` is :ref:`valid <valid-val>` for :math:`i + 1`.
 
 
 
 
-The recursive type :math:`(\mathsf{rec}~{\mathit{subtype}}_1~{{\mathit{subtype}}^\ast})` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i})` if:
+The recursive type :math:`(\mathsf{rec})` is :ref:`valid <valid-val>` for :math:`i`.
 
 
-   * The sub type :math:`{\mathit{subtype}}_1` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i})`.
 
-   * The recursive type :math:`(\mathsf{rec}~{{\mathit{subtype}}^\ast})` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i + 1})`.
+
+The recursive type :math:`(\mathsf{rec}~{\mathit{subtype}}_1~{{\mathit{subtype}}^\ast})` is :ref:`valid <valid-val>` for :math:`i` if:
+
+
+   * The sub type :math:`{\mathit{subtype}}_1` is :ref:`valid <valid-val>` for :math:`i`.
+
+   * The recursive type :math:`(\mathsf{rec}~{{\mathit{subtype}}^\ast})` is :ref:`valid <valid-val>` for :math:`i + 1`.
 
 
 
@@ -14114,7 +14266,7 @@ The defined type :math:`({\mathit{rectype}} {.} i)` is :ref:`valid <valid-val>` 
 
    * Let :math:`{C'}` be the same context as :math:`C`, but with the sub type sequence :math:`{{\mathit{subtype}}^{n}}` prepended to the field :math:`\mathsf{recs}`.
 
-   * Under the context :math:`{C'}`, the recursive type :math:`{\mathit{rectype}}` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{0})`.
+   * Under the context :math:`{C'}`, the recursive type :math:`{\mathit{rectype}}` is :ref:`valid <valid-val>` for :math:`0`.
 
    * The recursive type :math:`{\mathit{rectype}}` is of the form :math:`(\mathsf{rec}~{{\mathit{subtype}}^{n}})`.
 
@@ -14693,44 +14845,6 @@ The instruction type :math:`{t_1^\ast}~{\rightarrow}_{{x^\ast}}\,{t_2^\ast}` is 
    * For all :math:`x` in :math:`{x^\ast}`:
 
       * The local :math:`C{.}\mathsf{locals}{}[x]` exists.
-
-
-
-
-The :ref:`expansion <aux-expand-typeuse>` of :math:`C` is :math:`{\mathit{comptype}}` if:
-
-
-   * Either:
-
-      * The type use :math:`{\mathit{typeuse}}` is of the form :math:`{\mathit{deftype}}`.
-
-      * The :ref:`expansion <aux-expand-deftype>` of :math:`{\mathit{deftype}}` is :math:`{\mathit{comptype}}`.
-
-   * Or:
-
-      * The type use :math:`{\mathit{typeuse}}` is of the form :math:`{\mathit{typeidx}}`.
-
-      * The type :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` exists.
-
-      * The :ref:`expansion <aux-expand-deftype>` of :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` is :math:`{\mathit{comptype}}`.
-
-
-
-
-The :ref:`expansion <aux-expand-typeuse>` of :math:`C` is :math:`{\mathit{comptype}}` if:
-
-
-   * The :ref:`expansion <aux-expand-deftype>` of :math:`{\mathit{deftype}}` is :math:`{\mathit{comptype}}`.
-
-
-
-
-The :ref:`expansion <aux-expand-typeuse>` of :math:`C` is :math:`{\mathit{comptype}}` if:
-
-
-   * The type :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` exists.
-
-   * The :ref:`expansion <aux-expand-deftype>` of :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` is :math:`{\mathit{comptype}}`.
 
 
 
@@ -17698,7 +17812,7 @@ The identifier context :math:`I` is :ref:`valid <valid-val>` if:
 The context :math:`C` is :ref:`valid <valid-val>` if:
 
 
-   * The context :math:`C` is of the form :math:`\{ \mathsf{types}~{{\mathit{dt}}^{n}},\;\allowbreak \mathsf{recs}~{{\mathit{st}}^{m}},\;\allowbreak \mathsf{tags}~{{\mathit{jt}}^\ast},\;\allowbreak \mathsf{globals}~{{\mathit{gt}}^\ast},\;\allowbreak \mathsf{mems}~{{\mathit{mt}}^\ast},\;\allowbreak \mathsf{tables}~{{\mathit{tt}}^\ast},\;\allowbreak \mathsf{funcs}~{{\mathit{dt}}_{\mathsf{f}}^\ast},\;\allowbreak \mathsf{datas}~{{\mathit{ok}}^\ast},\;\allowbreak \mathsf{elems}~{{\mathit{et}}^\ast},\;\allowbreak \mathsf{locals}~{{{\mathit{lt}}}^\ast},\;\allowbreak \mathsf{labels}~{{\mathit{rt}}^\ast},\;\allowbreak \mathsf{return}~{{\mathit{rt}'}^?},\;\allowbreak \mathsf{refs}~{x^\ast} \}`.
+   * The context :math:`C` is of the form :math:`\{ \mathsf{types}~{{\mathit{dt}}^{n}},\;\allowbreak \mathsf{tags}~{{\mathit{jt}}^\ast},\;\allowbreak \mathsf{globals}~{{\mathit{gt}}^\ast},\;\allowbreak \mathsf{mems}~{{\mathit{mt}}^\ast},\;\allowbreak \mathsf{tables}~{{\mathit{tt}}^\ast},\;\allowbreak \mathsf{funcs}~{{\mathit{dt}}_{\mathsf{f}}^\ast},\;\allowbreak \mathsf{datas}~{{\mathit{ok}}^\ast},\;\allowbreak \mathsf{elems}~{{\mathit{et}}^\ast},\;\allowbreak \mathsf{locals}~{{{\mathit{lt}}}^\ast},\;\allowbreak \mathsf{labels}~{{\mathit{rt}}^\ast},\;\allowbreak \mathsf{return}~{{\mathit{rt}'}^?},\;\allowbreak \mathsf{refs}~{x^\ast},\;\allowbreak \mathsf{recs}~{{\mathit{st}}^{m}} \}`.
 
    * The context :math:`C_0` is of the form :math:`\{ \mathsf{types}~{{\mathit{dt}}^{n}},\;\allowbreak \mathsf{return}~\epsilon \}`.
 
@@ -17708,7 +17822,7 @@ The context :math:`C` is :ref:`valid <valid-val>` if:
 
    * For all :math:`{\mathit{st}}` in :math:`{{\mathit{st}}^\ast}`:
 
-      * Under the context :math:`\{ \mathsf{types}~{{\mathit{dt}}^{n}},\;\allowbreak \mathsf{recs}~{{\mathit{st}}^{m}},\;\allowbreak \mathsf{return}~\epsilon \}`, the sub type :math:`{\mathit{st}}` is :ref:`valid <valid-val>` for :math:`({\mathsf{ok}}{i})`.
+      * Under the context :math:`\{ \mathsf{types}~{{\mathit{dt}}^{n}},\;\allowbreak \mathsf{return}~\epsilon,\;\allowbreak \mathsf{recs}~{{\mathit{st}}^{m}} \}`, the sub type :math:`{\mathit{st}}` is :ref:`valid <valid-val>` for :math:`i`.
 
    * For all :math:`{\mathit{jt}}` in :math:`{{\mathit{jt}}^\ast}`:
 
@@ -17815,7 +17929,7 @@ The export instance :math:`\{ \mathsf{name}~{\mathit{nm}},\;\allowbreak \mathsf{
 
 
 
-The module instance :math:`\{ \mathsf{types}~{{\mathit{deftype}}^\ast},\;\allowbreak \mathsf{tags}~{{\mathit{tagaddr}}^\ast},\;\allowbreak \mathsf{globals}~{{\mathit{globaladdr}}^\ast},\;\allowbreak \mathsf{mems}~{{\mathit{memaddr}}^\ast},\;\allowbreak \mathsf{tables}~{{\mathit{tableaddr}}^\ast},\;\allowbreak \mathsf{funcs}~{{\mathit{funcaddr}}^\ast},\;\allowbreak \mathsf{datas}~{{\mathit{dataaddr}}^\ast},\;\allowbreak \mathsf{elems}~{{\mathit{elemaddr}}^\ast},\;\allowbreak \mathsf{exports}~{{\mathit{exportinst}}^\ast} \}` is :ref:`valid <valid-val>` with the context :math:`\{ \mathsf{types}~{{\mathit{deftype}}^\ast},\;\allowbreak \mathsf{recs}~{{\mathit{subtype}}^\ast},\;\allowbreak \mathsf{tags}~{{\mathit{tagtype}}^\ast},\;\allowbreak \mathsf{globals}~{{\mathit{globaltype}}^\ast},\;\allowbreak \mathsf{mems}~{{\mathit{memtype}}^\ast},\;\allowbreak \mathsf{tables}~{{\mathit{tabletype}}^\ast},\;\allowbreak \mathsf{funcs}~{{\mathit{deftype}}_{\mathsf{f}}^\ast},\;\allowbreak \mathsf{datas}~{{\mathit{datatype}}^\ast},\;\allowbreak \mathsf{elems}~{{\mathit{elemtype}}^\ast},\;\allowbreak \mathsf{return}~\epsilon,\;\allowbreak \mathsf{refs}~{i^{i<{|{{\mathit{funcaddr}}^\ast}|}}} \}` if:
+The module instance :math:`\{ \mathsf{types}~{{\mathit{deftype}}^\ast},\;\allowbreak \mathsf{tags}~{{\mathit{tagaddr}}^\ast},\;\allowbreak \mathsf{globals}~{{\mathit{globaladdr}}^\ast},\;\allowbreak \mathsf{mems}~{{\mathit{memaddr}}^\ast},\;\allowbreak \mathsf{tables}~{{\mathit{tableaddr}}^\ast},\;\allowbreak \mathsf{funcs}~{{\mathit{funcaddr}}^\ast},\;\allowbreak \mathsf{datas}~{{\mathit{dataaddr}}^\ast},\;\allowbreak \mathsf{elems}~{{\mathit{elemaddr}}^\ast},\;\allowbreak \mathsf{exports}~{{\mathit{exportinst}}^\ast} \}` is :ref:`valid <valid-val>` with the context :math:`\{ \mathsf{types}~{{\mathit{deftype}}^\ast},\;\allowbreak \mathsf{tags}~{{\mathit{tagtype}}^\ast},\;\allowbreak \mathsf{globals}~{{\mathit{globaltype}}^\ast},\;\allowbreak \mathsf{mems}~{{\mathit{memtype}}^\ast},\;\allowbreak \mathsf{tables}~{{\mathit{tabletype}}^\ast},\;\allowbreak \mathsf{funcs}~{{\mathit{deftype}}_{\mathsf{f}}^\ast},\;\allowbreak \mathsf{datas}~{{\mathit{datatype}}^\ast},\;\allowbreak \mathsf{elems}~{{\mathit{elemtype}}^\ast},\;\allowbreak \mathsf{return}~\epsilon,\;\allowbreak \mathsf{refs}~{i^{i<{|{{\mathit{funcaddr}}^\ast}|}}},\;\allowbreak \mathsf{recs}~{{\mathit{subtype}}^\ast} \}` if:
 
 
    * For all :math:`{\mathit{deftype}}` in :math:`{{\mathit{deftype}}^\ast}`:
@@ -18190,120 +18304,6 @@ The exception instance :math:`\{ \mathsf{tag}~{\mathit{ta}},\;\allowbreak \maths
    * For all :math:`t` in :math:`{t^\ast}`, and corresponding :math:`{\mathit{val}}` in :math:`{{\mathit{val}}^\ast}`:
 
       * The value :math:`{\mathit{val}}` is :ref:`valid <valid-val>` with the value type :math:`t`.
-
-
-
-
-:math:`{\mathit{fv}}_2` is immutably reachable from :math:`{\mathit{fv}}_1` if:
-
-
-   * Either:
-
-      * :math:`{\mathit{fv}'}` is immutably reachable from :math:`{\mathit{fv}}_1`.
-
-      * :math:`{\mathit{fv}}_2` is immutably reachable from :math:`{\mathit{fv}'}`.
-
-   * Or:
-
-      * The field value :math:`{\mathit{fv}}_1` is of the form :math:`(\mathsf{ref{.}struct}~a)`.
-
-      * The field value :math:`{\mathit{fv}}_2` is of the form :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]`.
-
-      * The field value :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]` exists.
-
-      * The structure instance :math:`s{.}\mathsf{structs}{}[a]` exists.
-
-      * The :ref:`expansion <aux-expand-deftype>` of :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{type}` is :math:`(\mathsf{struct}~{{\mathit{ft}}^\ast})`.
-
-      * The length of :math:`{{\mathit{ft}}^\ast}` is greater than :math:`i`.
-
-      * The field type :math:`{{\mathit{ft}}^\ast}{}[i]` is of the form :math:`(\epsilon~{\mathit{zt}})`.
-   * Or:
-
-      * The field value :math:`{\mathit{fv}}_1` is of the form :math:`(\mathsf{ref{.}array}~a)`.
-
-      * The field value :math:`{\mathit{fv}}_2` is of the form :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]`.
-
-      * The field value :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]` exists.
-
-      * The array instance :math:`s{.}\mathsf{arrays}{}[a]` exists.
-
-      * The :ref:`expansion <aux-expand-deftype>` of :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{type}` is :math:`(\mathsf{array}~(\epsilon~{\mathit{zt}}))`.
-   * Or:
-
-      * The field value :math:`{\mathit{fv}}_1` is of the form :math:`(\mathsf{ref{.}exn}~a)`.
-
-      * The field value :math:`{\mathit{fv}}_2` is of the form :math:`s{.}\mathsf{exns}{}[a]{.}\mathsf{fields}{}[i]`.
-
-      * The value :math:`s{.}\mathsf{exns}{}[a]{.}\mathsf{fields}{}[i]` exists.
-
-      * The exception instance :math:`s{.}\mathsf{exns}{}[a]` exists.
-   * Or:
-
-      * The field value :math:`{\mathit{fv}}_1` is of the form :math:`(\mathsf{ref{.}extern}~{\mathit{ref}})`.
-
-      * The field value :math:`{\mathit{fv}}_2` is of the form :math:`{\mathit{ref}}`.
-
-
-
-
-:math:`{\mathit{fv}}_2` is immutably reachable from :math:`{\mathit{fv}}_1` if:
-
-
-   * :math:`{\mathit{fv}'}` is immutably reachable from :math:`{\mathit{fv}}_1`.
-
-   * :math:`{\mathit{fv}}_2` is immutably reachable from :math:`{\mathit{fv}'}`.
-
-
-
-
-:math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]` is immutably reachable from :math:`(\mathsf{ref{.}struct}~a)` if:
-
-
-   * The field value :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{fields}{}[i]` exists.
-
-   * The structure instance :math:`s{.}\mathsf{structs}{}[a]` exists.
-
-   * The :ref:`expansion <aux-expand-deftype>` of :math:`s{.}\mathsf{structs}{}[a]{.}\mathsf{type}` is :math:`(\mathsf{struct}~{{\mathit{ft}}^\ast})`.
-
-   * The length of :math:`{{\mathit{ft}}^\ast}` is greater than :math:`i`.
-
-   * The field type :math:`{{\mathit{ft}}^\ast}{}[i]` is of the form :math:`(\epsilon~{\mathit{zt}})`.
-
-
-
-
-:math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]` is immutably reachable from :math:`(\mathsf{ref{.}array}~a)` if:
-
-
-   * The field value :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{fields}{}[i]` exists.
-
-   * The array instance :math:`s{.}\mathsf{arrays}{}[a]` exists.
-
-   * The :ref:`expansion <aux-expand-deftype>` of :math:`s{.}\mathsf{arrays}{}[a]{.}\mathsf{type}` is :math:`(\mathsf{array}~(\epsilon~{\mathit{zt}}))`.
-
-
-
-
-:math:`s{.}\mathsf{exns}{}[a]{.}\mathsf{fields}{}[i]` is immutably reachable from :math:`(\mathsf{ref{.}exn}~a)` if:
-
-
-   * The value :math:`s{.}\mathsf{exns}{}[a]{.}\mathsf{fields}{}[i]` exists.
-
-   * The exception instance :math:`s{.}\mathsf{exns}{}[a]` exists.
-
-
-
-
-:math:`{\mathit{ref}}` is immutably reachable from :math:`(\mathsf{ref{.}extern}~{\mathit{ref}})`.
-
-
-
-
-:math:`{\mathit{fv}}_2` is not immutably reachable from :math:`{\mathit{fv}}_1` if:
-
-
-   * NotImmutReachable(:math:`{\mathit{fv}}_1`, :math:`s`, :math:`{\mathit{fv}}_2`) is true.
 
 
 
@@ -19017,8 +19017,8 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
    a. Push the value :math:`{\mathit{val}}_2` to the stack.
 
 
-:math:`\mathsf{if}~{\mathit{bt}}~{{\mathit{instr}}_1^\ast}~{{\mathit{instr}}_2^\ast}`
-.....................................................................................
+:math:`\mathsf{if}~{\mathit{bt}}~{{\mathit{instr}}_1^\ast}~\mathsf{else}~{{\mathit{instr}}_2^\ast}`
+...................................................................................................
 
 
 1. Assert: Due to validation, a value of number type :math:`\mathsf{i{\scriptstyle 32}}` is on the top of the stack.
@@ -23249,15 +23249,6 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 #. Return :math:`{{\mathit{subtype}}^\ast}{}[i]`.
 
 
-:math:`{\mathrm{expand}}({\mathit{deftype}})`
-.............................................
-
-
-1. Let :math:`(\mathsf{sub}~{\mathsf{final}^?}~{{\mathit{typeuse}}^\ast}~{\mathit{comptype}})` be the destructuring of :math:`{\mathrm{unroll}}({\mathit{deftype}})`.
-
-#. Return :math:`{\mathit{comptype}}`.
-
-
 :math:`{\mathrm{free}}_{\mathit{addrtype}}({\mathit{addrtype}})`
 ................................................................
 
@@ -24510,8 +24501,8 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 #. Return :math:`j < i`.
 
 
-:math:`{{\mathrm{unroll}}}_{C}({\mathit{heaptype}})`
-....................................................
+:math:`{{\mathrm{unrollht}}}_{C}({\mathit{heaptype}})`
+......................................................
 
 
 1. If :math:`{\mathit{heaptype}}` is defined type, then:
@@ -27691,6 +27682,88 @@ spectec 0.5 generator
 == IL Validation after pass sideconditions...
 == Translating to AL...
 == Prose Generation...
+ImmutReachable
+- fv_2 is immutably reachable from fv_1 if:
+  - Either:
+    - fv' is immutably reachable from fv_1.
+    - fv_2 is immutably reachable from fv'.
+  - Or:
+    - the field value fv_1 is (REF.STRUCT_ADDR a).
+    - the field value fv_2 is s.STRUCTS[a].FIELDS[i].
+    - the field value s.STRUCTS[a].FIELDS[i] exists.
+    - the structure instance s.STRUCTS[a] exists.
+    - The :ref:`expansion <aux-expand-deftype>` of s.STRUCTS[a].TYPE is (STRUCT ft*).
+    - |ft*| is greater than i.
+    - the field type ft*[i] is (?() zt).
+  - Or:
+    - fv_1 is (REF.ARRAY_ADDR a).
+    - fv_2 is s.ARRAYS[a].FIELDS[i].
+    - the field value s.ARRAYS[a].FIELDS[i] exists.
+    - the array instance s.ARRAYS[a] exists.
+    - The :ref:`expansion <aux-expand-deftype>` of s.ARRAYS[a].TYPE is (ARRAY (?() zt)).
+  - Or:
+    - fv_1 is (REF.EXN_ADDR a).
+    - fv_2 is s.EXNS[a].FIELDS[i].
+    - the value s.EXNS[a].FIELDS[i] exists.
+    - the exception instance s.EXNS[a] exists.
+  - Or:
+    - fv_1 is (REF.EXTERN ref).
+    - fv_2 is ref.
+
+ImmutReachable/trans
+- fv_2 is immutably reachable from fv_1 if:
+  - fv' is immutably reachable from fv_1.
+  - fv_2 is immutably reachable from fv'.
+
+ImmutReachable/ref.struct
+- s.STRUCTS[a].FIELDS[i] is immutably reachable from (REF.STRUCT_ADDR a) if:
+  - the field value s.STRUCTS[a].FIELDS[i] exists.
+  - the structure instance s.STRUCTS[a] exists.
+  - The :ref:`expansion <aux-expand-deftype>` of s.STRUCTS[a].TYPE is (STRUCT ft*).
+  - |ft*| is greater than i.
+  - the field type ft*[i] is (?() zt).
+
+ImmutReachable/ref.array
+- s.ARRAYS[a].FIELDS[i] is immutably reachable from (REF.ARRAY_ADDR a) if:
+  - the field value s.ARRAYS[a].FIELDS[i] exists.
+  - the array instance s.ARRAYS[a] exists.
+  - The :ref:`expansion <aux-expand-deftype>` of s.ARRAYS[a].TYPE is (ARRAY (?() zt)).
+
+ImmutReachable/ref.exn
+- s.EXNS[a].FIELDS[i] is immutably reachable from (REF.EXN_ADDR a) if:
+  - the value s.EXNS[a].FIELDS[i] exists.
+  - the exception instance s.EXNS[a] exists.
+
+ImmutReachable/ref.extern
+- ref is immutably reachable from (REF.EXTERN ref).
+
+Expand
+- The :ref:`expansion <aux-expand-deftype>` of deftype is comptype if:
+  - the sub type $unrolldt(deftype) is (SUB final? typeuse* comptype).
+
+Expand_use
+- The :ref:`expansion <aux-expand-typeuse>` of C is comptype if:
+  - Either:
+    - the type use typeuse is deftype.
+    - The :ref:`expansion <aux-expand-deftype>` of deftype is comptype.
+  - Or:
+    - typeuse is (_IDX typeidx).
+    - the type C.TYPES[typeidx] exists.
+    - The :ref:`expansion <aux-expand-deftype>` of C.TYPES[typeidx] is comptype.
+
+Expand_use/deftype
+- The :ref:`expansion <aux-expand-typeuse>` of C is comptype if:
+  - The :ref:`expansion <aux-expand-deftype>` of deftype is comptype.
+
+Expand_use/typeidx
+- The :ref:`expansion <aux-expand-typeuse>` of C is comptype if:
+  - the type C.TYPES[typeidx] exists.
+  - The :ref:`expansion <aux-expand-deftype>` of C.TYPES[typeidx] is comptype.
+
+NotImmutReachable
+- fv_2 is not immutably reachable from fv_1 if:
+  - $NotImmutReachable(fv_1, s, fv_2) is true.
+
 Numtype_ok
 - the number type numtype is always valid.
 
@@ -27706,12 +27779,8 @@ Packtype_sub
 Numtype_sub
 - numtype matches only itself.
 
-Expand
-- The :ref:`expansion <aux-expand-deftype>` of deftype is comptype if:
-  - the composite type $expanddt(deftype) is comptype.
-
 Vectype_sub
-- the vector type vectype matches only itself.
+- vectype matches only itself.
 
 Heaptype_ok
 - the heap type heaptype is valid if:
@@ -27850,7 +27919,7 @@ Subtype_ok2
   - For all typeuse in typeuse*:
     - the type use typeuse is valid.
     - $before(typeuse, i) is true.
-    - the sub type $unrollht(C, typeuse) is (SUB ?() typeuse'* comptype').
+    - the sub type $unrollht_(C, typeuse) is (SUB ?() typeuse'* comptype').
   - comptype'* is the concatenation of all such comptype'.
   - the composite type comptype is valid.
   - For all comptype' in comptype'*:
@@ -28179,25 +28248,6 @@ Instrtype_ok
   - the result type t_2* is valid.
   - For all x in x*:
     - the local C.LOCALS[x] exists.
-
-Expand_use
-- The :ref:`expansion <aux-expand-typeuse>` of C is comptype if:
-  - Either:
-    - the type use typeuse is deftype.
-    - The :ref:`expansion <aux-expand-deftype>` of deftype is comptype.
-  - Or:
-    - typeuse is (_IDX typeidx).
-    - the type C.TYPES[typeidx] exists.
-    - The :ref:`expansion <aux-expand-deftype>` of C.TYPES[typeidx] is comptype.
-
-Expand_use/deftype
-- The :ref:`expansion <aux-expand-typeuse>` of C is comptype if:
-  - The :ref:`expansion <aux-expand-deftype>` of deftype is comptype.
-
-Expand_use/typeidx
-- The :ref:`expansion <aux-expand-typeuse>` of C is comptype if:
-  - the type C.TYPES[typeidx] exists.
-  - The :ref:`expansion <aux-expand-deftype>` of C.TYPES[typeidx] is comptype.
 
 Subtype_ok
 - the sub type (SUB FINAL? (_IDX x)* comptype) is valid for the type index (OK x_0) if:
@@ -29728,12 +29778,12 @@ Idctxt_ok
 
 Context_ok
 - the context C is valid if:
-  - C is { TYPES: dt^n; RECS: st^m; TAGS: jt*; GLOBALS: gt*; MEMS: mt*; TABLES: tt*; FUNCS: dt_F*; DATAS: ok*; ELEMS: et*; LOCALS: lct*; LABELS: [rt*]; RETURN: ?(rt'?); REFS: x* }.
+  - C is { TYPES: dt^n; TAGS: jt*; GLOBALS: gt*; MEMS: mt*; TABLES: tt*; FUNCS: dt_F*; DATAS: ok*; ELEMS: et*; LOCALS: lct*; LABELS: [rt*]; RETURN: ?(rt'?); REFS: x*; RECS: st^m }.
   - the context C_0 is { TYPES: dt^n; RETURN: ?() }.
   - For all dt in dt*:
     - Under the context { TYPES: dt^n[0 : i]; RETURN: ?() }, the defined type dt is valid.
   - For all st in st*:
-    - Under the context { TYPES: dt^n; RECS: st^m; RETURN: ?() }, the sub type st is valid for (OK i).
+    - Under the context { TYPES: dt^n; RETURN: ?(); RECS: st^m }, the sub type st is valid for (OK i).
   - For all jt in jt*:
     - Under the context C_0, the tag type jt is valid.
   - For all gt in gt*:
@@ -29788,7 +29838,7 @@ Exportinst_ok
   - the external address xa is valid with the external type xt.
 
 Moduleinst_ok
-- the module instance { TYPES: deftype*; TAGS: tagaddr*; GLOBALS: globaladdr*; MEMS: memaddr*; TABLES: tableaddr*; FUNCS: funcaddr*; DATAS: dataaddr*; ELEMS: elemaddr*; EXPORTS: exportinst* } is valid with the context { TYPES: deftype*; RECS: subtype*; TAGS: tagtype*; GLOBALS: globaltype*; MEMS: memtype*; TABLES: tabletype*; FUNCS: deftype_F*; DATAS: datatype*; ELEMS: elemtype*; RETURN: ?(); REFS: i^(i<|funcaddr*|) } if:
+- the module instance { TYPES: deftype*; TAGS: tagaddr*; GLOBALS: globaladdr*; MEMS: memaddr*; TABLES: tableaddr*; FUNCS: funcaddr*; DATAS: dataaddr*; ELEMS: elemaddr*; EXPORTS: exportinst* } is valid with the context { TYPES: deftype*; TAGS: tagtype*; GLOBALS: globaltype*; MEMS: memtype*; TABLES: tabletype*; FUNCS: deftype_F*; DATAS: datatype*; ELEMS: elemtype*; RETURN: ?(); REFS: i^(i<|funcaddr*|); RECS: subtype* } if:
   - For all deftype in deftype*:
     - Under the context { RETURN: ?() }, the defined type deftype is valid.
   - For all tagaddr in tagaddr*, and corresponding tagtype in tagtype*:
@@ -29979,65 +30029,6 @@ Exninst_ok
   - The :ref:`expansion <aux-expand-deftype>` of dt is (FUNC t* -> []).
   - For all t in t*, and corresponding val in val*:
     - the value val is valid with the value type t.
-
-ImmutReachable
-- fv_2 is immutably reachable from fv_1 if:
-  - Either:
-    - fv' is immutably reachable from fv_1.
-    - fv_2 is immutably reachable from fv'.
-  - Or:
-    - the field value fv_1 is (REF.STRUCT_ADDR a).
-    - the field value fv_2 is s.STRUCTS[a].FIELDS[i].
-    - the field value s.STRUCTS[a].FIELDS[i] exists.
-    - the structure instance s.STRUCTS[a] exists.
-    - The :ref:`expansion <aux-expand-deftype>` of s.STRUCTS[a].TYPE is (STRUCT ft*).
-    - |ft*| is greater than i.
-    - the field type ft*[i] is (?() zt).
-  - Or:
-    - fv_1 is (REF.ARRAY_ADDR a).
-    - fv_2 is s.ARRAYS[a].FIELDS[i].
-    - the field value s.ARRAYS[a].FIELDS[i] exists.
-    - the array instance s.ARRAYS[a] exists.
-    - The :ref:`expansion <aux-expand-deftype>` of s.ARRAYS[a].TYPE is (ARRAY (?() zt)).
-  - Or:
-    - fv_1 is (REF.EXN_ADDR a).
-    - fv_2 is s.EXNS[a].FIELDS[i].
-    - the value s.EXNS[a].FIELDS[i] exists.
-    - the exception instance s.EXNS[a] exists.
-  - Or:
-    - fv_1 is (REF.EXTERN ref).
-    - fv_2 is ref.
-
-ImmutReachable/trans
-- fv_2 is immutably reachable from fv_1 if:
-  - fv' is immutably reachable from fv_1.
-  - fv_2 is immutably reachable from fv'.
-
-ImmutReachable/ref.struct
-- s.STRUCTS[a].FIELDS[i] is immutably reachable from (REF.STRUCT_ADDR a) if:
-  - the field value s.STRUCTS[a].FIELDS[i] exists.
-  - the structure instance s.STRUCTS[a] exists.
-  - The :ref:`expansion <aux-expand-deftype>` of s.STRUCTS[a].TYPE is (STRUCT ft*).
-  - |ft*| is greater than i.
-  - the field type ft*[i] is (?() zt).
-
-ImmutReachable/ref.array
-- s.ARRAYS[a].FIELDS[i] is immutably reachable from (REF.ARRAY_ADDR a) if:
-  - the field value s.ARRAYS[a].FIELDS[i] exists.
-  - the array instance s.ARRAYS[a] exists.
-  - The :ref:`expansion <aux-expand-deftype>` of s.ARRAYS[a].TYPE is (ARRAY (?() zt)).
-
-ImmutReachable/ref.exn
-- s.EXNS[a].FIELDS[i] is immutably reachable from (REF.EXN_ADDR a) if:
-  - the value s.EXNS[a].FIELDS[i] exists.
-  - the exception instance s.EXNS[a] exists.
-
-ImmutReachable/ref.extern
-- ref is immutably reachable from (REF.EXTERN ref).
-
-NotImmutReachable
-- fv_2 is not immutably reachable from fv_1 if:
-  - $NotImmutReachable(fv_1, s, fv_2) is true.
 
 Store_ok
 - the store s is valid if:
@@ -32364,10 +32355,6 @@ unrolldt (_DEF rectype i)
 1. Let (REC subtype*) be $unrollrt(rectype).
 2. Return subtype*[i].
 
-expanddt deftype
-1. Let (SUB final? typeuse* comptype) be $unrolldt(deftype).
-2. Return comptype.
-
 free_addrtype addrtype
 1. Return {}.
 
@@ -32962,7 +32949,7 @@ before typeuse i
 2. Let (REC j) be typeuse.
 3. Return (j < i).
 
-unrollht C heaptype
+unrollht_ C heaptype
 1. If heaptype is deftype, then:
   a. Return $unrolldt(heaptype).
 2. If heaptype is some _IDX, then:
