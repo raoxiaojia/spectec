@@ -5535,25 +5535,25 @@ The expression :math:`{{\mathit{instr}}^\ast}` is :ref:`valid <valid-val>` with 
 
 
 
-:math:`{\mathit{val}}` is constant if:
+:math:`{\mathit{instr}}` is constant if:
 
 
    * Either:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`({\mathit{nt}}{.}\mathsf{const}~c)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`({\mathit{nt}}{.}\mathsf{const}~c)`.
 
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`({\mathit{vt}}{.}\mathsf{const}~{\mathit{vc}})`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`({\mathit{vt}}{.}\mathsf{const}~{\mathit{vc}})`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{ref{.}null}~{\mathit{rt}})`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{ref{.}null}~{\mathit{rt}})`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{ref{.}func}~x)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{ref{.}func}~x)`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{global{.}get}~x)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{global{.}get}~x)`.
 
       * The global type :math:`C{.}\mathsf{globals}{}[x]` exists.
 
@@ -11271,17 +11271,17 @@ Expr_ok
   - instr* is valid with the function type [] -> t*.
 
 Instr_const
-- the value val is constant if:
+- the instruction instr is constant if:
   - Either:
-    - val is (nt.CONST c).
+    - instr is (nt.CONST c).
   - Or:
-    - val is (vt.CONST vc).
+    - instr is (vt.CONST vc).
   - Or:
-    - val is (REF.NULL rt).
+    - instr is (REF.NULL rt).
   - Or:
-    - val is (REF.FUNC x).
+    - instr is (REF.FUNC x).
   - Or:
-    - val is (GLOBAL.GET x).
+    - instr is (GLOBAL.GET x).
     - the global type C.GLOBALS[x] exists.
     - C.GLOBALS[x] is (?() t).
 
@@ -14454,6 +14454,33 @@ The heap type :math:`{\mathit{heaptype}}_1` :ref:`matches <match>` the heap type
 
       * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`(\mathsf{rec} {.} i)`.
 
+      * The heap type :math:`{\mathit{heaptype}}_2` is of the form :math:`\mathsf{struct}`.
+
+      * The recursive type :math:`C{.}\mathsf{recs}{}[i]` exists.
+
+      * The recursive type :math:`C{.}\mathsf{recs}{}[i]` is of the form :math:`(\mathsf{sub}~{\mathsf{final}^?}~(\mathsf{struct}~{{\mathit{fieldtype}}^\ast}))`.
+   * Or:
+
+      * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`(\mathsf{rec} {.} i)`.
+
+      * The heap type :math:`{\mathit{heaptype}}_2` is of the form :math:`\mathsf{array}`.
+
+      * The recursive type :math:`C{.}\mathsf{recs}{}[i]` exists.
+
+      * The recursive type :math:`C{.}\mathsf{recs}{}[i]` is of the form :math:`(\mathsf{sub}~{\mathsf{final}^?}~(\mathsf{array}~{\mathit{fieldtype}}))`.
+   * Or:
+
+      * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`(\mathsf{rec} {.} i)`.
+
+      * The heap type :math:`{\mathit{heaptype}}_2` is of the form :math:`\mathsf{func}`.
+
+      * The recursive type :math:`C{.}\mathsf{recs}{}[i]` exists.
+
+      * The recursive type :math:`C{.}\mathsf{recs}{}[i]` is of the form :math:`(\mathsf{sub}~{\mathsf{final}^?}~(\mathsf{func}~{t_1^\ast}~\rightarrow~{t_2^\ast}))`.
+   * Or:
+
+      * The heap type :math:`{\mathit{heaptype}}_1` is of the form :math:`(\mathsf{rec} {.} i)`.
+
       * The length of :math:`{{\mathit{typeuse}}^\ast}` is greater than :math:`j`.
 
       * The heap type :math:`{\mathit{heaptype}}_2` is of the form :math:`{{\mathit{typeuse}}^\ast}{}[j]`.
@@ -14581,6 +14608,36 @@ The heap type :math:`{\mathit{heaptype}}` :ref:`matches <match>` the heap type :
    * The type :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]` exists.
 
    * The heap type :math:`{\mathit{heaptype}}` :ref:`matches <match>` the type :math:`C{.}\mathsf{types}{}[{\mathit{typeidx}}]`.
+
+
+
+
+The heap type :math:`(\mathsf{rec} {.} i)` :ref:`matches <match>` the heap type :math:`\mathsf{struct}` if:
+
+
+   * The recursive type :math:`C{.}\mathsf{recs}{}[i]` exists.
+
+   * The recursive type :math:`C{.}\mathsf{recs}{}[i]` is of the form :math:`(\mathsf{sub}~{\mathsf{final}^?}~(\mathsf{struct}~{{\mathit{fieldtype}}^\ast}))`.
+
+
+
+
+The heap type :math:`(\mathsf{rec} {.} i)` :ref:`matches <match>` the heap type :math:`\mathsf{array}` if:
+
+
+   * The recursive type :math:`C{.}\mathsf{recs}{}[i]` exists.
+
+   * The recursive type :math:`C{.}\mathsf{recs}{}[i]` is of the form :math:`(\mathsf{sub}~{\mathsf{final}^?}~(\mathsf{array}~{\mathit{fieldtype}}))`.
+
+
+
+
+The heap type :math:`(\mathsf{rec} {.} i)` :ref:`matches <match>` the heap type :math:`\mathsf{func}` if:
+
+
+   * The recursive type :math:`C{.}\mathsf{recs}{}[i]` exists.
+
+   * The recursive type :math:`C{.}\mathsf{recs}{}[i]` is of the form :math:`(\mathsf{sub}~{\mathsf{final}^?}~(\mathsf{func}~{t_1^\ast}~\rightarrow~{t_2^\ast}))`.
 
 
 
@@ -14860,7 +14917,7 @@ The sub type :math:`(\mathsf{sub}~{\mathsf{final}^?}~{x^\ast}~{\mathit{comptype}
 
       * The type :math:`C{.}\mathsf{types}{}[x]` exists.
 
-      * The sub type :math:`{\mathrm{unroll}}(C{.}\mathsf{types}{}[x])` is of the form :math:`(\mathsf{sub}~{{x'}^\ast}~{\mathit{comptype}'})`.
+      * The sub type :math:`{\mathrm{unroll}}(C{.}\mathsf{types}{}[x])` is of the form :math:`(\mathsf{sub}~{y^\ast}~{\mathit{comptype}'})`.
 
    * :math:`{{\mathit{comptype}'}^\ast}` is the concatenation of all such :math:`{\mathit{comptype}'}`.
 
@@ -16734,58 +16791,62 @@ The value type :math:`t` is not defaultable if:
 
 
 
-:math:`{\mathit{val}}` is constant if:
+:math:`{\mathit{instr}}` is constant if:
 
 
    * Either:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`({\mathit{nt}}{.}\mathsf{const}~c_{\mathit{nt}})`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`({\mathit{nt}}{.}\mathsf{const}~c_{\mathit{nt}})`.
 
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`({\mathit{vt}}{.}\mathsf{const}~c_{\mathit{vt}})`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`({\mathit{vt}}{.}\mathsf{const}~c_{\mathit{vt}})`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{ref{.}null}~{\mathit{ht}})`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{ref{.}null}~{\mathit{ht}})`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`\mathsf{ref{.}i{\scriptstyle 31}}`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`\mathsf{ref{.}i{\scriptstyle 31}}`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{ref{.}func}~x)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{ref{.}func}~x)`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{struct{.}new}~x)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{struct{.}new}~x)`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{struct{.}new\_default}~x)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{struct{.}new\_default}~x)`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{array{.}new}~x)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{array{.}new}~x)`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{array{.}new\_default}~x)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{array{.}new\_default}~x)`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{array{.}new\_fixed}~x~n)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{array{.}new\_fixed}~x~n)`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`\mathsf{any{.}convert\_extern}`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`\mathsf{any{.}convert\_extern}`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`\mathsf{extern{.}convert\_any}`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`\mathsf{extern{.}convert\_any}`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`(\mathsf{global{.}get}~x)`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`(\mathsf{global{.}get}~x)`.
 
       * The global :math:`C{.}\mathsf{globals}{}[x]` exists.
 
       * The global :math:`C{.}\mathsf{globals}{}[x]` is of the form :math:`(\epsilon~t)`.
    * Or:
 
-      * The value :math:`{\mathit{val}}` is of the form :math:`({\mathsf{i}}{N} {.} {\mathit{binop}})`.
+      * The instruction :math:`{\mathit{instr}}` is of the form :math:`({\mathsf{i}}{N} {.} {\mathit{binop}})`.
+
+      * The length of :math:`\mathsf{i{\scriptstyle 32}}~\mathsf{i{\scriptstyle 64}}` is greater than :math:`0`.
 
       * :math:`{\mathsf{i}}{N}` is contained in [:math:`\mathsf{i{\scriptstyle 32}}`; :math:`\mathsf{i{\scriptstyle 64}}`].
+
+      * The length of :math:`\mathsf{add}~\mathsf{sub}~\mathsf{mul}` is greater than :math:`0`.
 
       * :math:`{\mathit{binop}}` is contained in [:math:`\mathsf{add}`; :math:`\mathsf{sub}`; :math:`\mathsf{mul}`].
 
@@ -16865,7 +16926,11 @@ The value type :math:`t` is not defaultable if:
 :math:`({\mathsf{i}}{N} {.} {\mathit{binop}})` is constant if:
 
 
+   * The length of :math:`\mathsf{i{\scriptstyle 32}}~\mathsf{i{\scriptstyle 64}}` is greater than :math:`0`.
+
    * :math:`{\mathsf{i}}{N}` is contained in [:math:`\mathsf{i{\scriptstyle 32}}`; :math:`\mathsf{i{\scriptstyle 64}}`].
+
+   * The length of :math:`\mathsf{add}~\mathsf{sub}~\mathsf{mul}` is greater than :math:`0`.
 
    * :math:`{\mathit{binop}}` is contained in [:math:`\mathsf{add}`; :math:`\mathsf{sub}`; :math:`\mathsf{mul}`].
 
@@ -17392,7 +17457,7 @@ The module :math:`(\mathsf{module}~{{\mathit{type}}^\ast}~{{\mathit{import}}^\as
 
    * The context :math:`{C'}` is of the form :math:`\{ \mathsf{types}~{{\mathit{dt}'}^\ast},\;\allowbreak \mathsf{globals}~{{\mathit{gt}}_{\mathsf{i}}^\ast},\;\allowbreak \mathsf{funcs}~{{\mathit{dt}}_{\mathsf{i}}^\ast}~{{\mathit{dt}}^\ast},\;\allowbreak \mathsf{return}~\epsilon,\;\allowbreak \mathsf{refs}~{x^\ast} \}`.
 
-   * The function index sequence :math:`{x^\ast}` is of the form :math:`{\mathrm{funcidx}}({{\mathit{global}}^\ast}~{{\mathit{mem}}^\ast}~{{\mathit{table}}^\ast}~{{\mathit{elem}}^\ast})`.
+   * The function index sequence :math:`{x^\ast}` is of the form :math:`{\mathrm{funcidx}}({{\mathit{global}}^\ast}~{{\mathit{mem}}^\ast}~{{\mathit{table}}^\ast}~{{\mathit{elem}}^\ast}~{{\mathit{start}}^?}~{{\mathit{export}}^\ast})`.
 
    * The tag type sequence :math:`{{\mathit{jt}}_{\mathsf{i}}^\ast}` is of the form :math:`{\mathrm{tags}}({{\mathit{xt}}_{\mathsf{i}}^\ast})`.
 
@@ -24009,13 +24074,13 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
    #. Return :math:`{\mathrm{free}}_{\mathit{typeidx}}({\mathit{typeidx}})`.
 
-#. If :math:`{\mathit{instr}'}` is some :math:`{\mathsf{struct{.}get}}{\mathsf{\_}}{{{\mathit{sx}}^?}}~{\mathit{typeidx}}~{\mathit{u{\kern-0.1em\scriptstyle 32}}}`, then:
+#. If :math:`{\mathit{instr}'}` is some :math:`{\mathsf{struct{.}get}}{\mathsf{\_}}{{{\mathit{sx}}^?}}~{\mathit{typeidx}}~{\mathit{fieldidx}}`, then:
 
    a. Let :math:`({\mathsf{struct{.}get}}{\mathsf{\_}}{{{\mathit{sx}}^?}}~{\mathit{typeidx}}~{\mathit{u{\kern-0.1em\scriptstyle 32}}})` be the destructuring of :math:`{\mathit{instr}'}`.
 
    #. Return :math:`{\mathrm{free}}_{\mathit{typeidx}}({\mathit{typeidx}})`.
 
-#. If :math:`{\mathit{instr}'}` is some :math:`\mathsf{struct{.}set}~{\mathit{typeidx}}~{\mathit{u{\kern-0.1em\scriptstyle 32}}}`, then:
+#. If :math:`{\mathit{instr}'}` is some :math:`\mathsf{struct{.}set}~{\mathit{typeidx}}~{\mathit{fieldidx}}`, then:
 
    a. Let :math:`(\mathsf{struct{.}set}~{\mathit{typeidx}}~{\mathit{u{\kern-0.1em\scriptstyle 32}}})` be the destructuring of :math:`{\mathit{instr}'}`.
 
@@ -24562,11 +24627,11 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 1. Return :math:`{\mathit{zt}} \neq {\mathrm{unpack}}({\mathit{zt}})`.
 
 
-:math:`{\mathrm{funcidx}}({{\mathit{global}}^\ast}~{{\mathit{mem}}^\ast}~{{\mathit{table}}^\ast}~{{\mathit{elem}}^\ast})`
-.........................................................................................................................
+:math:`{\mathrm{funcidx}}({{\mathit{global}}^\ast}~{{\mathit{mem}}^\ast}~{{\mathit{table}}^\ast}~{{\mathit{elem}}^\ast}~{{\mathit{start}}^?}~{{\mathit{export}}^\ast})`
+.......................................................................................................................................................................
 
 
-1. Return :math:`{\mathrm{funcidx}}(\mathsf{module}~{{\mathit{global}}^\ast}~{{\mathit{mem}}^\ast}~{{\mathit{table}}^\ast}~{{\mathit{elem}}^\ast})`.
+1. Return :math:`{\mathrm{funcidx}}(\mathsf{module}~{{\mathit{global}}^\ast}~{{\mathit{mem}}^\ast}~{{\mathit{table}}^\ast}~{{\mathit{elem}}^\ast}~{{\mathit{start}}^?}~{{\mathit{export}}^\ast})`.
 
 
 :math:`{{\mathrm{relaxed}}(i)}{{}[ X_1, X_2 ]}`
@@ -28045,9 +28110,24 @@ Heaptype_sub
     - heaptype_1 matches C.TYPES[typeidx].
   - Or:
     - heaptype_1 is (REC i).
+    - heaptype_2 is STRUCT.
+    - the recursive type C.RECS[i] exists.
+    - C.RECS[i] is (SUB final? [] (STRUCT fieldtype*)).
+  - Or:
+    - heaptype_1 is (REC i).
+    - heaptype_2 is ARRAY.
+    - C.RECS[i] exists.
+    - C.RECS[i] is (SUB final? [] (ARRAY fieldtype)).
+  - Or:
+    - heaptype_1 is (REC i).
+    - heaptype_2 is FUNC.
+    - C.RECS[i] exists.
+    - C.RECS[i] is (SUB final? [] (FUNC t_1* -> t_2*)).
+  - Or:
+    - heaptype_1 is (REC i).
     - |typeuse*| is greater than j.
     - heaptype_2 is typeuse*[j].
-    - the recursive type C.RECS[i] exists.
+    - C.RECS[i] exists.
     - C.RECS[i] is (SUB final? typeuse* ct).
   - Or:
     - heaptype_1 is NONE.
@@ -28114,6 +28194,21 @@ Heaptype_sub/typeidx
 - the heap type heaptype matches the heap type (_IDX typeidx) if:
   - the type C.TYPES[typeidx] exists.
   - heaptype matches C.TYPES[typeidx].
+
+Heaptype_sub/rec
+- the heap type (REC i) matches the heap type STRUCT if:
+  - the recursive type C.RECS[i] exists.
+  - C.RECS[i] is (SUB final? [] (STRUCT fieldtype*)).
+
+Heaptype_sub/rec
+- the heap type (REC i) matches the heap type ARRAY if:
+  - the recursive type C.RECS[i] exists.
+  - C.RECS[i] is (SUB final? [] (ARRAY fieldtype)).
+
+Heaptype_sub/rec
+- the heap type (REC i) matches the heap type FUNC if:
+  - the recursive type C.RECS[i] exists.
+  - C.RECS[i] is (SUB final? [] (FUNC t_1* -> t_2*)).
 
 Heaptype_sub/rec
 - the heap type (REC i) matches the type use typeuse*[j] if:
@@ -28255,7 +28350,7 @@ Subtype_ok
   - For all x in x*:
     - the index x is less than x_0.
     - the type C.TYPES[x] exists.
-    - the sub type $unrolldt(C.TYPES[x]) is (SUB ?() (_IDX x')* comptype').
+    - the sub type $unrolldt(C.TYPES[x]) is (SUB ?() yy* comptype').
   - comptype'* is the concatenation of all such comptype'.
   - the composite type comptype is valid.
   - For all comptype' in comptype'*:
@@ -29214,38 +29309,40 @@ Nondefaultable
   - the value $default_(t) is ?().
 
 Instr_const
-- the value val is constant if:
+- the instruction instr is constant if:
   - Either:
-    - val is (nt.CONST c_nt).
+    - instr is (nt.CONST c_nt).
   - Or:
-    - val is (vt.CONST c_vt).
+    - instr is (vt.CONST c_vt).
   - Or:
-    - val is (REF.NULL ht).
+    - instr is (REF.NULL ht).
   - Or:
-    - val is REF.I31.
+    - instr is REF.I31.
   - Or:
-    - val is (REF.FUNC x).
+    - instr is (REF.FUNC x).
   - Or:
-    - val is (STRUCT.NEW x).
+    - instr is (STRUCT.NEW x).
   - Or:
-    - val is (STRUCT.NEW_DEFAULT x).
+    - instr is (STRUCT.NEW_DEFAULT x).
   - Or:
-    - val is (ARRAY.NEW x).
+    - instr is (ARRAY.NEW x).
   - Or:
-    - val is (ARRAY.NEW_DEFAULT x).
+    - instr is (ARRAY.NEW_DEFAULT x).
   - Or:
-    - val is (ARRAY.NEW_FIXED x n).
+    - instr is (ARRAY.NEW_FIXED x n).
   - Or:
-    - val is ANY.CONVERT_EXTERN.
+    - instr is ANY.CONVERT_EXTERN.
   - Or:
-    - val is EXTERN.CONVERT_ANY.
+    - instr is EXTERN.CONVERT_ANY.
   - Or:
-    - val is (GLOBAL.GET x).
+    - instr is (GLOBAL.GET x).
     - the global C.GLOBALS[x] exists.
     - C.GLOBALS[x] is (?() t).
   - Or:
-    - val is (BINOP Inn binop).
+    - instr is (BINOP Inn binop).
+    - |[I32, I64]| is greater than 0.
     - Inn is contained in [I32, I64].
+    - |[ADD, SUB, MUL]| is greater than 0.
     - binop is contained in [ADD, SUB, MUL].
 
 Instr_const/const
@@ -29291,7 +29388,9 @@ Instr_const/global.get
 
 Instr_const/binop
 - the instruction (BINOP Inn binop) is constant if:
+  - |[I32, I64]| is greater than 0.
   - Inn is contained in [I32, I64].
+  - |[ADD, SUB, MUL]| is greater than 0.
   - binop is contained in [ADD, SUB, MUL].
 
 Expr_const
@@ -29559,7 +29658,7 @@ Module_ok
   - $disjoint_(`name, nm*) is true.
   - the context C is C' with .TAGS appended by jt_I* :: jt* and .GLOBALS appended by gt* and .MEMS appended by mt_I* :: mt* and .TABLES appended by tt_I* :: tt* and .DATAS appended by ok* and .ELEMS appended by rt*.
   - the context C' is { TYPES: dt'*; GLOBALS: gt_I*; FUNCS: dt_I* :: dt*; RETURN: ?(); REFS: x* }.
-  - the function index sequence x* is $funcidx_nonfuncs((global* mem* table* elem*)).
+  - the function index sequence x* is $funcidx_nonfuncs((global* mem* table* elem* start? export*)).
   - the tag type sequence jt_I* is $tagsxt(xt_I*).
   - the global type sequence gt_I* is $globalsxt(xt_I*).
   - the memory type sequence mt_I* is $memsxt(xt_I*).
@@ -32978,8 +33077,8 @@ default_ valtype
 is_packtype zt
 1. Return (zt =/= $unpack(zt)).
 
-funcidx_nonfuncs (global* mem* table* elem*)
-1. Return $funcidx_module((MODULE [] [] [] global* mem* table* [] [] elem* ?() [])).
+funcidx_nonfuncs (global* mem* table* elem* start? export*)
+1. Return $funcidx_module((MODULE [] [] [] global* mem* table* [] [] elem* start? export*)).
 
 relaxed2 i `X X_1 X_2
 1. If $ND(), then:

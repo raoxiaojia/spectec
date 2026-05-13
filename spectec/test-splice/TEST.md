@@ -539,6 +539,7 @@ warning: grammar `Bexterntype` was never spliced
 warning: grammar `Bf32` was never spliced
 warning: grammar `Bf64` was never spliced
 warning: grammar `BfN` was never spliced
+warning: grammar `Bfieldidx` was never spliced
 warning: grammar `Bfieldtype` was never spliced
 warning: grammar `Bfunc` was never spliced
 warning: grammar `Bfuncidx` was never spliced
@@ -1048,7 +1049,10 @@ warning: rule `Heaptype_sub/func` was never spliced
 warning: rule `Heaptype_sub/def` was never spliced
 warning: rule `Heaptype_sub/typeidx-l` was never spliced
 warning: rule `Heaptype_sub/typeidx-r` was never spliced
-warning: rule `Heaptype_sub/rec` was never spliced
+warning: rule `Heaptype_sub/rec-struct` was never spliced
+warning: rule `Heaptype_sub/rec-array` was never spliced
+warning: rule `Heaptype_sub/rec-func` was never spliced
+warning: rule `Heaptype_sub/rec-sub` was never spliced
 warning: rule `Heaptype_sub/none` was never spliced
 warning: rule `Heaptype_sub/nofunc` was never spliced
 warning: rule `Heaptype_sub/noexn` was never spliced

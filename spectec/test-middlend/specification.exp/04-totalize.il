@@ -3538,8 +3538,8 @@ syntax instr =
   | `I31.GET`(sx : sx)
   | `STRUCT.NEW`(typeidx : typeidx)
   | `STRUCT.NEW_DEFAULT`(typeidx : typeidx)
-  | `STRUCT.GET`(`sx?` : sx?, typeidx : typeidx, u32 : u32)
-  | `STRUCT.SET`(typeidx : typeidx, u32 : u32)
+  | `STRUCT.GET`(`sx?` : sx?, typeidx : typeidx, fieldidx : fieldidx)
+  | `STRUCT.SET`(typeidx : typeidx, fieldidx : fieldidx)
   | `ARRAY.NEW`(typeidx : typeidx)
   | `ARRAY.NEW_DEFAULT`(typeidx : typeidx)
   | `ARRAY.NEW_FIXED`(typeidx : typeidx, u32 : u32)
@@ -3921,16 +3921,16 @@ relation wf_instr: `%`(instr)
     -- wf_uN: `%%`(32, typeidx)
 
   ;; ../../../../specification/wasm-3.0/4.0-execution.configurations.spectec:133.8-133.13
-  rule instr_case_60{`sx?` : sx?, typeidx : typeidx, u32 : u32}:
-    `%`(`STRUCT.GET`_instr(`sx?`, typeidx, u32))
+  rule instr_case_60{`sx?` : sx?, typeidx : typeidx, fieldidx : fieldidx}:
+    `%`(`STRUCT.GET`_instr(`sx?`, typeidx, fieldidx))
     -- wf_uN: `%%`(32, typeidx)
-    -- wf_uN: `%%`(32, u32)
+    -- wf_uN: `%%`(32, fieldidx)
 
   ;; ../../../../specification/wasm-3.0/4.0-execution.configurations.spectec:133.8-133.13
-  rule instr_case_61{typeidx : typeidx, u32 : u32}:
-    `%`(`STRUCT.SET`_instr(typeidx, u32))
+  rule instr_case_61{typeidx : typeidx, fieldidx : fieldidx}:
+    `%`(`STRUCT.SET`_instr(typeidx, fieldidx))
     -- wf_uN: `%%`(32, typeidx)
-    -- wf_uN: `%%`(32, u32)
+    -- wf_uN: `%%`(32, fieldidx)
 
   ;; ../../../../specification/wasm-3.0/4.0-execution.configurations.spectec:133.8-133.13
   rule instr_case_62{typeidx : typeidx}:
@@ -5161,7 +5161,7 @@ relation Deftype_ok: `%|-%:OK`(context, deftype)
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:102.1-102.108
 relation Comptype_sub: `%|-%<:%`(context, comptype, comptype)
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:169.1-171.41
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:181.1-183.41
   rule struct{C : context, `ft_1*` : fieldtype*, `ft'_1*` : fieldtype*, `ft_2*` : fieldtype*}:
     `%|-%<:%`(C, STRUCT_comptype(`%`_list(ft_1*{ft_1 <- `ft_1*`} ++ ft'_1*{ft'_1 <- `ft'_1*`})), STRUCT_comptype(`%`_list(ft_2*{ft_2 <- `ft_2*`})))
     -- wf_context: `%`(C)
@@ -5169,7 +5169,7 @@ relation Comptype_sub: `%|-%<:%`(context, comptype, comptype)
     -- wf_comptype: `%`(STRUCT_comptype(`%`_list(ft_2*{ft_2 <- `ft_2*`})))
     -- (Fieldtype_sub: `%|-%<:%`(C, ft_1, ft_2))*{ft_1 <- `ft_1*`, ft_2 <- `ft_2*`}
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:173.1-175.38
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:185.1-187.38
   rule array{C : context, ft_1 : fieldtype, ft_2 : fieldtype}:
     `%|-%<:%`(C, ARRAY_comptype(ft_1), ARRAY_comptype(ft_2))
     -- wf_context: `%`(C)
@@ -5177,7 +5177,7 @@ relation Comptype_sub: `%|-%<:%`(context, comptype, comptype)
     -- wf_comptype: `%`(ARRAY_comptype(ft_2))
     -- Fieldtype_sub: `%|-%<:%`(C, ft_1, ft_2)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:177.1-180.41
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:189.1-192.41
   rule func{C : context, `t_11*` : valtype*, `t_12*` : valtype*, `t_21*` : valtype*, `t_22*` : valtype*}:
     `%|-%<:%`(C, `FUNC%->%`_comptype(`%`_resulttype(t_11*{t_11 <- `t_11*`}), `%`_resulttype(t_12*{t_12 <- `t_12*`})), `FUNC%->%`_comptype(`%`_resulttype(t_21*{t_21 <- `t_21*`}), `%`_resulttype(t_22*{t_22 <- `t_22*`})))
     -- wf_context: `%`(C)
@@ -5188,13 +5188,13 @@ relation Comptype_sub: `%|-%<:%`(context, comptype, comptype)
 
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec:103.1-103.107
 relation Deftype_sub: `%|-%<:%`(context, deftype, deftype)
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:183.1-185.66
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:195.1-197.66
   rule refl{C : context, deftype_1 : deftype, deftype_2 : deftype}:
     `%|-%<:%`(C, deftype_1, deftype_2)
     -- wf_context: `%`(C)
     -- if ($clos_deftype(C, deftype_1) = $clos_deftype(C, deftype_2))
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:187.1-190.49
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:199.1-202.49
   rule super{C : context, deftype_1 : deftype, deftype_2 : deftype, `final?` : final?, `typeuse*` : typeuse*, ct : comptype, i : nat}:
     `%|-%<:%`(C, deftype_1, deftype_2)
     -- wf_context: `%`(C)
@@ -5295,15 +5295,42 @@ relation Heaptype_sub: `%|-%<:%`(context, heaptype, heaptype)
     -- wf_heaptype: `%`(_IDX_heaptype(typeidx))
     -- Heaptype_sub: `%|-%<:%`(C, heaptype, (C.TYPES_context[typeidx!`%`_uN.0] : deftype <: heaptype))
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:65.1-67.43
-  rule rec{C : context, i : n, `typeuse*` : typeuse*, j : nat, `final?` : final?, ct : comptype}:
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:65.1-67.51
+  rule `rec-struct`{C : context, i : n, `final?` : final?, `fieldtype*` : fieldtype*}:
+    `%|-%<:%`(C, REC_heaptype(i), STRUCT_heaptype)
+    -- wf_context: `%`(C)
+    -- wf_heaptype: `%`(REC_heaptype(i))
+    -- wf_heaptype: `%`(STRUCT_heaptype)
+    -- wf_subtype: `%`(SUB_subtype(final?{final <- `final?`}, [], STRUCT_comptype(`%`_list(fieldtype*{fieldtype <- `fieldtype*`}))))
+    -- if (C.RECS_context[i] = SUB_subtype(final?{final <- `final?`}, [], STRUCT_comptype(`%`_list(fieldtype*{fieldtype <- `fieldtype*`}))))
+
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:69.1-71.49
+  rule `rec-array`{C : context, i : n, `final?` : final?, fieldtype : fieldtype}:
+    `%|-%<:%`(C, REC_heaptype(i), ARRAY_heaptype)
+    -- wf_context: `%`(C)
+    -- wf_heaptype: `%`(REC_heaptype(i))
+    -- wf_heaptype: `%`(ARRAY_heaptype)
+    -- wf_subtype: `%`(SUB_subtype(final?{final <- `final?`}, [], ARRAY_comptype(fieldtype)))
+    -- if (C.RECS_context[i] = SUB_subtype(final?{final <- `final?`}, [], ARRAY_comptype(fieldtype)))
+
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:73.1-75.51
+  rule `rec-func`{C : context, i : n, `final?` : final?, `t_1*` : valtype*, `t_2*` : valtype*}:
+    `%|-%<:%`(C, REC_heaptype(i), FUNC_heaptype)
+    -- wf_context: `%`(C)
+    -- wf_heaptype: `%`(REC_heaptype(i))
+    -- wf_heaptype: `%`(FUNC_heaptype)
+    -- wf_subtype: `%`(SUB_subtype(final?{final <- `final?`}, [], `FUNC%->%`_comptype(`%`_resulttype(t_1*{t_1 <- `t_1*`}), `%`_resulttype(t_2*{t_2 <- `t_2*`}))))
+    -- if (C.RECS_context[i] = SUB_subtype(final?{final <- `final?`}, [], `FUNC%->%`_comptype(`%`_resulttype(t_1*{t_1 <- `t_1*`}), `%`_resulttype(t_2*{t_2 <- `t_2*`}))))
+
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:77.1-79.43
+  rule `rec-sub`{C : context, i : n, `typeuse*` : typeuse*, j : nat, `final?` : final?, ct : comptype}:
     `%|-%<:%`(C, REC_heaptype(i), (typeuse*{typeuse <- `typeuse*`}[j] : typeuse <: heaptype))
     -- wf_context: `%`(C)
     -- wf_heaptype: `%`(REC_heaptype(i))
     -- wf_subtype: `%`(SUB_subtype(final?{final <- `final?`}, typeuse*{typeuse <- `typeuse*`}, ct))
     -- if (C.RECS_context[i] = SUB_subtype(final?{final <- `final?`}, typeuse*{typeuse <- `typeuse*`}, ct))
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:69.1-72.25
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:81.1-84.25
   rule none{C : context, heaptype : heaptype}:
     `%|-%<:%`(C, NONE_heaptype, heaptype)
     -- wf_context: `%`(C)
@@ -5314,7 +5341,7 @@ relation Heaptype_sub: `%|-%<:%`(context, heaptype, heaptype)
     -- Heaptype_sub: `%|-%<:%`(C, heaptype, ANY_heaptype)
     -- if (heaptype =/= BOT_heaptype)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:74.1-77.25
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:86.1-89.25
   rule nofunc{C : context, heaptype : heaptype}:
     `%|-%<:%`(C, NOFUNC_heaptype, heaptype)
     -- wf_context: `%`(C)
@@ -5325,7 +5352,7 @@ relation Heaptype_sub: `%|-%<:%`(context, heaptype, heaptype)
     -- Heaptype_sub: `%|-%<:%`(C, heaptype, FUNC_heaptype)
     -- if (heaptype =/= BOT_heaptype)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:79.1-82.25
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:91.1-94.25
   rule noexn{C : context, heaptype : heaptype}:
     `%|-%<:%`(C, NOEXN_heaptype, heaptype)
     -- wf_context: `%`(C)
@@ -5336,7 +5363,7 @@ relation Heaptype_sub: `%|-%<:%`(context, heaptype, heaptype)
     -- Heaptype_sub: `%|-%<:%`(C, heaptype, EXN_heaptype)
     -- if (heaptype =/= BOT_heaptype)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:84.1-87.25
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:96.1-99.25
   rule noextern{C : context, heaptype : heaptype}:
     `%|-%<:%`(C, NOEXTERN_heaptype, heaptype)
     -- wf_context: `%`(C)
@@ -5347,7 +5374,7 @@ relation Heaptype_sub: `%|-%<:%`(context, heaptype, heaptype)
     -- Heaptype_sub: `%|-%<:%`(C, heaptype, EXTERN_heaptype)
     -- if (heaptype =/= BOT_heaptype)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:89.1-90.23
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:101.1-102.23
   rule bot{C : context, heaptype : heaptype}:
     `%|-%<:%`(C, BOT_heaptype, heaptype)
     -- wf_context: `%`(C)
@@ -5356,7 +5383,7 @@ relation Heaptype_sub: `%|-%<:%`(context, heaptype, heaptype)
 
 ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:10.1-10.103
 relation Reftype_sub: `%|-%<:%`(context, reftype, reftype)
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:93.1-95.37
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:105.1-107.37
   rule nonnull{C : context, ht_1 : heaptype, ht_2 : heaptype}:
     `%|-%<:%`(C, REF_reftype(?(), ht_1), REF_reftype(?(), ht_2))
     -- wf_context: `%`(C)
@@ -5364,7 +5391,7 @@ relation Reftype_sub: `%|-%<:%`(context, reftype, reftype)
     -- wf_reftype: `%`(REF_reftype(?(), ht_2))
     -- Heaptype_sub: `%|-%<:%`(C, ht_1, ht_2)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:97.1-99.37
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:109.1-111.37
   rule null{C : context, ht_1 : heaptype, ht_2 : heaptype}:
     `%|-%<:%`(C, REF_reftype(?(NULL_null), ht_1), REF_reftype(?(NULL_null), ht_2))
     -- wf_context: `%`(C)
@@ -5374,19 +5401,19 @@ relation Reftype_sub: `%|-%<:%`(context, reftype, reftype)
 
 ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:11.1-11.103
 relation Valtype_sub: `%|-%<:%`(context, valtype, valtype)
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:102.1-104.46
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:114.1-116.46
   rule num{C : context, numtype_1 : numtype, numtype_2 : numtype}:
     `%|-%<:%`(C, (numtype_1 : numtype <: valtype), (numtype_2 : numtype <: valtype))
     -- wf_context: `%`(C)
     -- Numtype_sub: `%|-%<:%`(C, numtype_1, numtype_2)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:106.1-108.46
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:118.1-120.46
   rule vec{C : context, vectype_1 : vectype, vectype_2 : vectype}:
     `%|-%<:%`(C, (vectype_1 : vectype <: valtype), (vectype_2 : vectype <: valtype))
     -- wf_context: `%`(C)
     -- Vectype_sub: `%|-%<:%`(C, vectype_1, vectype_2)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:110.1-112.46
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:122.1-124.46
   rule ref{C : context, reftype_1 : reftype, reftype_2 : reftype}:
     `%|-%<:%`(C, (reftype_1 : reftype <: valtype), (reftype_2 : reftype <: valtype))
     -- wf_context: `%`(C)
@@ -5394,16 +5421,16 @@ relation Valtype_sub: `%|-%<:%`(context, valtype, valtype)
     -- wf_reftype: `%`(reftype_2)
     -- Reftype_sub: `%|-%<:%`(C, reftype_1, reftype_2)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:114.1-115.22
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:126.1-127.22
   rule bot{C : context, valtype : valtype}:
     `%|-%<:%`(C, BOT_valtype, valtype)
     -- wf_context: `%`(C)
     -- wf_valtype: `%`(valtype)
     -- wf_valtype: `%`(BOT_valtype)
 
-;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:120.1-120.115
+;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:132.1-132.115
 relation Resulttype_sub: `%|-%<:%`(context, resulttype, resulttype)
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:123.1-125.37
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:135.1-137.37
   rule _{C : context, `t_1*` : valtype*, `t_2*` : valtype*}:
     `%|-%<:%`(C, `%`_resulttype(t_1*{t_1 <- `t_1*`}), `%`_resulttype(t_2*{t_2 <- `t_2*`}))
     -- wf_context: `%`(C)
@@ -5411,9 +5438,9 @@ relation Resulttype_sub: `%|-%<:%`(context, resulttype, resulttype)
     -- (wf_valtype: `%`(t_2))*{t_2 <- `t_2*`}
     -- (Valtype_sub: `%|-%<:%`(C, t_1, t_2))*{t_1 <- `t_1*`, t_2 <- `t_2*`}
 
-;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:138.1-138.119
+;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:150.1-150.119
 relation Storagetype_sub: `%|-%<:%`(context, storagetype, storagetype)
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:150.1-152.46
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:162.1-164.46
   rule val{C : context, valtype_1 : valtype, valtype_2 : valtype}:
     `%|-%<:%`(C, (valtype_1 : valtype <: storagetype), (valtype_2 : valtype <: storagetype))
     -- wf_context: `%`(C)
@@ -5421,15 +5448,15 @@ relation Storagetype_sub: `%|-%<:%`(context, storagetype, storagetype)
     -- wf_valtype: `%`(valtype_2)
     -- Valtype_sub: `%|-%<:%`(C, valtype_1, valtype_2)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:154.1-156.49
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:166.1-168.49
   rule pack{C : context, packtype_1 : packtype, packtype_2 : packtype}:
     `%|-%<:%`(C, (packtype_1 : packtype <: storagetype), (packtype_2 : packtype <: storagetype))
     -- wf_context: `%`(C)
     -- Packtype_sub: `%|-%<:%`(C, packtype_1, packtype_2)
 
-;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:139.1-139.117
+;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:151.1-151.117
 relation Fieldtype_sub: `%|-%<:%`(context, fieldtype, fieldtype)
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:159.1-161.40
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:171.1-173.40
   rule const{C : context, zt_1 : storagetype, zt_2 : storagetype}:
     `%|-%<:%`(C, `%%`_fieldtype(?(), zt_1), `%%`_fieldtype(?(), zt_2))
     -- wf_context: `%`(C)
@@ -5437,7 +5464,7 @@ relation Fieldtype_sub: `%|-%<:%`(context, fieldtype, fieldtype)
     -- wf_fieldtype: `%`(`%%`_fieldtype(?(), zt_2))
     -- Storagetype_sub: `%|-%<:%`(C, zt_1, zt_2)
 
-  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:163.1-166.40
+  ;; ../../../../specification/wasm-3.0/2.2-validation.subtyping.spectec:175.1-178.40
   rule var{C : context, zt_1 : storagetype, zt_2 : storagetype}:
     `%|-%<:%`(C, `%%`_fieldtype(?(MUT_mut), zt_1), `%%`_fieldtype(?(MUT_mut), zt_2))
     -- wf_context: `%`(C)
@@ -5499,15 +5526,15 @@ relation wf_oktypeidx: `%`(oktypeidx)
 ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
 relation Subtype_ok: `%|-%:%`(context, subtype, oktypeidx)
   ;; ../../../../specification/wasm-3.0/2.1-validation.types.spectec
-  rule _{C : context, `x*` : idx*, comptype : comptype, x_0 : idx, `comptype'*` : comptype*, `x'**` : idx**}:
+  rule _{C : context, `x*` : idx*, comptype : comptype, x_0 : idx, `comptype'*` : comptype*, `yy**` : typeuse**}:
     `%|-%:%`(C, SUB_subtype(?(FINAL_final), _IDX_typeuse(x)*{x <- `x*`}, comptype), OK_oktypeidx(x_0))
     -- wf_context: `%`(C)
     -- wf_subtype: `%`(SUB_subtype(?(FINAL_final), _IDX_typeuse(x)*{x <- `x*`}, comptype))
     -- wf_oktypeidx: `%`(OK_oktypeidx(x_0))
-    -- (wf_subtype: `%`(SUB_subtype(?(), _IDX_typeuse(x')*{x' <- `x'*`}, comptype')))*{comptype' <- `comptype'*`, `x'*` <- `x'**`}
+    -- (wf_subtype: `%`(SUB_subtype(?(), yy*{yy <- `yy*`}, comptype')))*{comptype' <- `comptype'*`, `yy*` <- `yy**`}
     -- if (|x*{x <- `x*`}| <= 1)
     -- (if (x!`%`_uN.0 < x_0!`%`_uN.0))*{x <- `x*`}
-    -- (if ($unrolldt(C.TYPES_context[x!`%`_uN.0]) = SUB_subtype(?(), _IDX_typeuse(x')*{x' <- `x'*`}, comptype')))*{comptype' <- `comptype'*`, x <- `x*`, `x'*` <- `x'**`}
+    -- (if ($unrolldt(C.TYPES_context[x!`%`_uN.0]) = SUB_subtype(?(), yy*{yy <- `yy*`}, comptype')))*{comptype' <- `comptype'*`, x <- `x*`, `yy*` <- `yy**`}
     -- Comptype_ok: `%|-%:OK`(C, comptype)
     -- (Comptype_sub: `%|-%<:%`(C, comptype, comptype'))*{comptype' <- `comptype'*`}
 
@@ -6209,7 +6236,7 @@ relation Instr_ok: `%|-%:%`(context, instr, instrtype)
     -- (Defaultable: `|-%DEFAULTABLE`($unpack(zt)))*{zt <- `zt*`}
 
   ;; ../../../../specification/wasm-3.0/2.3-validation.instructions.spectec:258.1-262.41
-  rule `struct.get`{C : context, `sx?` : sx?, x : idx, i : u32, zt : storagetype, `ft*` : fieldtype*, `mut?` : mut?}:
+  rule `struct.get`{C : context, `sx?` : sx?, x : idx, i : fieldidx, zt : storagetype, `ft*` : fieldtype*, `mut?` : mut?}:
     `%|-%:%`(C, `STRUCT.GET`_instr(sx?{sx <- `sx?`}, x, i), `%->_%%`_instrtype(`%`_resulttype([REF_valtype(?(NULL_null), _IDX_heaptype(x))]), [], `%`_resulttype([$unpack(zt)])))
     -- wf_context: `%`(C)
     -- wf_instr: `%`(`STRUCT.GET`_instr(sx?{sx <- `sx?`}, x, i))
@@ -6221,7 +6248,7 @@ relation Instr_ok: `%|-%:%`(context, instr, instrtype)
     -- if ((sx?{sx <- `sx?`} =/= ?()) <=> $is_packtype(zt))
 
   ;; ../../../../specification/wasm-3.0/2.3-validation.instructions.spectec:264.1-267.24
-  rule `struct.set`{C : context, x : idx, i : u32, zt : storagetype, `ft*` : fieldtype*}:
+  rule `struct.set`{C : context, x : idx, i : fieldidx, zt : storagetype, `ft*` : fieldtype*}:
     `%|-%:%`(C, `STRUCT.SET`_instr(x, i), `%->_%%`_instrtype(`%`_resulttype([REF_valtype(?(NULL_null), _IDX_heaptype(x)) $unpack(zt)]), [], `%`_resulttype([])))
     -- wf_context: `%`(C)
     -- wf_instr: `%`(`STRUCT.SET`_instr(x, i))
@@ -7255,12 +7282,12 @@ rec {
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:136.1-136.100
 relation Globals_ok: `%|-%:%`(context, global*, globaltype*)
-  ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:180.1-181.17
+  ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:181.1-182.17
   rule empty{C : context}:
     `%|-%:%`(C, [], [])
     -- wf_context: `%`(C)
 
-  ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:183.1-186.54
+  ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:184.1-187.54
   rule cons{C : context, global_1 : global, `global*` : global*, gt_1 : globaltype, `gt*` : globaltype*}:
     `%|-%:%`(C, [global_1] ++ global*{global <- `global*`}, [gt_1] ++ gt*{gt <- `gt*`})
     -- wf_context: `%`(C)
@@ -7277,12 +7304,12 @@ rec {
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:135.1-135.98
 relation Types_ok: `%|-%:%`(context, type*, deftype*)
-  ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:172.1-173.17
+  ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:173.1-174.17
   rule empty{C : context}:
     `%|-%:%`(C, [], [])
     -- wf_context: `%`(C)
 
-  ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:175.1-178.49
+  ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec:176.1-179.49
   rule cons{C : context, type_1 : type, `type*` : type*, `dt_1*` : deftype*, `dt*` : deftype*}:
     `%|-%:%`(C, [type_1] ++ type*{type <- `type*`}, dt_1*{dt_1 <- `dt_1*`} ++ dt*{dt <- `dt*`})
     -- wf_context: `%`(C)
@@ -7293,23 +7320,25 @@ relation Types_ok: `%|-%:%`(context, type*, deftype*)
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
 syntax nonfuncs = 
-  | `%%%%`(`global*` : global*, `mem*` : mem*, `table*` : table*, `elem*` : elem*)
+  | `%%%%%%`(`global*` : global*, `mem*` : mem*, `table*` : table*, `elem*` : elem*, `start?` : start?, `export*` : export*)
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
 relation wf_nonfuncs: `%`(nonfuncs)
   ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
-  rule nonfuncs_case_0{`global*` : global*, `mem*` : mem*, `table*` : table*, `elem*` : elem*}:
-    `%`(`%%%%`_nonfuncs(`global*`, `mem*`, `table*`, `elem*`))
+  rule nonfuncs_case_0{`global*` : global*, `mem*` : mem*, `table*` : table*, `elem*` : elem*, `start?` : start?, `export*` : export*}:
+    `%`(`%%%%%%`_nonfuncs(`global*`, `mem*`, `table*`, `elem*`, `start?`, `export*`))
     -- (wf_global: `%`(global))*{global <- `global*`}
     -- (wf_mem: `%`(mem))*{mem <- `mem*`}
     -- (wf_table: `%`(table))*{table <- `table*`}
     -- (wf_elem: `%`(elem))*{elem <- `elem*`}
+    -- (wf_start: `%`(start))?{start <- `start?`}
+    -- (wf_export: `%`(export))*{export <- `export*`}
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
 def $funcidx_nonfuncs(nonfuncs : nonfuncs) : funcidx*
   ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
-  def $funcidx_nonfuncs{`global*` : global*, `mem*` : mem*, `table*` : table*, `elem*` : elem*}(`%%%%`_nonfuncs(global*{global <- `global*`}, mem*{mem <- `mem*`}, table*{table <- `table*`}, elem*{elem <- `elem*`})) = $funcidx_module(MODULE_module(`%`_list([]), `%`_list([]), `%`_list([]), `%`_list(global*{global <- `global*`}), `%`_list(mem*{mem <- `mem*`}), `%`_list(table*{table <- `table*`}), `%`_list([]), `%`_list([]), `%`_list(elem*{elem <- `elem*`}), ?(), `%`_list([])))
-    -- wf_module: `%`(MODULE_module(`%`_list([]), `%`_list([]), `%`_list([]), `%`_list(global*{global <- `global*`}), `%`_list(mem*{mem <- `mem*`}), `%`_list(table*{table <- `table*`}), `%`_list([]), `%`_list([]), `%`_list(elem*{elem <- `elem*`}), ?(), `%`_list([])))
+  def $funcidx_nonfuncs{`global*` : global*, `mem*` : mem*, `table*` : table*, `elem*` : elem*, `start?` : start?, `export*` : export*}(`%%%%%%`_nonfuncs(global*{global <- `global*`}, mem*{mem <- `mem*`}, table*{table <- `table*`}, elem*{elem <- `elem*`}, start?{start <- `start?`}, export*{export <- `export*`})) = $funcidx_module(MODULE_module(`%`_list([]), `%`_list([]), `%`_list([]), `%`_list(global*{global <- `global*`}), `%`_list(mem*{mem <- `mem*`}), `%`_list(table*{table <- `table*`}), `%`_list([]), `%`_list([]), `%`_list(elem*{elem <- `elem*`}), start?{start <- `start?`}, `%`_list(export*{export <- `export*`})))
+    -- wf_module: `%`(MODULE_module(`%`_list([]), `%`_list([]), `%`_list([]), `%`_list(global*{global <- `global*`}), `%`_list(mem*{mem <- `mem*`}), `%`_list(table*{table <- `table*`}), `%`_list([]), `%`_list([]), `%`_list(elem*{elem <- `elem*`}), start?{start <- `start?`}, `%`_list(export*{export <- `export*`})))
 
 ;; ../../../../specification/wasm-3.0/2.4-validation.modules.spectec
 relation Module_ok: `|-%:%`(module, moduletype)
@@ -7325,7 +7354,7 @@ relation Module_ok: `|-%:%`(module, moduletype)
     -- wf_context: `%`({TYPES dt'*{dt' <- `dt'*`}, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- wf_context: `%`({TYPES [], TAGS jt_I*{jt_I <- `jt_I*`} ++ jt*{jt <- `jt*`}, GLOBALS gt*{gt <- `gt*`}, MEMS mt_I*{mt_I <- `mt_I*`} ++ mt*{mt <- `mt*`}, TABLES tt_I*{tt_I <- `tt_I*`} ++ tt*{tt <- `tt*`}, FUNCS [], DATAS ok*{ok <- `ok*`}, ELEMS rt*{rt <- `rt*`}, LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- wf_context: `%`({TYPES dt'*{dt' <- `dt'*`}, TAGS [], GLOBALS gt_I*{gt_I <- `gt_I*`}, MEMS [], TABLES [], FUNCS dt_I*{dt_I <- `dt_I*`} ++ dt*{dt <- `dt*`}, DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS x*{x <- `x*`}, RECS []})
-    -- wf_nonfuncs: `%`(`%%%%`_nonfuncs(global*{global <- `global*`}, mem*{mem <- `mem*`}, table*{table <- `table*`}, elem*{elem <- `elem*`}))
+    -- wf_nonfuncs: `%`(`%%%%%%`_nonfuncs(global*{global <- `global*`}, mem*{mem <- `mem*`}, table*{table <- `table*`}, elem*{elem <- `elem*`}, start?{start <- `start?`}, export*{export <- `export*`}))
     -- Types_ok: `%|-%:%`({TYPES [], TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, type*{type <- `type*`}, dt'*{dt' <- `dt'*`})
     -- (Import_ok: `%|-%:%`({TYPES dt'*{dt' <- `dt'*`}, TAGS [], GLOBALS [], MEMS [], TABLES [], FUNCS [], DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []}, import, xt_I))*{import <- `import*`, xt_I <- `xt_I*`}
     -- (Tag_ok: `%|-%:%`(C', tag, jt))*{jt <- `jt*`, tag <- `tag*`}
@@ -7340,7 +7369,7 @@ relation Module_ok: `|-%:%`(module, moduletype)
     -- if $disjoint_(syntax name, nm*{nm <- `nm*`})
     -- if (C = C' +++ {TYPES [], TAGS jt_I*{jt_I <- `jt_I*`} ++ jt*{jt <- `jt*`}, GLOBALS gt*{gt <- `gt*`}, MEMS mt_I*{mt_I <- `mt_I*`} ++ mt*{mt <- `mt*`}, TABLES tt_I*{tt_I <- `tt_I*`} ++ tt*{tt <- `tt*`}, FUNCS [], DATAS ok*{ok <- `ok*`}, ELEMS rt*{rt <- `rt*`}, LOCALS [], LABELS [], RETURN ?(), REFS [], RECS []})
     -- if (C' = {TYPES dt'*{dt' <- `dt'*`}, TAGS [], GLOBALS gt_I*{gt_I <- `gt_I*`}, MEMS [], TABLES [], FUNCS dt_I*{dt_I <- `dt_I*`} ++ dt*{dt <- `dt*`}, DATAS [], ELEMS [], LOCALS [], LABELS [], RETURN ?(), REFS x*{x <- `x*`}, RECS []})
-    -- if (x*{x <- `x*`} = $funcidx_nonfuncs(`%%%%`_nonfuncs(global*{global <- `global*`}, mem*{mem <- `mem*`}, table*{table <- `table*`}, elem*{elem <- `elem*`})))
+    -- if (x*{x <- `x*`} = $funcidx_nonfuncs(`%%%%%%`_nonfuncs(global*{global <- `global*`}, mem*{mem <- `mem*`}, table*{table <- `table*`}, elem*{elem <- `elem*`}, start?{start <- `start?`}, export*{export <- `export*`})))
     -- if (jt_I*{jt_I <- `jt_I*`} = $tagsxt(xt_I*{xt_I <- `xt_I*`}))
     -- if (gt_I*{gt_I <- `gt_I*`} = $globalsxt(xt_I*{xt_I <- `xt_I*`}))
     -- if (mt_I*{mt_I <- `mt_I*`} = $memsxt(xt_I*{xt_I <- `xt_I*`}))
@@ -10780,13 +10809,13 @@ relation Step_read: `%~>%`(config, instr*)
     -- (if (!($default_($unpack(zt))) = ?(val)))*{val <- `val*`, zt <- `zt*`}
 
   ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
-  rule `struct.get-null`{z : state, `sx?` : sx?, x : idx, i : u32}:
+  rule `struct.get-null`{z : state, `sx?` : sx?, x : idx, i : fieldidx}:
     `%~>%`(`%;%`_config(z, [`REF.NULL_ADDR`_instr `STRUCT.GET`_instr(sx?{sx <- `sx?`}, x, i)]), [TRAP_instr])
     -- wf_config: `%`(`%;%`_config(z, [`REF.NULL_ADDR`_instr `STRUCT.GET`_instr(sx?{sx <- `sx?`}, x, i)]))
     -- wf_instr: `%`(TRAP_instr)
 
   ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec
-  rule `struct.get-struct`{z : state, a : addr, `sx?` : sx?, x : idx, i : u32, `zt*` : storagetype*, `mut?*` : mut?*}:
+  rule `struct.get-struct`{z : state, a : addr, `sx?` : sx?, x : idx, i : fieldidx, `zt*` : storagetype*, `mut?*` : mut?*}:
     `%~>%`(`%;%`_config(z, [`REF.STRUCT_ADDR`_instr(a) `STRUCT.GET`_instr(sx?{sx <- `sx?`}, x, i)]), [(!($unpackfield_(zt*{zt <- `zt*`}[i!`%`_uN.0], sx?{sx <- `sx?`}, $structinst(z)[a].FIELDS_structinst[i!`%`_uN.0])) : val <: instr)])
     -- wf_config: `%`(`%;%`_config(z, [`REF.STRUCT_ADDR`_instr(a) `STRUCT.GET`_instr(sx?{sx <- `sx?`}, x, i)]))
     -- wf_comptype: `%`(STRUCT_comptype(`%`_list(`%%`_fieldtype(mut?{mut <- `mut?`}, zt)*{`mut?` <- `mut?*`, zt <- `zt*`})))
@@ -11261,13 +11290,13 @@ relation Step: `%~>%`(config, config)
     -- if (si = {TYPE $type(z, x), FIELDS !($packfield_(zt, val))^n{val <- `val*`, zt <- `zt*`}})
 
   ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec:721.1-722.55
-  rule `struct.set-null`{z : state, val : val, x : idx, i : u32}:
+  rule `struct.set-null`{z : state, val : val, x : idx, i : fieldidx}:
     `%~>%`(`%;%`_config(z, [`REF.NULL_ADDR`_instr (val : val <: instr) `STRUCT.SET`_instr(x, i)]), `%;%`_config(z, [TRAP_instr]))
     -- wf_config: `%`(`%;%`_config(z, [`REF.NULL_ADDR`_instr (val : val <: instr) `STRUCT.SET`_instr(x, i)]))
     -- wf_config: `%`(`%;%`_config(z, [TRAP_instr]))
 
   ;; ../../../../specification/wasm-3.0/4.3-execution.instructions.spectec:724.1-727.46
-  rule `struct.set-struct`{z : state, a : addr, val : val, x : idx, i : u32, `zt*` : storagetype*, `mut?*` : mut?*}:
+  rule `struct.set-struct`{z : state, a : addr, val : val, x : idx, i : fieldidx, `zt*` : storagetype*, `mut?*` : mut?*}:
     `%~>%`(`%;%`_config(z, [`REF.STRUCT_ADDR`_instr(a) (val : val <: instr) `STRUCT.SET`_instr(x, i)]), `%;%`_config($with_struct(z, a, i!`%`_uN.0, !($packfield_(zt*{zt <- `zt*`}[i!`%`_uN.0], val))), []))
     -- wf_config: `%`(`%;%`_config(z, [`REF.STRUCT_ADDR`_instr(a) (val : val <: instr) `STRUCT.SET`_instr(x, i)]))
     -- wf_config: `%`(`%;%`_config($with_struct(z, a, i!`%`_uN.0, !($packfield_(zt*{zt <- `zt*`}[i!`%`_uN.0], val))), []))
@@ -12903,6 +12932,11 @@ grammar Blocalidx : localidx
   prod{x : idx} x:Bu32 => x
 
 ;; ../../../../specification/wasm-3.0/5.1-binary.values.spectec
+grammar Bfieldidx : fieldidx
+  ;; ../../../../specification/wasm-3.0/5.1-binary.values.spectec
+  prod{x : idx} x:Bu32 => x
+
+;; ../../../../specification/wasm-3.0/5.1-binary.values.spectec
 grammar Blabelidx : labelidx
   ;; ../../../../specification/wasm-3.0/5.1-binary.values.spectec
   prod{l : labelidx} l:Bu32 => l
@@ -13298,14 +13332,14 @@ grammar Binstr : instr
   prod{x : idx} {{0xFB} {`%`_u32(0):Bu32} {x:Btypeidx}} => `STRUCT.NEW`_instr(x)
   ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:153.5-153.51
   prod{x : idx} {{0xFB} {`%`_u32(1):Bu32} {x:Btypeidx}} => `STRUCT.NEW_DEFAULT`_instr(x)
-  ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:154.5-154.52
-  prod{x : idx, i : u32} {{0xFB} {`%`_u32(2):Bu32} {x:Btypeidx} {i:Bu32}} => `STRUCT.GET`_instr(?(), x, i)
-  ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:155.5-155.54
-  prod{x : idx, i : u32} {{0xFB} {`%`_u32(3):Bu32} {x:Btypeidx} {i:Bu32}} => `STRUCT.GET`_instr(?(S_sx), x, i)
-  ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:156.5-156.54
-  prod{x : idx, i : u32} {{0xFB} {`%`_u32(4):Bu32} {x:Btypeidx} {i:Bu32}} => `STRUCT.GET`_instr(?(U_sx), x, i)
-  ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:157.5-157.52
-  prod{x : idx, i : u32} {{0xFB} {`%`_u32(5):Bu32} {x:Btypeidx} {i:Bu32}} => `STRUCT.SET`_instr(x, i)
+  ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:154.5-154.57
+  prod{x : idx, i : fieldidx} {{0xFB} {`%`_u32(2):Bu32} {x:Btypeidx} {i:Bfieldidx}} => `STRUCT.GET`_instr(?(), x, i)
+  ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:155.5-155.59
+  prod{x : idx, i : fieldidx} {{0xFB} {`%`_u32(3):Bu32} {x:Btypeidx} {i:Bfieldidx}} => `STRUCT.GET`_instr(?(S_sx), x, i)
+  ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:156.5-156.59
+  prod{x : idx, i : fieldidx} {{0xFB} {`%`_u32(4):Bu32} {x:Btypeidx} {i:Bfieldidx}} => `STRUCT.GET`_instr(?(U_sx), x, i)
+  ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:157.5-157.57
+  prod{x : idx, i : fieldidx} {{0xFB} {`%`_u32(5):Bu32} {x:Btypeidx} {i:Bfieldidx}} => `STRUCT.SET`_instr(x, i)
   ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:161.5-161.42
   prod{x : idx} {{0xFB} {`%`_u32(6):Bu32} {x:Btypeidx}} => `ARRAY.NEW`_instr(x)
   ;; ../../../../specification/wasm-3.0/5.3-binary.instructions.spectec:162.5-162.50
