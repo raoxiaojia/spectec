@@ -352,7 +352,7 @@ let t_rule env rule =
       List.map (transform_param tf) quants, 
       m, 
       transform_exp tf exp, 
-      List.map (transform_prem tf) (extra_prems @ prems) 
+      List.map (transform_prem tf) (prems @ extra_prems) 
     )
   ) $ rule.at
 
@@ -367,7 +367,7 @@ let t_clause env clause =
     DefD (List.map (transform_param tf) quants, 
       List.map (transform_arg tf) args,
       transform_exp tf exp, 
-      List.map (transform_prem tf) (extra_prems @ prems)
+      List.map (transform_prem tf) (prems @ extra_prems)
     )
   ) $ clause.at
 
