@@ -27,6 +27,7 @@ type pass =
   | AliasDemut
   | ImproveIds
   | Ite
+  | ElseSimp
   | LetIntroMech
 
 (* This list declares the intended order of passes.
@@ -43,6 +44,7 @@ let all_passes = [
   Undep;
   Totalize;
   Else;
+  ElseSimp;
   Uncaseremoval;
   Sideconditions;
   SubExpansion;
@@ -114,6 +116,7 @@ let pass_flag = function
   | Uncaseremoval -> "uncase-removal"
   | ImproveIds -> "improve-ids"
   | Ite -> "ite"
+  | ElseSimp -> "else-simplification"
   | LetIntroMech -> "let-intro-mech"
 
 let pass_desc = function
@@ -129,6 +132,7 @@ let pass_desc = function
   | AliasDemut -> "Lifts type aliases out of mutual groups"
   | ImproveIds -> "Disambiguates ids used from each other"
   | Ite -> "If-then-else introduction"
+  | ElseSimp -> "Simplifies generated otherwise relations (after else pass)"
   | LetIntroMech -> "Let Premise introduction for mechanization backends"
 
 
@@ -146,7 +150,7 @@ let run_pass : pass -> Il.Ast.script -> Il.Ast.script = function
   | ImproveIds -> Middlend.Improveids.transform
   | Ite -> Middlend.Ite.transform
   | LetIntroMech -> Middlend.Letintromech.transform
-
+  | ElseSimp -> Middlend.Elsesimp.transform
 
 (* Argument parsing *)
 
