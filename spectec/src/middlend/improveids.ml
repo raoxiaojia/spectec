@@ -1,7 +1,3 @@
-(* 
-  This pass simply ensures that there is no ambiguity between any names.
-*)
-
 open Il.Ast
 open Il
 open Il.Walk
