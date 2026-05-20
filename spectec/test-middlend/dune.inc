@@ -1,6 +1,6 @@
 (rule (alias runtest) (deps (alias dune.inc) (file specification.act) (glob_files_rec specification.exp/*)) (action (no-infer (diff specification.exp/00-elab.il specification.act/00-elab.il))))
 (rule (alias runtest) (deps (alias dune.inc) (file specification.act) (glob_files_rec specification.exp/*)) (action (no-infer (diff specification.exp/01-ite.il specification.act/01-ite.il))))
-(rule (alias runtest) (deps (alias dune.inc) (file specification.act) (glob_files_rec specification.exp/*)) (action (no-infer (diff specification.exp/02-let-intro.il specification.act/02-let-intro.il))))
+(rule (alias runtest) (deps (alias dune.inc) (file specification.act) (glob_files_rec specification.exp/*)) (action (no-infer (diff specification.exp/02-let-intro-mech.il specification.act/02-let-intro-mech.il))))
 (rule (alias runtest) (deps (alias dune.inc) (file specification.act) (glob_files_rec specification.exp/*)) (action (no-infer (diff specification.exp/03-typefamily-removal.il specification.act/03-typefamily-removal.il))))
 (rule (alias runtest) (deps (alias dune.inc) (file specification.act) (glob_files_rec specification.exp/*)) (action (no-infer (diff specification.exp/04-remove-indexed-types.il specification.act/04-remove-indexed-types.il))))
 (rule (alias runtest) (deps (alias dune.inc) (file specification.act) (glob_files_rec specification.exp/*)) (action (no-infer (diff specification.exp/05-totalize.il specification.act/05-totalize.il))))
