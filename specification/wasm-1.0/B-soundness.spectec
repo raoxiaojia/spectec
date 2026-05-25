@@ -112,9 +112,10 @@ rule Meminst_ok:
   -- if |b*| = $(n * $($(64 * $Ki)))
 
 rule Tableinst_ok:
-  s |- {TYPE `[n..m] , REFS ref*} : `[n..m]
+  s |- {TYPE `[n..m] , REFS (fa?)*} : `[n..m]
   -- Tabletype_ok: |- `[n..m] : OK
-  -- if |ref*| = n
+  -- ((Externaddr_ok: s |- FUNC fa : FUNC ft)?)*
+  -- if |(fa?)*| = n
 
 rule Funcinst_ok:
   s |- {TYPE ft, MODULE moduleinst, CODE func} : ft
