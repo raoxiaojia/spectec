@@ -6,31 +6,18 @@ open Ds
 
 module FuncMap = Map.Make (String)
 
-let ref_ok =
-  (* TODO: some / none *)
-  let null = some "NULL" in
-  let nonull = none "NULL" in
-
-  function
-  (* null *)
-  | [CaseV ("REF.NULL_ADDR", [])] -> CaseV ("REF", [ null; nullary "BOT"])
-  (* i31 *)
-  | [CaseV ("REF.I31_NUM", [ _ ])] -> CaseV ("REF", [ nonull; nullary "I31"])
-  (* host *)
-  | [CaseV ("REF.HOST_ADDR", [ _ ])] -> CaseV ("REF", [ nonull; nullary "ANY"])
-  (* exception *)
-  | [CaseV ("REF.EXN_ADDR", [ _ ])] -> CaseV ("REF", [ nonull; nullary "EXN"])
-  (* array/func/struct addr *)
-  | [CaseV (name, [ NumV (`Nat i) ])]
-  when String.starts_with ~prefix:"REF." name && String.ends_with ~suffix:"_ADDR" name ->
-    let field_name = String.sub name 4 (String.length name - 9) in
-    let object_ = listv_nth (Ds.Store.access (field_name ^ "S")) (Z.to_int i) in
-    let dt = strv_access "TYPE" object_ in
-    CaseV ("REF", [ nonull; dt])
-  (* extern *)
-  (* TODO: check null *)
-  | [CaseV ("REF.EXTERN", [ _ ])] -> CaseV ("REF", [ nonull; nullary "EXTERN"])
-  | vs -> Numerics.error_values "$Reftype" vs
+(* predicate: r's principal reftype matches target rt *)
+let ref_ok = function
+  | [ r; rt ] ->
+    let value = Construct.al_to_value r in
+    let reftype = Construct.al_to_reftype rt in
+    (try
+      match value with
+      | Value.Ref r' ->
+        boolV (Match.match_reftype [] (Value.type_of_ref r') reftype)
+      | _ -> Numerics.error_values "$Ref_ok" [r; rt]
+    with exn -> raise (Exception.Invalid (exn, Printexc.get_raw_backtrace ())))
+  | vs -> Numerics.error_values "$Ref_ok" vs
 
 let module_ok v =
   if !Construct.version <> 3 then failwith "This hardcoded function ($Module_ok) should be only called with test version 3.0";
