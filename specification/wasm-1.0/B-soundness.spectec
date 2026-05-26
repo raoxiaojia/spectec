@@ -230,7 +230,7 @@ relation State_ok: |- state : context
 relation Config_ok: |- config : resulttype
 
 rule Frame_ok:
-  s |- {LOCALS val*, MODULE moduleinst} : C ++ {LOCALS lct*}
+  s |- {LOCALS val*, MODULE moduleinst} : C ++ {LOCALS t*}
   -- Moduleinst_ok: s |- moduleinst : C
   -- (Val_ok: |- val : t)*
 
