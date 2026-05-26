@@ -1,3 +1,25 @@
+;; Contexts
+
+relation Context_ok: |- context : OK  hint(macro "%context")
+
+rule Context_ok:
+  |- C : OK
+  -- if C =
+    { TYPES ft*,
+      FUNCS ft_2*,
+      GLOBALS gt*,
+      MEMS mt*,
+      TABLES tt*,
+      LOCALS lct*,
+      LABELS rt*,
+      RETURN rt'?,
+    }
+  -- (Functype_ok: |- ft : OK)*
+  -- (Globaltype_ok: |- gt : OK)*
+  -- (Memtype_ok: |- mt : OK)*
+  -- (Tabletype_ok: |- tt : OK)*
+  -- (Functype_ok: |- ft_2 : OK)*
+  
 ;; Value type ok
 
 relation Val_ok: |- val : valtype
@@ -205,7 +227,7 @@ rule Extend_store:
 
 relation Frame_ok: store |- frame : context
 relation State_ok: |- state : context
-relation Config_ok: |- config : OK
+relation Config_ok: |- config : resulttype
 
 rule Frame_ok:
   s |- {LOCALS val*, MODULE moduleinst} : C ++ {LOCALS lct*}
@@ -218,6 +240,6 @@ rule State_ok:
   -- Frame_ok: s |- f : C
 
 rule Config_ok:
-  |- (s; f); instr* : OK
+  |- (s; f); instr* : t?
   -- State_ok: |- (s; f) : C
   -- Expr_ok2: s; C |- admininstr* : t?
