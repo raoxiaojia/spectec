@@ -17550,6 +17550,8 @@ The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the 
 
       * The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the reference type :math:`{\mathit{rt}'}`.
 
+      * Under the context :math:`\{ \mathsf{return}~\epsilon \}`, the reference type :math:`{\mathit{rt}}` is :ref:`valid <valid-val>`.
+
       * The reference type :math:`{\mathit{rt}'}` :ref:`matches <match>` the reference type :math:`{\mathit{rt}}`.
 
 
@@ -17622,6 +17624,8 @@ The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the 
 
 
    * The reference value :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with the reference type :math:`{\mathit{rt}'}`.
+
+   * Under the context :math:`\{ \mathsf{return}~\epsilon \}`, the reference type :math:`{\mathit{rt}}` is :ref:`valid <valid-val>`.
 
    * The reference type :math:`{\mathit{rt}'}` :ref:`matches <match>` the reference type :math:`{\mathit{rt}}`.
 
@@ -17777,6 +17781,8 @@ The external address :math:`{\mathit{externaddr}}` is :ref:`valid <valid-val>` w
 
       * The external address :math:`{\mathit{externaddr}}` is :ref:`valid <valid-val>` with the external type :math:`{\mathit{xt}'}`.
 
+      * Under the context :math:`\{ \mathsf{return}~\epsilon \}`, the external type :math:`{\mathit{externtype}}` is :ref:`valid <valid-val>`.
+
       * The external type :math:`{\mathit{xt}'}` :ref:`matches <match>` the external type :math:`{\mathit{externtype}}`.
 
 
@@ -17836,6 +17842,8 @@ The external address :math:`{\mathit{externaddr}}` is :ref:`valid <valid-val>` w
 
 
    * The external address :math:`{\mathit{externaddr}}` is :ref:`valid <valid-val>` with the external type :math:`{\mathit{xt}'}`.
+
+   * Under the context :math:`\{ \mathsf{return}~\epsilon \}`, the external type :math:`{\mathit{xt}}` is :ref:`valid <valid-val>`.
 
    * The external type :math:`{\mathit{xt}'}` :ref:`matches <match>` the external type :math:`{\mathit{xt}}`.
 
@@ -18453,12 +18461,12 @@ The state :math:`(s, f)` is :ref:`valid <valid-val>` with the context :math:`C` 
 
 
 
-The configuration :math:`z~;~{{\mathit{instr}}^\ast}` is :ref:`valid <valid-val>` if:
+The configuration :math:`(s, f)~;~{{\mathit{instr}}^\ast}` is :ref:`valid <valid-val>` with the result type :math:`{t^\ast}` if:
 
 
-   * The state :math:`z` is :ref:`valid <valid-val>` with the context :math:`C`.
+   * The state :math:`(s, f)` is :ref:`valid <valid-val>` with the context :math:`C`.
 
-   * The expression :math:`{{\mathit{instr}}^\ast}` is :ref:`valid <valid-val>` with the result type :math:`{t^\ast}`.
+   * :math:`{{\mathit{instr}}^\ast}` is valid with :math:`{t^\ast}`.
 
 
 
@@ -19991,11 +19999,9 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{ref}}` from the stack.
 
-#. Let :math:`{\mathit{rt}}` be the type of :math:`{\mathit{ref}}`.
-
 #. Push the value :math:`{\mathit{ref}}` to the stack.
 
-#. If :math:`{\mathit{rt}}` matches :math:`{{\mathrm{inst}}}_{f{.}\mathsf{module}}({\mathit{rt}}_2)`, then:
+#. If :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with type :math:`{{\mathrm{inst}}}_{f{.}\mathsf{module}}({\mathit{rt}}_2)`, then:
 
    a. Execute the instruction :math:`(\mathsf{br}~l)`.
 
@@ -20014,11 +20020,9 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{ref}}` from the stack.
 
-#. Let :math:`{\mathit{rt}}` be the type of :math:`{\mathit{ref}}`.
-
 #. Push the value :math:`{\mathit{ref}}` to the stack.
 
-#. If :math:`{\mathit{rt}}` matches :math:`{{\mathrm{inst}}}_{f{.}\mathsf{module}}({\mathit{rt}}_2)`, then:
+#. If :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with type :math:`{{\mathrm{inst}}}_{f{.}\mathsf{module}}({\mathit{rt}}_2)`, then:
 
    a. Do nothing.
 
@@ -20953,9 +20957,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{ref}}` from the stack.
 
-#. Let :math:`{\mathit{rt}'}` be the type of :math:`{\mathit{ref}}`.
-
-#. If :math:`{\mathit{rt}'}` matches :math:`{{\mathrm{inst}}}_{f{.}\mathsf{module}}({\mathit{rt}})`, then:
+#. If :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with type :math:`{{\mathrm{inst}}}_{f{.}\mathsf{module}}({\mathit{rt}})`, then:
 
    a. Push the value :math:`(\mathsf{i{\scriptstyle 32}}{.}\mathsf{const}~1)` to the stack.
 
@@ -20974,9 +20976,7 @@ The instruction sequence :math:`(\mathsf{block}~{\mathit{blocktype}}~{{\mathit{i
 
 #. Pop the value :math:`{\mathit{ref}}` from the stack.
 
-#. Let :math:`{\mathit{rt}'}` be the type of :math:`{\mathit{ref}}`.
-
-#. If :math:`{\mathit{rt}'}` does not match :math:`{{\mathrm{inst}}}_{f{.}\mathsf{module}}({\mathit{rt}})`, then:
+#. If not :math:`{\mathit{ref}}` is :ref:`valid <valid-val>` with type :math:`{{\mathrm{inst}}}_{f{.}\mathsf{module}}({\mathit{rt}})`, then:
 
    a. Trap.
 
@@ -29709,6 +29709,7 @@ Ref_ok
     - ref' is not REF.NULL_ADDR.
   - Or:
     - ref is valid with the reference type rt'.
+    - Under the context { RETURN: ?() }, rt is valid.
     - rt' matches rt.
 
 Ref_ok/null
@@ -29747,6 +29748,7 @@ Ref_ok/extern
 Ref_ok/sub
 - the reference value ref is valid with the reference type rt if:
   - ref is valid with the reference type rt'.
+  - Under the context { RETURN: ?() }, rt is valid.
   - rt' matches rt.
 
 Val_ok
@@ -29827,6 +29829,7 @@ Externaddr_ok
     - s.FUNCS[a] is funcinst.
   - Or:
     - externaddr is valid with the external type xt'.
+    - Under the context { RETURN: ?() }, externtype is valid.
     - xt' matches externtype.
 
 Externaddr_ok/tag
@@ -29857,6 +29860,7 @@ Externaddr_ok/func
 Externaddr_ok/sub
 - the external address externaddr is valid with the external type xt if:
   - externaddr is valid with the external type xt'.
+  - Under the context { RETURN: ?() }, xt is valid.
   - xt' matches xt.
 
 Idctxt_ok
@@ -30170,9 +30174,9 @@ State_ok
   - the frame f is valid with C.
 
 Config_ok
-- the configuration z ; instr* is valid if:
-  - the state z is valid with the context C.
-  - the expression instr* is valid with the result type t*.
+- the configuration (s, f) ; instr* is valid with the result type t* if:
+  - the state (s, f) is valid with the context C.
+  - instr* is valid with t*.
 
 NotationTypingInstrScheme
 - the instruction sequence [instr] is valid with the instruction type valtype* -> valtype'* if:
@@ -30892,22 +30896,20 @@ Step_read/br_on_cast l rt_1 rt_2
 1. Let (FRAME_ _ { f }) be the topmost FRAME_.
 2. Assert: Due to validation, a value of value type ref is on the top of the stack.
 3. Pop the value ref from the stack.
-4. Let rt be $Ref_ok(ref).
-5. Push the value ref to the stack.
-6. If rt matches $inst_reftype(f.MODULE, rt_2), then:
+4. Push the value ref to the stack.
+5. If $Ref_ok(ref, $inst_reftype(f.MODULE, rt_2)), then:
   a. Execute the instruction (BR l).
-7. Else:
+6. Else:
   a. Do nothing.
 
 Step_read/br_on_cast_fail l rt_1 rt_2
 1. Let (FRAME_ _ { f }) be the topmost FRAME_.
 2. Assert: Due to validation, a value of value type ref is on the top of the stack.
 3. Pop the value ref from the stack.
-4. Let rt be $Ref_ok(ref).
-5. Push the value ref to the stack.
-6. If rt matches $inst_reftype(f.MODULE, rt_2), then:
+4. Push the value ref to the stack.
+5. If $Ref_ok(ref, $inst_reftype(f.MODULE, rt_2)), then:
   a. Do nothing.
-7. Else:
+6. Else:
   a. Execute the instruction (BR l).
 
 Step_read/call x
@@ -31349,20 +31351,18 @@ Step_read/ref.test rt
 1. Let (FRAME_ _ { f }) be the topmost FRAME_.
 2. Assert: Due to validation, a value of value type ref is on the top of the stack.
 3. Pop the value ref from the stack.
-4. Let rt' be $Ref_ok(ref).
-5. If rt' matches $inst_reftype(f.MODULE, rt), then:
+4. If $Ref_ok(ref, $inst_reftype(f.MODULE, rt)), then:
   a. Push the value (I32.CONST 1) to the stack.
-6. Else:
+5. Else:
   a. Push the value (I32.CONST 0) to the stack.
 
 Step_read/ref.cast rt
 1. Let (FRAME_ _ { f }) be the topmost FRAME_.
 2. Assert: Due to validation, a value of value type ref is on the top of the stack.
 3. Pop the value ref from the stack.
-4. Let rt' be $Ref_ok(ref).
-5. If rt' does not match $inst_reftype(f.MODULE, rt), then:
+4. If not $Ref_ok(ref, $inst_reftype(f.MODULE, rt)), then:
   a. Trap.
-6. Push the value ref to the stack.
+5. Push the value ref to the stack.
 
 Step_read/struct.new_default x
 1. Let z be the current state.
